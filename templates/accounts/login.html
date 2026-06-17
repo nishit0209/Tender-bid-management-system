@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load widget_tweaks static socialaccount %}
+
+{% block title %}Login{% endblock %}
+
+{% block auth_content %}
+<div class="min-h-screen flex">
+
+    <!-- Left Panel: Branding -->
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 relative overflow-hidden items-center justify-center p-12">
+        <!-- Decorative blobs -->
+        <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-indigo-600/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-cyan-600/20 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
+
+        <div class="relative z-10 max-w-md">
+            <!-- Logo -->
+            <div class="flex items-center gap-4 mb-12">
+                <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-500/30">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-white">TenderBMS</h1>
+                    <p class="text-indigo-300 text-sm">Enterprise Procurement System</p>
+                </div>
+            </div>
+
+            <h2 class="text-4xl font-bold text-white leading-tight mb-4">
+                Streamline Your <br>
+                <span class="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">Procurement</span>
+            </h2>
+            <p class="text-slate-400 text-lg leading-relaxed mb-10">
+                End-to-end tender management — from vendor onboarding to purchase order generation.
+            </p>
+
+            <!-- Feature List -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-3 text-sm text-indigo-200/80">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-indigo-400 flex-shrink-0"></i>
+                    Vendor Registration &amp; Verification
+                </div>
+                <div class="flex items-center gap-3 text-sm text-indigo-200/80">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-indigo-400 flex-shrink-0"></i>
+                    Tender Creation &amp; Publishing
+                </div>
+                <div class="flex items-center gap-3 text-sm text-indigo-200/80">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-indigo-400 flex-shrink-0"></i>
+                    Bid Evaluation &amp; Scoring
+                </div>
+                <div class="flex items-center gap-3 text-sm text-indigo-200/80">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-indigo-400 flex-shrink-0"></i>
+                    Purchase Order Generation
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Panel: Login Form -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-slate-950">
+        <div class="w-full max-w-md">
+
+            <!-- Mobile Logo -->
+            <div class="flex items-center gap-3 mb-8 lg:hidden">
+                <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold text-white">TenderBMS</span>
+            </div>
+
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-white">Welcome back</h2>
+                <p class="text-slate-400 mt-1">Sign in to your account to continue</p>
+            </div>
+
+            <form method="post" id="login-form" novalidate>
+                {% csrf_token %}
+                <div class="space-y-5">
+
+                    <!-- Email -->
+                    <div>
+                        <label for="id_email" class="block text-sm font-medium text-slate-300 mb-1.5">Email Address</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                        <p class="mt-1.5 text-xs text-red-400 flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            {{ form.username.errors.0 }}
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="id_password" class="block text-sm font-medium text-slate-300">Password</label>
+                            <a href="{% url 'accounts:forgot_password' %}" class="text-xs text-indigo-400 hover:text-indigo-300 transition-colors">Forgot password?</a>
+                        </div>
+                        <div class="relative">
+                            {{ form.password|attr:"autocomplete:current-password" }}
+                            <button type="button" id="toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors">
+                                <i data-lucide="eye" class="w-4 h-4" id="eye-icon"></i>
+                            </button>
+                        </div>
+                        {% if form.password.errors %}
+                        <p class="mt-1.5 text-xs text-red-400">{{ form.password.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="flex items-center gap-2">
+                        {{ form.remember_me }}
+                        <label for="id_remember_me" class="text-sm text-slate-400 cursor-pointer select-none">
+                            {{ form.remember_me.label }}
+                        </label>
+                    </div>
+
+                    <!-- Non-field errors -->
+                    {% if form.non_field_errors %}
+                    <div class="flex items-center gap-2 px-4 py-3 bg-red-900/30 border border-red-700/50 rounded-xl">
+                        <svg class="w-4 h-4 text-red-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm text-red-300">{{ form.non_field_errors.0 }}</span>
+                    </div>
+                    {% endif %}
+
+                    <!-- Submit -->
+                    <button type="submit" id="login-btn"
+                            class="w-full py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        Sign In
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-6 flex items-center justify-center space-x-4">
+                <div class="flex-1 border-t border-slate-800"></div>
+                <span class="text-xs text-slate-500 uppercase tracking-wider">Or continue with</span>
+                <div class="flex-1 border-t border-slate-800"></div>
+            </div>
+
+            <div class="mt-6">
+                <a href="{% provider_login_url 'google' %}"
+                   class="w-full flex items-center justify-center gap-3 py-3.5 px-4 bg-slate-900 border border-slate-700 hover:bg-slate-800 text-white font-medium rounded-xl transition-all duration-200 hover:-translate-y-0.5">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0112 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115z"/>
+                        <path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 01-6.723-4.823l-4.04 3.067A11.965 11.965 0 0012 24c2.933 0 5.735-1.043 7.834-3l-3.793-2.987z"/>
+                        <path fill="#4A90E2" d="M19.834 21c2.195-2.048 3.62-5.096 3.62-9 0-.71-.109-1.473-.272-2.182H12v4.637h6.436c-.317 1.559-1.17 2.766-2.395 3.558L19.834 21z"/>
+                        <path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 014.909 12c0-.782.125-1.533.357-2.235L1.24 6.65A11.934 11.934 0 000 12c0 1.92.445 3.73 1.237 5.335l4.04-3.067z"/>
+                    </svg>
+                    Continue with Google
+                </a>
+            </div>
+
+            <!-- Register link -->
+            <p class="text-center text-sm text-slate-400 mt-6">
+                New vendor?
+                <a href="{% url 'accounts:register' %}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Register your company →</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    lucide.createIcons();
+
+    // Password toggle
+    const toggleBtn = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('id_password');
+    const eyeIcon = document.getElementById('eye-icon');
+    if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener('click', function () {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            eyeIcon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+    }
+
+    // Submit button loading state
+    const form = document.getElementById('login-form');
+    const btn = document.getElementById('login-btn');
+    if (form && btn) {
+        form.addEventListener('submit', function () {
+            btn.innerHTML = '<svg class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Signing in...';
+            btn.disabled = true;
+        });
+    }
+});
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/password_strength.js' %}"></script>
+{% endblock %}

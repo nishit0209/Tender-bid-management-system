@@ -1,0 +1,39 @@
+# Core Framework
+Django==5.1.4
+
+# Database
+psycopg2-binary==2.9.10
+
+# Environment Variables
+python-decouple==3.8
+
+# Image Processing
+Pillow==11.1.0
+
+# PDF Generation
+reportlab==4.2.5
+xhtml2pdf==0.2.16
+
+# Excel Export
+openpyxl==3.1.5
+xlsxwriter==3.2.0
+
+# Date/Time Utilities
+python-dateutil==2.9.0
+
+# Form Rendering
+django-widget-tweaks==1.5.0
+
+# File Validation
+django-cleanup==9.0.0
+
+# Security
+django-axes==7.0.1
+
+# Development
+django-debug-toolbar==4.4.6
+django-allauth==0.63.3
+PyJWT==2.10.1
+
+# Deployment
+whitenoise==6.12.0

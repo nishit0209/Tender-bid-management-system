@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+        <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-800
+            {% if action_color == 'red' %}bg-red-900/10{% elif action_color == 'emerald' %}bg-emerald-900/10{% elif action_color == 'blue' %}bg-blue-900/10{% else %}bg-slate-800/30{% endif %}">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center
+                {% if action_color == 'red' %}bg-red-600/20{% elif action_color == 'emerald' %}bg-emerald-600/20{% elif action_color == 'blue' %}bg-blue-600/20{% else %}bg-slate-700{% endif %}">
+                <i data-lucide="{% if action == 'verify' %}shield-check{% elif action == 'approve' %}check-circle{% elif action == 'delete' %}trash-2{% else %}alert-triangle{% endif %}"
+                   class="w-4 h-4 {% if action_color == 'red' %}text-red-400{% elif action_color == 'emerald' %}text-emerald-400{% elif action_color == 'blue' %}text-blue-400{% else %}text-slate-400{% endif %}"></i>
+            </div>
+            <h3 class="text-sm font-semibold text-white">{{ page_title }}</h3>
+        </div>
+
+        <div class="p-6">
+            <p class="text-sm text-slate-300 leading-relaxed mb-6">{{ message }}</p>
+
+            {% if vendor %}
+            <div class="flex items-center gap-3 p-4 bg-slate-800 rounded-xl mb-6">
+                <div class="w-10 h-10 bg-indigo-600/20 rounded-xl flex items-center justify-center text-sm font-bold text-indigo-300 flex-shrink-0">
+                    {{ vendor.company_name|first|upper }}
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-white">{{ vendor.company_name }}</p>
+                    <p class="text-xs text-slate-400">{{ vendor.get_status_display }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <form method="post" class="flex items-center justify-between gap-3">
+                {% csrf_token %}
+                <a href="{% if vendor %}{% url 'vendors:detail' vendor.pk %}{% else %}javascript:history.back(){% endif %}"
+                   class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-slate-300 text-sm rounded-xl transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Cancel
+                </a>
+                <button type="submit"
+                        class="flex items-center gap-2 px-5 py-2 text-white text-sm font-semibold rounded-xl transition-all
+                        {% if action_color == 'red' %}bg-red-600 hover:bg-red-500 shadow-lg shadow-red-500/20
+                        {% elif action_color == 'emerald' %}bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/20
+                        {% elif action_color == 'blue' %}bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-500/20
+                        {% else %}bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-500/20{% endif %}">
+                    <i data-lucide="{% if action == 'delete' %}trash-2{% elif action == 'verify' %}shield-check{% elif action == 'approve' %}check-circle{% else %}check{% endif %}" class="w-4 h-4"></i>
+                    {{ action_label }}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>document.addEventListener('DOMContentLoaded', function() { lucide.createIcons(); });</script>
+{% endblock %}

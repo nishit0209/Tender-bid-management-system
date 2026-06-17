@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+
+{% block title %}Tender {{ tender.tender_number }}{% endblock %}
+{% block page_title %}{{ tender.tender_number }}{% endblock %}
+{% block page_subtitle %}{{ tender.title }}{% endblock %}
+
+{% block page_actions %}
+<a href="{% url 'tenders:list' %}" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
+    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+    Back to List
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Status Banner -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <!-- Icon based on status -->
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0
+                {% if tender.status == 'draft' %}bg-slate-800 text-slate-400
+                {% elif tender.status == 'pending_approval' %}bg-amber-500/20 text-amber-400
+                {% elif tender.status == 'open' %}bg-emerald-500/20 text-emerald-400
+                {% elif tender.status == 'closed' %}bg-red-500/20 text-red-400
+                {% elif tender.status == 'cancelled' %}bg-slate-800 text-slate-500
+                {% else %}bg-indigo-500/20 text-indigo-400{% endif %}">
+                
+                {% if tender.status == 'draft' %}<i data-lucide="file-edit" class="w-6 h-6"></i>
+                {% elif tender.status == 'pending_approval' %}<i data-lucide="clock" class="w-6 h-6"></i>
+                {% elif tender.status == 'open' %}<i data-lucide="unlock" class="w-6 h-6"></i>
+                {% elif tender.status == 'closed' %}<i data-lucide="lock" class="w-6 h-6"></i>
+                {% elif tender.status == 'cancelled' %}<i data-lucide="x-circle" class="w-6 h-6"></i>
+                {% else %}<i data-lucide="award" class="w-6 h-6"></i>{% endif %}
+            </div>
+            
+            <div>
+                <div class="flex items-center gap-3">
+                    <h2 class="text-lg font-bold text-white">Status: {{ tender.get_status_display }}</h2>
+                    {% if tender.is_public %}
+                    <span class="px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 text-xs font-medium border border-indigo-500/20">Public</span>
+                    {% else %}
+                    <span class="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-xs font-medium border border-slate-700">Internal</span>
+                    {% endif %}
+                </div>
+                <p class="text-sm text-slate-400 mt-0.5">
+                    {% if tender.status == 'draft' %}Created on {{ tender.created_at|date:"d M Y" }}
+                    {% elif tender.status == 'open' %}Closing in {{ tender.days_remaining }} days
+                    {% elif tender.status == 'closed' %}Evaluation pending
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <!-- Edit/Submit for Procurement -->
+            {% if can_edit %}
+                <a href="{% url 'tenders:edit' tender.pk %}" class="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded-xl transition-all border border-slate-700">
+                    <i data-lucide="edit-2" class="w-4 h-4"></i> Edit
+                </a>
+            {% endif %}
+            
+            {% if can_submit %}
+                <form method="post" action="{% url 'tenders:submit' tender.pk %}" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-indigo-500/20">
+                        <i data-lucide="send" class="w-4 h-4"></i> Submit for Approval
+                    </button>
+                </form>
+            {% endif %}
+
+            <!-- Approval Actions for Manager -->
+            {% if can_approve %}
+                <button type="button" onclick="document.getElementById('approve-modal').classList.remove('hidden')" class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-emerald-500/20">
+                    <i data-lucide="check" class="w-4 h-4"></i> Approve & Publish
+                </button>
+                <button type="button" onclick="document.getElementById('reject-modal').classList.remove('hidden')" class="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-red-500/20 text-red-400 text-sm font-medium rounded-xl transition-all border border-slate-700 hover:border-red-500/30">
+                    <i data-lucide="x" class="w-4 h-4"></i> Reject
+                </button>
+            {% endif %}
+
+            <!-- Close Tender for Procurement -->
+            {% if tender.status == 'open' and not user.is_vendor_user and user.role != 'manager' %}
+                <form method="post" action="{% url 'tenders:close' tender.pk %}" class="inline" onsubmit="return confirm('Are you sure you want to close this tender early?');">
+                    {% csrf_token %}
+                    <button type="submit" class="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-amber-500/20 text-amber-400 text-sm font-medium rounded-xl transition-all border border-slate-700">
+                        <i data-lucide="lock" class="w-4 h-4"></i> Close Tender
+                    </button>
+                </form>
+            {% endif %}
+
+            <!-- View Evaluations Action -->
+            {% if tender.status in 'closed,under_evaluation,awarded' and user.role in 'admin,manager,procurement_officer' %}
+                <a href="{% url 'evaluations:tender_evaluations' tender.pk %}" class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-amber-500/20">
+                    <i data-lucide="bar-chart-2" class="w-4 h-4"></i> {% if user.role == 'manager' %}Review Evaluations{% else %}Evaluate Bids{% endif %}
+                </a>
+            {% endif %}
+
+            <!-- Purchase Order Actions for AWARDED Tenders -->
+            {% if tender.status == 'awarded' and winning_bid and user.role in 'admin,manager,procurement_officer' %}
+                {% if winning_bid.evaluation.purchase_order %}
+                    <a href="{% url 'purchase_orders:detail' winning_bid.evaluation.purchase_order.pk %}" class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-indigo-500/20">
+                        <i data-lucide="file-text" class="w-4 h-4"></i> View Purchase Order
+                    </a>
+                {% else %}
+                    <a href="{% url 'purchase_orders:generate' winning_bid.pk %}" class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-emerald-500/20">
+                        <i data-lucide="file-plus" class="w-4 h-4"></i> Draft Purchase Order
+                    </a>
+                {% endif %}
+            {% endif %}
+            
+            <!-- Vendor Bid Action -->
+            {% if user.is_vendor_user and tender.status == 'open' %}
+                <a href="{% url 'bids:create' tender.pk %}" class="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-indigo-500/20">
+                    <i data-lucide="file-plus" class="w-4 h-4"></i> Submit Bid
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Column: Details -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- Basic Details -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
+                    <i data-lucide="info" class="w-5 h-5 text-indigo-400"></i>
+                    <h2 class="text-base font-semibold text-white">Tender Details</h2>
+                </div>
+                <div class="p-6">
+                    <p class="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap mb-6">{{ tender.description }}</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                        <div>
+                            <p class="text-xs text-slate-500 mb-1">Category</p>
+                            <p class="text-sm font-medium text-white">
+                                {% if tender.category == 'other' and tender.custom_category %}
+                                    {{ tender.custom_category }}
+                                {% else %}
+                                    {{ tender.get_category_display }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 mb-1">Tender Type</p>
+                            <p class="text-sm font-medium text-white">{{ tender.get_tender_type_display }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 mb-1">Quantity</p>
+                            <p class="text-sm font-medium text-white">{% if tender.quantity %}{{ tender.quantity }} {{ tender.unit }}{% else %}N/A{% endif %}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 mb-1">Estimated Budget</p>
+                            <p class="text-sm font-medium text-white">₹{{ tender.estimated_budget }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 mb-1">EMD Amount</p>
+                            <p class="text-sm font-medium text-white">{% if tender.emd_amount %}₹{{ tender.emd_amount }}{% else %}N/A{% endif %}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 mb-1">Created By</p>
+                            <p class="text-sm font-medium text-white">{{ tender.created_by.full_name }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Specifications -->
+            {% if tender.specifications %}
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
+                    <i data-lucide="settings" class="w-5 h-5 text-indigo-400"></i>
+                    <h2 class="text-base font-semibold text-white">Technical Specifications</h2>
+                </div>
+                <div class="p-6">
+                    <div class="prose prose-sm prose-invert max-w-none text-slate-300 whitespace-pre-wrap">{{ tender.specifications }}</div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Terms & Eligibility -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
+                    <i data-lucide="file-check" class="w-5 h-5 text-indigo-400"></i>
+                    <h2 class="text-base font-semibold text-white">Terms & Eligibility</h2>
+                </div>
+                <div class="p-6 space-y-6">
+                    {% if tender.eligibility_criteria %}
+                    <div>
+                        <h3 class="text-sm font-semibold text-white mb-2">Eligibility Criteria</h3>
+                        <p class="text-sm text-slate-300 whitespace-pre-wrap">{{ tender.eligibility_criteria }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if tender.terms_and_conditions %}
+                    <div>
+                        <h3 class="text-sm font-semibold text-white mb-2">Terms & Conditions</h3>
+                        <p class="text-sm text-slate-300 whitespace-pre-wrap">{{ tender.terms_and_conditions }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Sidebar -->
+        <div class="space-y-6">
+            
+            <!-- Important Dates -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
+                    <i data-lucide="calendar" class="w-5 h-5 text-indigo-400"></i>
+                    <h2 class="text-base font-semibold text-white">Timeline</h2>
+                </div>
+                <div class="p-6">
+                    <div class="relative pl-6 border-l-2 border-slate-800 space-y-6">
+                        <!-- Publish Date -->
+                        <div class="relative">
+                            <div class="absolute -left-[31px] w-4 h-4 rounded-full border-4 border-slate-900 bg-indigo-500"></div>
+                            <p class="text-xs text-slate-500 mb-0.5">Publish Date</p>
+                            <p class="text-sm font-medium text-white">{% if tender.publish_date %}{{ tender.publish_date|date:"d M Y, h:i A" }}{% else %}Not published{% endif %}</p>
+                        </div>
+                        
+                        <!-- Pre-bid meeting -->
+                        {% if tender.is_pre_bid_meeting_required %}
+                        <div class="relative">
+                            <div class="absolute -left-[31px] w-4 h-4 rounded-full border-4 border-slate-900 bg-amber-500"></div>
+                            <p class="text-xs text-slate-500 mb-0.5">Pre-Bid Meeting</p>
+                            <p class="text-sm font-medium text-white">{{ tender.pre_bid_meeting_date|date:"d M Y, h:i A" }}</p>
+                            <p class="text-xs text-slate-400 mt-1">{{ tender.pre_bid_meeting_location }}</p>
+                        </div>
+                        {% endif %}
+
+                        <!-- Closing Date -->
+                        <div class="relative">
+                            <div class="absolute -left-[31px] w-4 h-4 rounded-full border-4 border-slate-900 bg-emerald-500"></div>
+                            <p class="text-xs text-slate-500 mb-0.5">Closing Date</p>
+                            <p class="text-sm font-medium text-white">{{ tender.closing_date|date:"d M Y, h:i A" }}</p>
+                        </div>
+
+                        <!-- Evaluation Date -->
+                        <div class="relative">
+                            <div class="absolute -left-[31px] w-4 h-4 rounded-full border-4 border-slate-900 bg-slate-600"></div>
+                            <p class="text-xs text-slate-500 mb-0.5">Evaluation Starts</p>
+                            <p class="text-sm font-medium text-white">{% if tender.evaluation_date %}{{ tender.evaluation_date|date:"d M Y" }}{% else %}TBD{% endif %}</p>
+                        </div>
+                        
+                        <!-- Delivery -->
+                        <div class="relative">
+                            <div class="absolute -left-[31px] w-4 h-4 rounded-full border-4 border-slate-900 bg-slate-600"></div>
+                            <p class="text-xs text-slate-500 mb-0.5">Delivery Deadline</p>
+                            <p class="text-sm font-medium text-white">{% if tender.delivery_deadline %}{{ tender.delivery_deadline|date:"d M Y" }}{% else %}TBD{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
+                    <i data-lucide="paperclip" class="w-5 h-5 text-indigo-400"></i>
+                    <h2 class="text-base font-semibold text-white">Documents</h2>
+                </div>
+                <div class="p-6">
+                    {% if tender.tender_document %}
+                    <a href="{{ tender.tender_document.url }}" target="_blank" class="flex items-start gap-3 p-3 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="file-text" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-white truncate">Tender Notice Document</p>
+                            <p class="text-xs text-slate-400 mt-0.5">Click to view/download PDF</p>
+                        </div>
+                        <i data-lucide="download" class="w-4 h-4 text-slate-500 group-hover:text-white mt-3"></i>
+                    </a>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-sm text-slate-500">No documents attached.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Approve Modal -->
+<div id="approve-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+        <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity" onclick="document.getElementById('approve-modal').classList.add('hidden')"></div>
+        <div class="relative inline-block align-bottom bg-slate-900 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-slate-700">
+            <form method="post" action="{% url 'tenders:approve' tender.pk %}">
+                {% csrf_token %}
+                <div class="px-6 py-6">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/20 text-emerald-400 mb-4">
+                        <i data-lucide="check" class="w-6 h-6"></i>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-lg leading-6 font-bold text-white" id="modal-title">Approve & Publish Tender</h3>
+                        <div class="mt-2">
+                            <p class="text-sm text-slate-400">Are you sure you want to approve this tender? It will become open for bidding immediately.</p>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Remarks (Optional)</label>
+                        {{ approval_form.remarks }}
+                    </div>
+                </div>
+                <div class="bg-slate-800/50 px-6 py-4 flex items-center justify-end gap-3">
+                    <button type="button" onclick="document.getElementById('approve-modal').classList.add('hidden')" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white bg-slate-800 border border-slate-700 rounded-xl transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-colors shadow-lg shadow-emerald-500/20">
+                        Approve Tender
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div id="reject-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+        <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity" onclick="document.getElementById('reject-modal').classList.add('hidden')"></div>
+        <div class="relative inline-block align-bottom bg-slate-900 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-slate-700">
+            <form method="post" action="{% url 'tenders:reject' tender.pk %}">
+                {% csrf_token %}
+                <div class="px-6 py-6">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-500/20 text-red-400 mb-4">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-lg leading-6 font-bold text-white" id="modal-title">Reject Tender</h3>
+                        <div class="mt-2">
+                            <p class="text-sm text-slate-400">Are you sure you want to reject this tender? It will be sent back to draft status.</p>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Reason for Rejection <span class="text-red-400">*</span></label>
+                        <textarea name="remarks" rows="3" required class="w-full bg-slate-800 border border-slate-700 rounded-xl text-sm text-white p-3 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none" placeholder="Provide a reason..."></textarea>
+                    </div>
+                </div>
+                <div class="bg-slate-800/50 px-6 py-4 flex items-center justify-end gap-3">
+                    <button type="button" onclick="document.getElementById('reject-modal').classList.add('hidden')" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white bg-slate-800 border border-slate-700 rounded-xl transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-500 rounded-xl transition-colors shadow-lg shadow-red-500/20">
+                        Reject Tender
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Add basic styling for approval form textarea */
+    textarea {
+        width: 100%;
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 0.75rem;
+        color: white;
+        font-size: 0.875rem;
+        padding: 0.75rem;
+    }
+    textarea:focus {
+        outline: none;
+        border-color: #6366f1;
+    }
+</style>
+{% endblock %}

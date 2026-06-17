@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}Submit Bid for {{ tender.tender_number }}{% endblock %}
+{% block page_title %}Submit Bid{% endblock %}
+{% block page_subtitle %}For Tender: {{ tender.title }}{% endblock %}
+
+{% block page_actions %}
+<a href="{% url 'tenders:detail' tender.pk %}" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
+    Cancel
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Tender Summary Card -->
+    <div class="bg-indigo-900/20 border border-indigo-500/20 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <p class="text-xs text-indigo-400 font-mono mb-1">{{ tender.tender_number }}</p>
+            <h3 class="text-white font-semibold">{{ tender.title }}</h3>
+        </div>
+        <div class="flex items-center gap-4 text-sm text-slate-300">
+            <div>
+                <span class="text-slate-500 block text-xs">Estimated Budget</span>
+                <span class="font-medium">₹{{ tender.estimated_budget }}</span>
+            </div>
+            <div>
+                <span class="text-slate-500 block text-xs">Closes On</span>
+                <span class="font-medium">{{ tender.closing_date|date:"d M Y" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bid Form -->
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+            <div class="text-sm text-red-400">{{ form.non_field_errors }}</div>
+        </div>
+        {% endif %}
+
+        <!-- Financial Proposal -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
+                <i data-lucide="indian-rupee" class="w-5 h-5 text-emerald-400"></i>
+                <h2 class="text-base font-semibold text-white">Financial Proposal</h2>
+            </div>
+            <div class="p-6 space-y-5">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <div class="sm:col-span-2">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Base Bid Amount (INR) <span class="text-red-400">*</span></label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">₹</span>
+                            {{ form.bid_amount }}
+                        </div>
+                        {% if form.bid_amount.errors %}<p class="text-xs text-red-400 mt-1">{{ form.bid_amount.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Tax / GST (%)</label>
+                        <div class="relative">
+                            {{ form.tax_percentage }}
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">%</span>
+                        </div>
+                        {% if form.tax_percentage.errors %}<p class="text-xs text-red-400 mt-1">{{ form.tax_percentage.errors.0 }}</p>{% endif %}
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Discount (%)</label>
+                    <div class="relative w-full sm:w-1/3">
+                        {{ form.discount_percentage }}
+                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">%</span>
+                    </div>
+                    {% if form.discount_percentage.errors %}<p class="text-xs text-red-400 mt-1">{{ form.discount_percentage.errors.0 }}</p>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Delivery & Warranty -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
+                <i data-lucide="truck" class="w-5 h-5 text-indigo-400"></i>
+                <h2 class="text-base font-semibold text-white">Delivery & Warranty</h2>
+            </div>
+            <div class="p-6 space-y-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Delivery Timeline (Days) <span class="text-red-400">*</span></label>
+                        {{ form.delivery_timeline_days }}
+                        {% if form.delivery_timeline_days.errors %}<p class="text-xs text-red-400 mt-1">{{ form.delivery_timeline_days.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Warranty Period (Months) <span class="text-red-400">*</span></label>
+                        {{ form.warranty_period_months }}
+                        {% if form.warranty_period_months.errors %}<p class="text-xs text-red-400 mt-1">{{ form.warranty_period_months.errors.0 }}</p>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
+                <i data-lucide="paperclip" class="w-5 h-5 text-amber-400"></i>
+                <h2 class="text-base font-semibold text-white">Proposal Documents</h2>
+            </div>
+            <div class="p-6 space-y-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Technical Proposal (Optional)</label>
+                        <div class="border-2 border-dashed border-slate-700 rounded-xl p-4 bg-slate-800/30">
+                            {{ form.technical_proposal }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Commercial Proposal (Optional)</label>
+                        <div class="border-2 border-dashed border-slate-700 rounded-xl p-4 bg-slate-800/30">
+                            {{ form.commercial_proposal }}
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Additional Notes</label>
+                    {{ form.notes }}
+                </div>
+            </div>
+        </div>
+
+        <!-- EMD Details -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
+                <i data-lucide="shield-check" class="w-5 h-5 text-blue-400"></i>
+                <h2 class="text-base font-semibold text-white">EMD & Compliance</h2>
+            </div>
+            <div class="p-6 space-y-6">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-4 rounded-xl border border-slate-700 bg-slate-800/30">
+                    <div class="flex items-center gap-3">
+                        {{ form.emd_paid }}
+                        <div>
+                            <p class="text-sm font-medium text-white">EMD Paid</p>
+                            <p class="text-xs text-slate-400">Check if EMD has been paid</p>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">EMD Reference Number</label>
+                        {{ form.emd_reference }}
+                        {% if form.emd_reference.errors %}<p class="text-xs text-red-400 mt-1">{{ form.emd_reference.errors.0 }}</p>{% endif %}
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-3 p-4 rounded-xl border border-indigo-500/30 bg-indigo-500/5">
+                    <div class="mt-0.5">{{ form.is_compliant }}</div>
+                    <div>
+                        <p class="text-sm font-medium text-white">I confirm full compliance with tender requirements.</p>
+                        <p class="text-xs text-slate-400 mt-1">By checking this box, you confirm that your bid meets all technical and commercial criteria specified in the tender document.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+            <a href="{% url 'tenders:detail' tender.pk %}" class="px-6 py-2.5 text-sm font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition-all">
+                Cancel
+            </a>
+            <button type="submit" class="px-6 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl shadow-lg shadow-indigo-500/20 transition-all flex items-center gap-2">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                Submit Bid
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<style>
+    /* Django form input styling */
+    input[type="text"], input[type="number"], select, textarea {
+        width: 100%;
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 0.75rem;
+        color: white;
+        font-size: 0.875rem;
+        padding: 0.625rem 0.75rem;
+        transition: all 0.2s;
+    }
+    input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 1px #6366f1;
+    }
+    .relative input[type="number"] {
+        padding-left: 2rem;
+    }
+    input[type="file"] {
+        width: 100%;
+        color: #94a3b8;
+        font-size: 0.875rem;
+    }
+    input[type="file"]::file-selector-button {
+        background-color: #334155;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        margin-right: 1rem;
+        cursor: pointer;
+    }
+    input[type="file"]::file-selector-button:hover {
+        background-color: #475569;
+    }
+    input[type="checkbox"] {
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 0.25rem;
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        color: #6366f1;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}

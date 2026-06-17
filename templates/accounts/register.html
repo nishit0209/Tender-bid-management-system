@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static widget_tweaks socialaccount %}
+
+{% block title %}Register — New Vendor{% endblock %}
+
+{% block auth_content %}
+<div class="min-h-screen flex items-center justify-center p-6 bg-slate-950">
+    <!-- Background decoration -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="relative w-full max-w-lg">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <a href="{% url 'accounts:login' %}" class="inline-flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-500/30">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold text-white">TenderBMS</span>
+            </a>
+            <h1 class="text-3xl font-bold text-white">Create Vendor Account</h1>
+            <p class="text-slate-400 mt-2">Register your company to participate in tenders</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <!-- Name Row -->
+                <div class="grid grid-cols-2 gap-4 mb-5">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1.5">First Name <span class="text-red-400">*</span></label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                        <p class="mt-1 text-xs text-red-400">{{ form.first_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1.5">Last Name <span class="text-red-400">*</span></label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                        <p class="mt-1 text-xs text-red-400">{{ form.last_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-300 mb-1.5">Business Email <span class="text-red-400">*</span></label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <p class="mt-1 text-xs text-red-400">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Phone -->
+                <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-300 mb-1.5">Phone Number</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                    <p class="mt-1 text-xs text-red-400">{{ form.phone.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Password -->
+                <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-300 mb-1.5">Password <span class="text-red-400">*</span></label>
+                    <div class="relative">
+                        {{ form.password1|attr:"autocomplete:new-password" }}
+                        <button type="button" id="toggle-pw1" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    {% if form.password1.errors %}
+                    <p class="mt-1 text-xs text-red-400">{{ form.password1.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-slate-300 mb-1.5">Confirm Password <span class="text-red-400">*</span></label>
+                    <div class="relative">
+                        {{ form.password2|attr:"autocomplete:new-password" }}
+                        <button type="button" id="toggle-pw2" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    {% if form.password2.errors %}
+                    <p class="mt-1 text-xs text-red-400">{{ form.password2.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Terms notice -->
+                <p class="text-xs text-slate-500 mb-5 text-center">
+                    By registering, you agree to our Terms of Service and Privacy Policy.
+                </p>
+
+                <!-- Submit -->
+                <button type="submit"
+                        class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-indigo-500/25 hover:-translate-y-0.5">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="mt-6 flex items-center justify-center space-x-4">
+                <div class="flex-1 border-t border-slate-800"></div>
+                <span class="text-xs text-slate-500 uppercase tracking-wider">Or sign up with</span>
+                <div class="flex-1 border-t border-slate-800"></div>
+            </div>
+
+            <div class="mt-6">
+                <a href="{% provider_login_url 'google' %}"
+                   class="w-full flex items-center justify-center gap-3 py-3.5 px-4 bg-slate-900 border border-slate-700 hover:bg-slate-800 text-white font-medium rounded-xl transition-all duration-200 hover:-translate-y-0.5">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0112 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115z"/>
+                        <path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 01-6.723-4.823l-4.04 3.067A11.965 11.965 0 0012 24c2.933 0 5.735-1.043 7.834-3l-3.793-2.987z"/>
+                        <path fill="#4A90E2" d="M19.834 21c2.195-2.048 3.62-5.096 3.62-9 0-.71-.109-1.473-.272-2.182H12v4.637h6.436c-.317 1.559-1.17 2.766-2.395 3.558L19.834 21z"/>
+                        <path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 014.909 12c0-.782.125-1.533.357-2.235L1.24 6.65A11.934 11.934 0 000 12c0 1.92.445 3.73 1.237 5.335l4.04-3.067z"/>
+                    </svg>
+                    Sign up with Google
+                </a>
+            </div>
+        </div>
+
+        <p class="text-center text-sm text-slate-400 mt-5">
+            Already have an account?
+            <a href="{% url 'accounts:login' %}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Sign in →</a>
+        </p>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    lucide.createIcons();
+    function togglePw(btnId, inputId) {
+        const btn = document.getElementById(btnId);
+        const inp = document.getElementById(inputId);
+        if (!btn || !inp) return;
+        btn.addEventListener('click', function () {
+            const show = inp.type === 'password';
+            inp.type = show ? 'text' : 'password';
+            btn.querySelector('[data-lucide]').setAttribute('data-lucide', show ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        });
+    }
+    togglePw('toggle-pw1', 'id_password1');
+    togglePw('toggle-pw2', 'id_password2');
+});
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/password_strength.js' %}"></script>
+{% endblock %}

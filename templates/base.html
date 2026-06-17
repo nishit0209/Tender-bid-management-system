@@ -1,0 +1,450 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}Enterprise Tender & Bid Management System — Streamline procurement from vendor onboarding to purchase orders.{% endblock %}">
+    <title>{% block title %}TenderBMS{% endblock %} | Enterprise Tender & Bid Management</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%236366f1'/><stop offset='100%25' stop-color='%2306b6d4'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='url(%23g)'/><path d='M10 8h7.17a2 2 0 011.42.59l3.82 3.82a2 2 0 01.59 1.42V22a2 2 0 01-2 2H10a2 2 0 01-2-2V10a2 2 0 012-2z' fill='none' stroke='white' stroke-width='1.5'/><path d='M12 16h8M12 20h8' stroke='white' stroke-width='1.5' stroke-linecap='round'/></svg>">
+
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary:  { DEFAULT: '#6366f1', 50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81' },
+                        accent:   { DEFAULT: '#06b6d4', 500: '#06b6d4', 600: '#0891b2' },
+                        success:  '#10b981',
+                        warning:  '#f59e0b',
+                        danger:   '#ef4444',
+                        info:     '#3b82f6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-in-out',
+                        'slide-in': 'slideIn 0.3s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn:  { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideIn: { '0%': { transform: 'translateX(-10px)', opacity: '0' }, '100%': { transform: 'translateX(0)', opacity: '1' } },
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="h-full bg-slate-950 text-slate-100 antialiased">
+
+{% if user.is_authenticated %}
+<!-- ═══════════════════════════════════════════════════════════════════
+     AUTHENTICATED LAYOUT: Sidebar + Main Content
+════════════════════════════════════════════════════════════════════ -->
+<div class="flex h-full min-h-screen" id="app-layout">
+
+    <!-- ── SIDEBAR ──────────────────────────────────────────────── -->
+    <!-- Mobile Overlay Backdrop -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden lg:hidden" aria-hidden="true"></div>
+
+    <aside id="sidebar" class="w-64 h-screen bg-slate-900 border-r border-slate-800 flex flex-col fixed top-0 left-0 z-40 overflow-y-auto">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-3 px-6 py-5 border-b border-slate-800">
+            <div class="w-9 h-9 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-white truncate">TenderBMS</p>
+                <p class="text-xs text-slate-400 truncate">Procurement System</p>
+            </div>
+            <!-- Mobile close button -->
+            <button id="sidebar-close" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- User Role Badge -->
+        <div class="px-4 py-3 border-b border-slate-800">
+            <div class="flex items-center gap-3 px-3 py-2 bg-slate-800 rounded-xl">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
+                    {{ user.initials }}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-semibold text-white truncate">{{ user.get_full_name|default:user.email }}</p>
+                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium
+                        {% if user.is_admin %}bg-purple-900/60 text-purple-300
+                        {% elif user.is_procurement_officer %}bg-blue-900/60 text-blue-300
+                        {% elif user.is_manager %}bg-amber-900/60 text-amber-300
+                        {% else %}bg-emerald-900/60 text-emerald-300{% endif %}">
+                        {{ user.get_role_display }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-3 py-4 space-y-1">
+
+            <!-- Dashboard -->
+            <a href="{% url 'dashboard:index' %}"
+               class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                      {% if request.resolver_match.namespace == 'dashboard' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 flex-shrink-0"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <!-- Notifications -->
+            <a href="{% url 'notifications:list' %}"
+               class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                      {% if request.resolver_match.namespace == 'notifications' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}">
+                <div class="relative">
+                    <i data-lucide="bell" class="w-4 h-4 flex-shrink-0"></i>
+                    {% if unread_notifications_count > 0 %}
+                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    {% endif %}
+                </div>
+                <span>Notifications</span>
+                {% if unread_notifications_count > 0 %}
+                <span class="ml-auto bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ unread_notifications_count }}</span>
+                {% endif %}
+            </a>
+
+            {% if user.is_admin %}
+            <!-- User Management (Admin Only) -->
+            <div class="pt-2">
+                <p class="px-3 mb-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Administration</p>
+                <a href="{% url 'accounts:user_management' %}"
+                   class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          {% if request.resolver_match.url_name == 'user_management' or request.resolver_match.url_name == 'user_edit' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}">
+                    <i data-lucide="users" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>User Management</span>
+                </a>
+                <a href="{% url 'accounts:system_logs' %}"
+                   class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 mt-0.5
+                          {% if request.resolver_match.url_name == 'system_logs' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}">
+                    <i data-lucide="activity" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>System Logs</span>
+                </a>
+            </div>
+            {% endif %}
+
+            {% if user.is_admin or user.is_procurement_officer or user.is_manager %}
+            <!-- Vendor Management -->
+            <div class="pt-2">
+                <p class="px-3 mb-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Vendor</p>
+                <a href="{% url 'vendors:list' %}"
+                   class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          {% if request.resolver_match.namespace == 'vendors' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}">
+                    <i data-lucide="building-2" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>Vendors</span>
+                </a>
+            </div>
+            {% endif %}
+
+            {% if user.is_vendor_user %}
+            <!-- Vendor Profile -->
+            <div class="pt-2">
+                <p class="px-3 mb-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">My Account</p>
+                <a href="{% url 'vendors:my_profile' %}"
+                   class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          {% if request.resolver_match.namespace == 'vendors' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}">
+                    <i data-lucide="building-2" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>My Profile</span>
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Tenders Section -->
+            <div class="pt-2">
+                <p class="px-3 mb-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Tenders</p>
+                <a href="{% url 'tenders:list' %}"
+                   class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          {% if request.resolver_match.namespace == 'tenders' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}">
+                    <i data-lucide="file-text" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>All Tenders</span>
+                </a>
+
+                {% if user.is_admin or user.is_procurement_officer %}
+                <a href="{% url 'tenders:create' %}"
+                   class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white hover:bg-slate-800 mt-0.5">
+                    <i data-lucide="plus-circle" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>Create Tender</span>
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Bids Section -->
+            <div class="pt-2">
+                <p class="px-3 mb-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Bids</p>
+                <a href="{% url 'bids:list' %}"
+                   class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          {% if request.resolver_match.namespace == 'bids' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}">
+                    <i data-lucide="send" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>{% if user.is_vendor_user %}My Bids{% else %}All Bids{% endif %}</span>
+                </a>
+            </div>
+
+            {% if user.is_admin or user.is_procurement_officer or user.is_manager %}
+            <!-- Evaluations -->
+            <div class="pt-2">
+                <p class="px-3 mb-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Evaluation</p>
+                <a href="{% url 'evaluations:list' %}"
+                   class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          {% if request.resolver_match.namespace == 'evaluations' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}">
+                    <i data-lucide="bar-chart-2" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>Evaluations</span>
+                </a>
+            </div>
+
+            <!-- Purchase Orders -->
+            <div class="pt-2">
+                <p class="px-3 mb-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Procurement</p>
+                <a href="{% url 'purchase_orders:list' %}"
+                   class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          {% if request.resolver_match.namespace == 'purchase_orders' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>Purchase Orders</span>
+                </a>
+
+                <a href="{% url 'reports:index' %}"
+                   class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          {% if request.resolver_match.namespace == 'reports' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %} mt-0.5">
+                    <i data-lucide="pie-chart" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+            {% endif %}
+
+            {% if user.is_vendor_user %}
+            <!-- Vendor Purchase Orders -->
+            <div class="pt-2">
+                <p class="px-3 mb-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Orders</p>
+                <a href="{% url 'purchase_orders:list' %}"
+                   class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                          {% if request.resolver_match.namespace == 'purchase_orders' %}nav-active text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}">
+                    <i data-lucide="package" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>My Orders</span>
+                </a>
+            </div>
+            {% endif %}
+
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="px-3 py-4 border-t border-slate-800 space-y-1">
+            <a href="{% url 'accounts:profile' %}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all duration-200">
+                <i data-lucide="user-circle" class="w-4 h-4 flex-shrink-0"></i>
+                <span>My Profile</span>
+            </a>
+            <a href="{% url 'accounts:logout' %}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-red-400 hover:bg-red-900/20 transition-all duration-200">
+                <i data-lucide="log-out" class="w-4 h-4 flex-shrink-0"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ── MAIN CONTENT ──────────────────────────────────────────── -->
+    <div class="flex-1 flex flex-col ml-0 lg:ml-64 min-h-screen">
+
+        <!-- TOP NAVIGATION BAR -->
+        <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-3 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-20">
+
+            <!-- Page Title -->
+            <div class="flex items-center gap-3">
+                <button id="sidebar-toggle" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all lg:hidden">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+                <div>
+                    <h1 class="text-base font-semibold text-white">{% block page_title %}Dashboard{% endblock %}</h1>
+                    <p class="text-xs text-slate-400">{% block page_subtitle %}{% endblock %}</p>
+                </div>
+            </div>
+
+            <!-- Page Action Buttons (injected per page) -->
+            <div class="hidden md:flex items-center gap-3">
+                {% block page_actions %}{% endblock %}
+            </div>
+
+
+            <div class="flex items-center gap-3">
+
+                <!-- Notifications Bell -->
+                <div class="relative" id="notif-container">
+                    <button id="notif-btn" class="relative p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        {% if unread_notifications_count > 0 %}
+                        <span class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold badge-pulse">
+                            {% if unread_notifications_count > 9 %}9+{% else %}{{ unread_notifications_count }}{% endif %}
+                        </span>
+                        {% endif %}
+                    </button>
+
+                    <!-- Notification Dropdown -->
+                    <div id="notif-dropdown" class="hidden absolute right-0 sm:right-0 top-full mt-2 w-72 sm:w-80 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden dropdown-menu max-h-96">
+                        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+                            <span class="text-sm font-semibold text-white">Notifications</span>
+                            {% if unread_notifications_count > 0 %}
+                            <a href="{% url 'notifications:mark_all_read' %}" class="text-xs text-indigo-400 hover:text-indigo-300">Mark all read</a>
+                            {% endif %}
+                        </div>
+                        <div class="max-h-72 overflow-y-auto">
+                            {% if recent_notifications %}
+                                {% for notif in recent_notifications %}
+                                <a href="{% url 'notifications:read' notif.pk %}" class="flex items-start gap-3 px-4 py-3 hover:bg-slate-700 transition-colors border-b border-slate-700/50 {% if not notif.is_read %}bg-indigo-900/20{% endif %}">
+                                    <div class="w-2 h-2 rounded-full mt-1.5 flex-shrink-0 {% if not notif.is_read %}bg-indigo-400{% else %}bg-slate-600{% endif %}"></div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-xs font-medium text-white truncate">{{ notif.title }}</p>
+                                        <p class="text-xs text-slate-400 mt-0.5 line-clamp-2">{{ notif.message }}</p>
+                                        <p class="text-xs text-slate-500 mt-1">{{ notif.created_at|timesince }} ago</p>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            {% else %}
+                                <div class="px-4 py-8 text-center">
+                                    <i data-lucide="bell-off" class="w-8 h-8 text-slate-600 mx-auto mb-2"></i>
+                                    <p class="text-sm text-slate-400">No notifications yet</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="px-4 py-2.5 border-t border-slate-700">
+                            <a href="{% url 'notifications:list' %}" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium">View all notifications →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Menu -->
+                <div class="relative" id="user-menu-container">
+                    <button id="user-menu-btn" class="flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 transition-all border border-slate-700">
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
+                            {{ user.initials }}
+                        </div>
+                        <span class="text-sm font-medium text-white max-w-24 truncate hidden sm:block">{{ user.first_name|default:user.email }}</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                    </button>
+
+                    <!-- User Dropdown -->
+                    <div id="user-menu-dropdown" class="hidden absolute right-0 top-full mt-2 w-48 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden dropdown-menu">
+                        <div class="px-4 py-3 border-b border-slate-700">
+                            <p class="text-xs font-semibold text-white truncate">{{ user.get_full_name|default:user.email }}</p>
+                            <p class="text-xs text-slate-400 truncate">{{ user.email }}</p>
+                        </div>
+                        <div class="py-1">
+                            <a href="{% url 'accounts:profile' %}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-700 transition-colors">
+                                <i data-lucide="user" class="w-4 h-4"></i> Profile
+                            </a>
+                            <a href="{% url 'accounts:change_password' %}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-700 transition-colors">
+                                <i data-lucide="lock" class="w-4 h-4"></i> Change Password
+                            </a>
+                        </div>
+                        <div class="border-t border-slate-700 py-1">
+                            <a href="{% url 'accounts:logout' %}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-colors">
+                                <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- FLASH MESSAGES / TOASTS -->
+        {% if messages %}
+        <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+            {% for message in messages %}
+            <div class="toast-enter flex items-start gap-3 px-4 py-3 rounded-xl shadow-2xl border text-sm font-medium
+                {% if message.tags == 'success' %}bg-emerald-900/90 border-emerald-700 text-emerald-200
+                {% elif message.tags == 'error' %}bg-red-900/90 border-red-700 text-red-200
+                {% elif message.tags == 'warning' %}bg-amber-900/90 border-amber-700 text-amber-200
+                {% else %}bg-indigo-900/90 border-indigo-700 text-indigo-200{% endif %}"
+                 data-toast>
+                <i data-lucide="{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}x-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}"
+                   class="w-5 h-5 flex-shrink-0 mt-0.5"></i>
+                <span class="flex-1">{{ message }}</span>
+                <button onclick="this.parentElement.remove()" class="ml-2 opacity-60 hover:opacity-100 transition-opacity flex-shrink-0">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- BREADCRUMB -->
+        {% block breadcrumb %}{% endblock %}
+
+        <!-- MAIN PAGE CONTENT -->
+        <main class="flex-1 p-3 sm:p-4 lg:p-6 animate-fade-in">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="border-t border-slate-800 px-3 sm:px-6 py-3 flex items-center justify-between">
+            <p class="text-xs text-slate-500 truncate">© {% now "Y" %} TenderBMS</p>
+            <p class="text-xs text-slate-600">v1.0.0</p>
+        </footer>
+    </div>
+</div>
+
+{% else %}
+<!-- ═══════════════════════════════════════════════════════════════════
+     UNAUTHENTICATED LAYOUT: Centered Auth Pages
+════════════════════════════════════════════════════════════════════ -->
+<div class="min-h-screen bg-slate-950">
+    {% if messages %}
+    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+        {% for message in messages %}
+        <div class="toast-enter flex items-start gap-3 px-4 py-3 rounded-xl shadow-2xl border text-sm font-medium
+            {% if message.tags == 'success' %}bg-emerald-900/90 border-emerald-700 text-emerald-200
+            {% elif message.tags == 'error' %}bg-red-900/90 border-red-700 text-red-200
+            {% elif message.tags == 'warning' %}bg-amber-900/90 border-amber-700 text-amber-200
+            {% else %}bg-indigo-900/90 border-indigo-700 text-indigo-200{% endif %}"
+             data-toast>
+            <i data-lucide="{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}x-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}"
+               class="w-5 h-5 flex-shrink-0 mt-0.5"></i>
+            <span class="flex-1">{{ message }}</span>
+            <button onclick="this.parentElement.remove()" class="ml-2 opacity-60 hover:opacity-100 transition-opacity flex-shrink-0">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block auth_content %}{% endblock %}
+</div>
+{% endif %}
+
+<!-- Custom JS -->
+<script src="{% static 'js/main.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

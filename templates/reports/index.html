@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports & Analytics{% endblock %}
+{% block page_title %}Reports & Analytics{% endblock %}
+{% block page_subtitle %}System-wide procurement insights and statistics{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Top KPIs -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl group-hover:bg-emerald-500/20 transition-all"></div>
+            <div class="flex items-center gap-4 mb-2">
+                <div class="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+                    <i data-lucide="indian-rupee" class="w-5 h-5 text-emerald-400"></i>
+                </div>
+                <h3 class="text-sm font-semibold text-slate-400">Total Procurement Value</h3>
+            </div>
+            <p class="text-2xl font-black text-white mt-4">₹{{ total_po_value|default:"0" }}</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl group-hover:bg-indigo-500/20 transition-all"></div>
+            <div class="flex items-center gap-4 mb-2">
+                <div class="w-10 h-10 bg-indigo-500/20 rounded-xl flex items-center justify-center">
+                    <i data-lucide="file-text" class="w-5 h-5 text-indigo-400"></i>
+                </div>
+                <h3 class="text-sm font-semibold text-slate-400">Active Tenders</h3>
+            </div>
+            <p class="text-2xl font-black text-white mt-4">{{ active_tenders }}</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-xl group-hover:bg-blue-500/20 transition-all"></div>
+            <div class="flex items-center gap-4 mb-2">
+                <div class="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                    <i data-lucide="building-2" class="w-5 h-5 text-blue-400"></i>
+                </div>
+                <h3 class="text-sm font-semibold text-slate-400">Verified Vendors</h3>
+            </div>
+            <p class="text-2xl font-black text-white mt-4">{{ total_vendors }}</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition-all"></div>
+            <div class="flex items-center gap-4 mb-2">
+                <div class="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                    <i data-lucide="send" class="w-5 h-5 text-purple-400"></i>
+                </div>
+                <h3 class="text-sm font-semibold text-slate-400">Total Bids Received</h3>
+            </div>
+            <p class="text-2xl font-black text-white mt-4">{{ total_bids }}</p>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Tender Status Chart -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
+            <h3 class="text-sm font-semibold text-white mb-5 flex items-center gap-2">
+                <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-400"></i>
+                Tenders by Status
+            </h3>
+            <div class="relative h-64 w-full">
+                <canvas id="tenderStatusChart"></canvas>
+            </div>
+        </div>
+
+        <!-- PO Value Trend Chart -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
+            <h3 class="text-sm font-semibold text-white mb-5 flex items-center gap-2">
+                <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i>
+                Purchase Order Spending Trend (6 Months)
+            </h3>
+            <div class="relative h-64 w-full">
+                <canvas id="poSpendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Vendors Table -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
+        <h3 class="text-sm font-semibold text-white mb-5 flex items-center gap-2">
+            <i data-lucide="award" class="w-4 h-4 text-amber-400"></i>
+            Top 5 Vendors by Total PO Value
+        </h3>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-800/50 border-b border-slate-800 text-xs text-slate-400 uppercase tracking-wider">
+                        <th class="px-2 py-3 sm:p-3 font-semibold rounded-tl-lg">Vendor Name</th>
+                        <th class="px-2 py-3 sm:p-3 font-semibold hidden sm:table-cell">GSTIN</th>
+                        <th class="px-2 py-3 sm:p-3 font-semibold text-right rounded-tr-lg">Total Business Value</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/50">
+                    {% for vendor in top_vendors %}
+                    <tr class="hover:bg-slate-800/30 transition-colors">
+                        <td class="px-2 py-3 sm:p-3 text-xs sm:text-sm font-bold text-white">{{ vendor.company_name }}</td>
+                        <td class="px-2 py-3 sm:p-3 text-xs sm:text-sm text-slate-400 hidden sm:table-cell">{{ vendor.gst_number }}</td>
+                        <td class="px-2 py-3 sm:p-3 text-xs sm:text-sm font-bold text-emerald-400 text-right">₹{{ vendor.po_total|default:"0.00" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="p-6 text-center text-slate-500 text-sm">No purchase orders awarded yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        lucide.createIcons();
+
+        // 1. Tender Status Doughnut Chart
+        const ctxStatus = document.getElementById('tenderStatusChart').getContext('2d');
+        const statusLabels = JSON.parse('{{ status_labels|safe }}');
+        const statusData = JSON.parse('{{ status_data|safe }}');
+
+        if(statusData.length > 0) {
+            new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        data: statusData,
+                        backgroundColor: [
+                            'rgba(99, 102, 241, 0.8)',   // Indigo
+                            'rgba(16, 185, 129, 0.8)',   // Emerald
+                            'rgba(245, 158, 11, 0.8)',   // Amber
+                            'rgba(59, 130, 246, 0.8)',   // Blue
+                            'rgba(239, 68, 68, 0.8)',    // Red
+                            'rgba(148, 163, 184, 0.8)'   // Slate
+                        ],
+                        borderColor: '#0f172a',
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#94a3b8' } }
+                    }
+                }
+            });
+        }
+
+        // 2. PO Spend Bar Chart
+        const ctxSpend = document.getElementById('poSpendChart').getContext('2d');
+        const poMonthLabels = JSON.parse('{{ po_month_labels|safe }}');
+        const poMonthData = JSON.parse('{{ po_month_data|safe }}');
+
+        if(poMonthData.length > 0) {
+            new Chart(ctxSpend, {
+                type: 'bar',
+                data: {
+                    labels: poMonthLabels,
+                    datasets: [{
+                        label: 'Total Spend (INR)',
+                        data: poMonthData,
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)', // Emerald bg
+                        borderColor: 'rgba(16, 185, 129, 1)',       // Emerald border
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: 'rgba(51, 65, 85, 0.5)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Manager Dashboard{% endblock %}
+{% block page_title %}Manager Dashboard{% endblock %}
+{% block page_subtitle %}Review and approve pending items{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 bg-indigo-600/20 rounded-xl flex items-center justify-center">
+                    <i data-lucide="building-2" class="w-5 h-5 text-indigo-400"></i>
+                </div>
+                {% if vendors_awaiting_approval > 0 %}
+                <span class="text-xs bg-indigo-900/40 text-indigo-400 px-2 py-0.5 rounded-md badge-pulse">Pending</span>
+                {% endif %}
+            </div>
+            <p class="text-3xl font-bold text-white">{{ vendors_awaiting_approval|default:"0" }}</p>
+            <p class="text-sm text-slate-400 mt-1">Vendors to Approve</p>
+        </div>
+
+        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 bg-amber-600/20 rounded-xl flex items-center justify-center">
+                    <i data-lucide="file-check" class="w-5 h-5 text-amber-400"></i>
+                </div>
+                {% if tenders_awaiting_approval > 0 %}
+                <span class="text-xs bg-amber-900/40 text-amber-400 px-2 py-0.5 rounded-md badge-pulse">Pending</span>
+                {% endif %}
+            </div>
+            <p class="text-3xl font-bold text-white">{{ tenders_awaiting_approval|default:"0" }}</p>
+            <p class="text-sm text-slate-400 mt-1">Tenders to Approve</p>
+        </div>
+
+        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 bg-purple-600/20 rounded-xl flex items-center justify-center">
+                    <i data-lucide="bar-chart-2" class="w-5 h-5 text-purple-400"></i>
+                </div>
+                {% if evaluations_for_approval > 0 %}
+                <span class="text-xs bg-purple-900/40 text-purple-400 px-2 py-0.5 rounded-md badge-pulse">Pending</span>
+                {% endif %}
+            </div>
+            <p class="text-3xl font-bold text-white">{{ evaluations_for_approval|default:"0" }}</p>
+            <p class="text-sm text-slate-400 mt-1">Evaluations to Review</p>
+        </div>
+
+        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 bg-emerald-600/20 rounded-xl flex items-center justify-center">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 text-emerald-400"></i>
+                </div>
+                {% if pos_awaiting_approval > 0 %}
+                <span class="text-xs bg-emerald-900/40 text-emerald-400 px-2 py-0.5 rounded-md badge-pulse">Pending</span>
+                {% endif %}
+            </div>
+            <p class="text-3xl font-bold text-white">{{ pos_awaiting_approval|default:"0" }}</p>
+            <p class="text-sm text-slate-400 mt-1">POs to Approve</p>
+        </div>
+    </div>
+
+    <!-- Pending Actions Banner -->
+    {% with total_pending=vendors_awaiting_approval|add:tenders_awaiting_approval|add:evaluations_for_approval|add:pos_awaiting_approval %}
+    {% if total_pending > 0 %}
+    <div class="flex items-center gap-4 p-4 bg-amber-900/20 border border-amber-700/40 rounded-2xl">
+        <div class="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400"></i>
+        </div>
+        <div class="flex-1">
+            <p class="text-sm font-semibold text-amber-300">{{ total_pending }} item{{ total_pending|pluralize }} require your approval</p>
+            <p class="text-xs text-amber-400/70 mt-0.5">Review the sections below and take action</p>
+        </div>
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Approval Tables -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Vendors Awaiting Approval -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                    <i data-lucide="building-2" class="w-4 h-4 text-indigo-400"></i>
+                    Vendors Awaiting Approval
+                </h3>
+                <a href="{% url 'vendors:list' %}" class="text-xs text-indigo-400 hover:text-indigo-300">View all &rarr;</a>
+            </div>
+            <div class="divide-y divide-slate-800/60">
+                {% for vendor in recent_vendors %}
+                <a href="{% url 'vendors:detail' vendor.pk %}"
+                   class="flex items-center gap-3 px-5 py-3 hover:bg-slate-800/40 transition-colors">
+                    <div class="w-8 h-8 rounded-xl bg-indigo-600/20 flex items-center justify-center text-xs font-bold text-indigo-300 flex-shrink-0">
+                        {{ vendor.company_name|first|upper }}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-white truncate">{{ vendor.company_name }}</p>
+                        <p class="text-xs text-slate-400">Verified &middot; Awaiting your approval</p>
+                    </div>
+                    <span class="flex-shrink-0 text-xs px-2 py-0.5 bg-blue-900/40 text-blue-400 rounded-md font-medium">Review</span>
+                </a>
+                {% empty %}
+                <div class="px-5 py-10 text-center">
+                    <i data-lucide="check-circle" class="w-8 h-8 text-emerald-600 mx-auto mb-2"></i>
+                    <p class="text-sm text-slate-400">No vendors pending approval</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Tenders Awaiting Approval -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800">
+                <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                    <i data-lucide="file-check" class="w-4 h-4 text-amber-400"></i>
+                    Tenders Awaiting Approval
+                </h3>
+                <a href="{% url 'tenders:list' %}" class="text-xs text-indigo-400 hover:text-indigo-300">View all &rarr;</a>
+            </div>
+            <div class="divide-y divide-slate-800/60">
+                {% for tender in recent_tenders %}
+                <a href="{% url 'tenders:detail' tender.pk %}"
+                   class="flex items-center gap-3 px-5 py-3 hover:bg-slate-800/40 transition-colors">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-white truncate">{{ tender.title }}</p>
+                        <p class="text-xs text-slate-400">{{ tender.tender_number }} &middot; &#8377;{{ tender.estimated_budget|floatformat:0 }}</p>
+                    </div>
+                    <span class="flex-shrink-0 text-xs px-2 py-0.5 bg-amber-900/40 text-amber-400 rounded-md font-medium">Approve</span>
+                </a>
+                {% empty %}
+                <div class="px-5 py-10 text-center">
+                    <i data-lucide="check-circle" class="w-8 h-8 text-emerald-600 mx-auto mb-2"></i>
+                    <p class="text-sm text-slate-400">No tenders pending approval</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>document.addEventListener('DOMContentLoaded', function() { lucide.createIcons(); });</script>
+{% endblock %}
