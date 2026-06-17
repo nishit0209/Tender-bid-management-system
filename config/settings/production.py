@@ -4,7 +4,7 @@ Production settings — extends base.py
 
 from .base import *
 
-DEBUG = False
+DEBUG = True
 
 # Must be set explicitly in production environment
 ALLOWED_HOSTS = ['*']
