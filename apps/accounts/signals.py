@@ -2,8 +2,6 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out, user_lo
 from django.dispatch import receiver
 from django.utils import timezone
 from .models import SystemLog, SystemLogAction, UserRole
-
-# Allauth signals
 # pyrefly: ignore [missing-import]
 from allauth.account.signals import user_signed_up
 
@@ -14,11 +12,11 @@ def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         return x_forwarded_for.split(',')[0]
-    return request.META.get('REMOTE_ADDR')
+    return request.META.get('REMOTE_ADDR')  
 
 @receiver(user_logged_in)
 def log_user_login(sender, request, user, **kwargs):
-    """Log successful logins."""
+    """Log successful logins."""    
     SystemLog.objects.create(
         user=user,
         email=user.email,
@@ -77,6 +75,8 @@ def allauth_user_signed_up(request, user, **kwargs):
         defaults={
             'company_name': f"{company_name}'s Company",
             'contact_email': user.email,
+            'gst_number': f"TEMP-GST-{user.id}",
+            'pan_number': f"TEMP-PAN-{user.id}",
         }
     )
 

@@ -13,21 +13,19 @@
             <div class="absolute inset-0 opacity-20" style="background-image: url('data:image/svg+xml,<svg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><g fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;><g fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.15&quot;><path d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/></g></g></svg>')"></div>
         </div>
         <div class="px-6 pb-6">
-            <div class="flex items-end gap-5 -mt-10 mb-4">
+            <div class="flex items-end gap-5">
                 <!-- Avatar -->
-                <div class="relative flex-shrink-0">
-                    <div class="w-20 h-20 rounded-2xl border-4 border-slate-900 overflow-hidden bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center shadow-xl">
-                        {% if user.profile_picture %}
-                            <img src="{{ user.profile_picture.url }}" alt="Profile" class="w-full h-full object-cover">
-                        {% else %}
-                            <span class="text-2xl font-bold text-white">{{ user.initials }}</span>
-                        {% endif %}
+                <div class="relative flex-shrink-0 -mt-12">
+                    <div class="w-24 h-24 rounded-2xl border-4 border-slate-900 overflow-hidden bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center shadow-xl">
+                        <span class="text-3xl font-bold text-white">{{ user.initials }}</span>
                     </div>
                 </div>
-                <div class="pb-1">
-                    <h2 class="text-xl font-bold text-white">{{ user.get_full_name|default:"Update your name" }}</h2>
+                <div class="pb-1 pt-2">
+                    <h2 class="text-xl font-bold text-white">
+                        {% if user.get_full_name %}{{ user.get_full_name }}{% else %}Profile Details{% endif %}
+                    </h2>
                     <p class="text-slate-400 text-sm">{{ user.email }}</p>
-                    <span class="inline-flex items-center mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium
+                    <span class="inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-xs font-medium
                         {% if user.is_admin %}bg-purple-900/60 text-purple-300 border border-purple-700/50
                         {% elif user.is_procurement_officer %}bg-blue-900/60 text-blue-300 border border-blue-700/50
                         {% elif user.is_manager %}bg-amber-900/60 text-amber-300 border border-amber-700/50
@@ -85,27 +83,7 @@
                     </div>
                     {% endif %}
 
-                    <!-- Profile Picture Upload -->
-                    <div class="mb-6">
-                        <label class="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wide">Profile Picture</label>
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center overflow-hidden" id="preview-container">
-                                {% if user.profile_picture %}
-                                    <img src="{{ user.profile_picture.url }}" class="w-full h-full object-cover" id="img-preview">
-                                {% else %}
-                                    <i data-lucide="user" class="w-5 h-5 text-slate-500" id="img-preview"></i>
-                                {% endif %}
-                            </div>
-                            <label for="id_profile_picture"
-                                   class="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-sm text-slate-300 cursor-pointer transition-colors">
-                                <i data-lucide="upload" class="w-4 h-4"></i>
-                                Choose Image
-                            </label>
-                            {{ form.profile_picture }}
-                            <span class="text-xs text-slate-500">Max 2MB</span>
-                        </div>
-                        {% if form.profile_picture.errors %}<p class="mt-1 text-xs text-red-400">{{ form.profile_picture.errors.0 }}</p>{% endif %}
-                    </div>
+
 
                     <div class="flex gap-3">
                         <button type="submit"
@@ -200,21 +178,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     lucide.createIcons();
-    // Profile picture preview
-    const fileInput = document.getElementById('id_profile_picture');
-    if (fileInput) {
-        fileInput.addEventListener('change', function () {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const preview = document.getElementById('preview-container');
-                    preview.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover" id="img-preview">`;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
 });
 </script>
 {% endblock %}

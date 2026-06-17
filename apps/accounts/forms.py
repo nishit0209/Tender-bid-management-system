@@ -219,7 +219,7 @@ class ProfileEditForm(forms.ModelForm):
         model = User
         fields = [
             'first_name', 'last_name', 'phone',
-            'department', 'designation', 'profile_picture',
+            'department', 'designation',
         ]
         widgets = {
             'first_name':   forms.TextInput(attrs={'class': _LIGHT, 'placeholder': 'First name'}),
@@ -227,19 +227,7 @@ class ProfileEditForm(forms.ModelForm):
             'phone':        forms.TextInput(attrs={'class': _LIGHT, 'placeholder': '+91 98765 43210'}),
             'department':   forms.TextInput(attrs={'class': _LIGHT, 'placeholder': 'e.g. IT, Finance'}),
             'designation':  forms.TextInput(attrs={'class': _LIGHT, 'placeholder': 'e.g. Manager'}),
-            'profile_picture': forms.FileInput(attrs={
-                'class': 'hidden',
-                'id': 'id_profile_picture',
-                'accept': 'image/*',
-            }),
         }
-
-    def clean_profile_picture(self):
-        picture = self.cleaned_data.get('profile_picture')
-        if picture and hasattr(picture, 'size'):
-            if picture.size > 2 * 1024 * 1024:
-                raise forms.ValidationError(_('Profile picture must be under 2MB.'))
-        return picture
 
 
 # ─────────────────────────────────────────────
