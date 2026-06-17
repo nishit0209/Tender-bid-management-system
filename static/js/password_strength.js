@@ -2,11 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Find password inputs
     const passInputs = document.querySelectorAll('input[type="password"]');
     
-    // We only want to attach this to actual primary password fields for registration/change.
-    // In Django, register/change is "password1" (and confirm is "password2").
-    // Do NOT attach to "password" because that is used in the Login form.
     passInputs.forEach(input => {
-        if (input.name === 'password1') {
+        // We attach to any password field (login, register, change password)
+        if (input.name === 'password1' || input.name === 'password' || input.name === 'password_confirm') {
             attachPasswordStrengthIndicator(input);
         }
     });
