@@ -135,7 +135,7 @@
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    lucide.createIcons();
+    try { lucide.createIcons(); } catch(e) {}
     function togglePw(btnId, inputId) {
         const btn = document.getElementById(btnId);
         const inp = document.getElementById(inputId);
@@ -154,5 +154,5 @@ document.addEventListener('DOMContentLoaded', function () {
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/password_strength.js' %}"></script>
+<script src="{% static 'js/password_strength.js' %}?v=2"></script>
 {% endblock %}
