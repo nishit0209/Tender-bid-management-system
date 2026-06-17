@@ -22,7 +22,6 @@ db.sqlite3-journal
 media/
 
 # Static (collected)
-staticfiles/
 
 # IDE
 .vscode/

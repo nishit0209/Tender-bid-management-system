@@ -188,7 +188,7 @@ class VendorRegisterView(View):
         form = VendorRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(
                 request,
                 'Account created successfully! Please complete your vendor profile to get started.'
