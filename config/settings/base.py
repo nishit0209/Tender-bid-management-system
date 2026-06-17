@@ -99,19 +99,18 @@ TEMPLATES = [
 # ─────────────────────────────────────────────
 # Database
 # ─────────────────────────────────────────────
+# pyrefly: ignore [missing-import]
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='tender_db'),
-        'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default='admin123'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
-        'OPTIONS': {
-            'connect_timeout': 5,
-        },
-    }
+    'default': config(
+        'DATABASE_URL',
+        default=f"postgres://{config('DB_USER', default='postgres')}:{config('DB_PASSWORD', default='admin123')}@{config('DB_HOST', default='localhost')}:{config('DB_PORT', default='5432')}/{config('DB_NAME', default='tender_db')}",
+        cast=dj_database_url.parse
+    )
 }
+DATABASES['default']['CONN_MAX_AGE'] = 600  # Persistent connections for Heroku
+DATABASES['default']['OPTIONS'] = {'connect_timeout': 5}
 
 # ─────────────────────────────────────────────
 # Authentication
