@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
-    lucide.createIcons();
+    try {
+        lucide.createIcons();
+    } catch (e) {
+        console.warn("Lucide icons failed to load:", e);
+    }
 
     // ── Notification Dropdown ──────────────────────────────────────
     const notifBtn = document.getElementById('notif-btn');
