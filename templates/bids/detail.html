@@ -210,7 +210,7 @@
                 </div>
                 <div class="p-6 space-y-3">
                     {% if bid.technical_proposal %}
-                    <a href="{{ bid.technical_proposal.url }}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                    <a href="{% url 'secure_download' 'bids' 'Bid' bid.id 'technical_proposal' %}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition-colors group">
                         <div class="flex items-center gap-3">
                             <i data-lucide="file-text" class="w-5 h-5 text-slate-400"></i>
                             <span class="text-sm font-medium text-slate-200">Technical Proposal</span>
@@ -220,7 +220,7 @@
                     {% endif %}
                     
                     {% if bid.commercial_proposal %}
-                    <a href="{{ bid.commercial_proposal.url }}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                    <a href="{% url 'secure_download' 'bids' 'Bid' bid.id 'commercial_proposal' %}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition-colors group">
                         <div class="flex items-center gap-3">
                             <i data-lucide="file-text" class="w-5 h-5 text-slate-400"></i>
                             <span class="text-sm font-medium text-slate-200">Commercial Proposal</span>

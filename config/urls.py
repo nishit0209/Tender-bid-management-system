@@ -22,6 +22,8 @@ def fix_site(request):
     Site.objects.update_or_create(id=2, defaults={'domain': '127.0.0.1:8000', 'name': 'Localhost'})
     return HttpResponse("Site 2 successfully created! You can now use Google Login on Local.")
 
+from apps.accounts.views_secure import secure_document_download
+
 urlpatterns = [
     path('fix-site/', fix_site),
     # Django Admin
@@ -30,6 +32,10 @@ urlpatterns = [
     # Authentication
     path('accounts/', include('apps.accounts.urls', namespace='accounts')),
     path('auth/', include('allauth.urls')),
+
+    # Secure File Download
+    path('secure-download/<str:app_label>/<str:model_name>/<int:document_id>/<str:field_name>/', 
+         secure_document_download, name='secure_download'),
 
     # Core Modules
     path('vendors/', include('apps.vendors.urls', namespace='vendors')),

@@ -199,7 +199,7 @@ CLOUDINARY_STORAGE = {
 if config('CLOUDINARY_CLOUD_NAME', default=''):
     STORAGES = {
         "default": {
-            "BACKEND": "cloudinary_storage.storage.RawMediaCloudinaryStorage",
+            "BACKEND": "config.storage.PrivateMediaCloudinaryStorage",
         },
         "staticfiles": {
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",

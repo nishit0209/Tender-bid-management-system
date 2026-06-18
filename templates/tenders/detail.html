@@ -265,7 +265,7 @@
                 </div>
                 <div class="p-6">
                     {% if tender.tender_document %}
-                    <a href="{{ tender.tender_document.url }}" target="_blank" class="flex items-start gap-3 p-3 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                    <a href="{% url 'secure_download' 'tenders' 'Tender' tender.id 'tender_document' %}" target="_blank" class="flex items-start gap-3 p-3 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition-colors group">
                         <div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0">
                             <i data-lucide="file-text" class="w-5 h-5"></i>
                         </div>

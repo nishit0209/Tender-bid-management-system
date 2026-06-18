@@ -176,7 +176,7 @@
                     </form>
                     {% endif %}
                     {% if doc.file %}
-                    <a href="{{ doc.file.url }}" target="_blank" title="Download"
+                    <a href="{% url 'secure_download' 'vendors' 'VendorDocument' doc.id 'file' %}" target="_blank" title="Download"
                        class="p-1.5 bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded-lg transition-all">
                         <i data-lucide="download" class="w-3.5 h-3.5 text-slate-400"></i>
                     </a>
