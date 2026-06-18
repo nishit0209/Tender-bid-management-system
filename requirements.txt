@@ -38,3 +38,5 @@ PyJWT==2.10.1
 
 # Deployment
 whitenoise==6.12.0
+cloudinary==1.42.1
+django-cloudinary-storage==0.3.0
