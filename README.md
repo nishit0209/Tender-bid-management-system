@@ -1,97 +1,108 @@
 # Enterprise Tender & Bid Management System
 
-## 🛠️ Project Setup & Installation (For New Users)
-When you clone or download this project, follow these steps to set it up properly on your machine.
+A comprehensive, full-stack web application designed to streamline the entire procurement lifecycle. From vendor registration and tender creation to bid submission, evaluation, and purchase order generation, this system provides a secure, role-based platform for efficient supply chain management.
 
-### Method 1: Automatic Setup (Windows Only)
-Simply double-click the **`setup.bat`** file in the project directory. 
-It will automatically:
-1. Create a Python Virtual Environment (`venv`)
-2. Activate it
-3. Install all dependencies from `requirements.txt`
-4. Apply database migrations
+## 🚀 Key Features
 
-### Method 2: Manual Setup (All Systems)
-1. **Create a Virtual Environment**:
-   ```bash
-   python -m venv venv
-   ```
-2. **Activate the Virtual Environment**:
-   - Windows: `venv\Scripts\activate`
-   - Mac/Linux: `source venv/bin/activate`
-3. **Install Requirements**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. **Run Database Migrations**:
-   ```bash
-   python manage.py migrate
-   ```
-5. **Start the Server**:
-   ```bash
-   python manage.py runserver
-   ```
+*   **Role-Based Access Control:** Distinct dashboards and permissions for Admins, Procurement Officers, Managers, and Vendors.
+*   **Vendor Management:** Secure vendor registration, profile verification, and document management.
+*   **Tender Publishing:** Create and publish tenders with deadlines, categories, and necessary documentation.
+*   **Bid Management:** Secure and structured bid submission by verified vendors.
+*   **Evaluation System:** Technical and financial evaluation of submitted bids with scoring mechanisms.
+*   **Purchase Orders:** Automated purchase order generation for winning bids.
+*   **Google OAuth Integration:** Seamless sign-in experience using Google credentials via `django-allauth`.
+*   **Real-time Notifications:** Automated system notifications for tender updates, bid status, and profile verification.
 
----
+## 🛠️ Technology Stack
 
-Aa document system na darek phase (tappe) ni sampurna mahiti aape che. System kevi rite kam kare che, konna su role che, ane ek tender create thava thi laine saaman aavi jay tya sudhi nu aakhu workflow ahia samjavva ma aavyu che.
+*   **Backend:** Python, Django
+*   **Frontend:** HTML5, Tailwind CSS, Vanilla JavaScript, Lucide Icons
+*   **Database:** PostgreSQL
+*   **Authentication:** Django Auth, Django-Allauth (Google OAuth2)
+*   **Deployment:** Vercel (Web Hosting), Render (Database Hosting)
 
----
+## 📂 Folder Structure
 
-## 👥 System Roles (Role-Based Access Control)
-System ma total 4 main roles che:
-1. **Admin**: System na malik. Darek user ne edit, active/inactive, ane system ni security manage kare.
-2. **Procurement Officer**: Ground level nu kaam kare. Tender banave, Vendor nu verification kare, bids ne marks (score) aape ane PO banave.
-3. **Manager**: Final Approval Authority. Procurement ae banavela Tender, Vendor verification, Bid award ane PO ne check kari ne final "Approve" ke "Reject" kare.
-4. **Vendor**: Bahaar ni company je tender ma bhag le che. Potani profile banave, bid submit kare ane contract malse to saaman mokli ne delivery proof aape.
+```text
+Tender-Bid-Management/
+├── apps/                       # Django Applications
+│   ├── accounts/               # User models, authentication, roles, system logs
+│   ├── vendors/                # Vendor profiles, document verification
+│   ├── tenders/                # Tender models, publishing logic
+│   ├── bids/                   # Bid submissions, pricing, vendor documents
+│   ├── evaluations/            # Bid scoring, technical/financial review
+│   ├── purchase_orders/        # PO generation, status tracking
+│   ├── notifications/          # System alerts and notifications
+│   └── reports/                # System analytics and reporting
+├── config/                     # Core Django Configuration
+│   ├── settings/               # Environment settings (base, development, production)
+│   ├── urls.py                 # Main URL routing
+│   └── wsgi.py                 # WSGI config for Vercel
+├── static/                     # Static Assets
+│   ├── css/                    # Tailwind output & custom styles
+│   └── js/                     # Client-side interactivity
+├── templates/                  # HTML Templates
+│   ├── base.html               # Master layout
+│   ├── accounts/               # Auth templates
+│   ├── dashboard/              # Role-specific dashboards
+│   └── ...                     # App-specific templates
+├── manage.py                   # Django management script
+├── requirements.txt            # Python dependencies
+└── vercel.json                 # Vercel deployment configuration
+```
 
----
+## ⚙️ Local Setup & Installation
 
-## 🚀 Development Phases & Workflow
+Follow these steps to set up the project locally for development.
 
-### Phase 1 & 2: Base Foundation & Security
-- **What it does:** System nu basic structure (Django + TailwindCSS) ane secure login system banaveli che. 
-- **Workflow:** Koi pan user potana email ane password thi login kare. System auto-detect kare ke aa user no role su che ane aene aena role na Dashboard par redirect kare.
+### 1. Clone the repository
+```bash
+git clone https://github.com/yourusername/Tender-Bid-Management.git
+cd Tender-Bid-Management
+```
 
-### Phase 3: Vendor Onboarding & Verification
-- **What it does:** Nava vendor system ma joday tyaarni process.
-- **Workflow:** 
-  1. Vendor sign up kari ne potani Company details (GST, PAN, Address) nakhi ne verification mate mokle.
-  2. **Procurement Officer** e details check kare ane "Verify" kare.
-  3. **Manager** final "Approve" kare pachi j Vendor system ma "Active" thay ane bids ma bhag lai shake.
+### 2. Create a Virtual Environment
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows use: .\venv\Scripts\activate
+```
 
-### Phase 4: Dashboards & Notifications
-- **What it does:** Darek user ne potanu personalized dashboard ane real-time alerts.
-- **Workflow:** System ma kai pan thay (jem ke navu tender aavu, bid winner thavu, PO aavu) to user ne upar ganteedi (bell icon) ma live notification aavi jay. 
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-### Phase 5: Tender Management & Bidding
-- **What it does:** Main business process - Tenders bahar padva ane Vendors dwara bhav (bids) bharva.
-- **Workflow:**
-  1. **Procurement Officer** navu Tender banave (Budget, Deadline, Items) ane Manager ne mokle.
-  2. **Manager** Tender ne approve kari ne "Open" kare.
-  3. **Vendors** open tenders joi shake ane potano bhav (Amount) ane delivery timeline sathe **Bid** (Technical & Commercial proposal) submit kare.
-  4. Time puro thay etle Tender "Closed" thai jay.
+### 4. Environment Variables
+Create a `.env` file in the root directory and add your configurations:
+```env
+DEBUG=True
+SECRET_KEY=your-secret-key
+DATABASE_URL=postgres://user:password@localhost:5432/tender_db
+```
 
-### Phase 6: Bid Evaluation & Awarding
-- **What it does:** Je bids aavi che aenu checking karvu ane ek company ne contract aapvo.
-- **Workflow:**
-  1. **Procurement Officer** aaveli badhi bids ne check kare ane **100 marks** mathi score aape (Price: 40, Experience: 30, Warranty: 20, Delivery: 10).
-  2. Jo koi bid na marks **40 thi ocha** aave to e tarat **Auto-Reject** thai jay.
-  3. Officer pass thayeli (shortlisted) bids Manager ne mokle.
-  4. **Manager** e shortlisted bids mathi sabthi best (1) bid ne select kari ne **"Approve & Award"** kare. E bid "Winner" bani jay ane baki ni badhi auto-reject thai jay.
+### 5. Database Setup
+Apply the migrations to set up the database schema:
+```bash
+python manage.py migrate
+```
 
-### Phase 7: Purchase Order (PO) Management & Delivery
-- **What it does:** Winner ne officially saaman mangavvano order aapvo.
-- **Workflow:**
-  1. **Procurement Officer** winner bid par thi ek Purchase Order (PO) banave jema Tax ane Payment Terms lakheli hoy.
-  2. **Manager** e PO ne approve kare.
-  3. PO approve thata j **Vendor** ne e dekhase. Vendor saaman mokli de etle system ma **"Dispatched"** mark karse.
-  4. Saaman pohchya pachi Vendor **Delivery Proof (Challan/Receipt)** upload kari ne **"Delivered"** mark karse.
-  5. Manager/Officer payment clear kari ne PO ne **"Completed & Closed"** mark karse.
+### 6. Create Superuser
+Create an admin account to access the backend:
+```bash
+python manage.py create_superuser
+```
 
-### Phase 8: Reporting & Analytics (Future/Final Phase)
-- **What it does:** System ni aakhi summary (kharcho, performance).
-- **Workflow:** Admin ane Manager mate reports (PDF/Excel) generate thase jema khabar padse ke ketlu budget vpray aiyu, kya vendor nu kam sabthi saru che, ane ketla tenders success thaya.
+### 7. Run the Development Server
+```bash
+python manage.py runserver
+```
+Visit `http://127.0.0.1:8000` in your browser.
 
----
-*Aa README file project ni root directory ma save kari che, jethi bhavishya ma koi pan developer ne aakhu architecture tarat samajai jay.*
+## 🔄 System Workflow
+
+1.  **Registration:** Vendors register on the platform and submit their company details and verification documents.
+2.  **Verification:** Procurement Officers review and approve vendor profiles.
+3.  **Tender Creation:** Managers/Officers create tenders specifying requirements, categories, and deadlines.
+4.  **Bidding:** Approved vendors view active tenders and submit their bids (technical details + financial quotes) before the deadline.
+5.  **Evaluation:** After the deadline, the evaluation committee reviews the bids, assigns scores, and selects a winner based on the criteria.
+6.  **Award & PO:** The winning bid is approved, and a Purchase Order is automatically generated and sent to the vendor.
