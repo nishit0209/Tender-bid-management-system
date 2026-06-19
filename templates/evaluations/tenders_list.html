@@ -7,60 +7,60 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-white mb-2">Tenders Pending Evaluation</h1>
-            <p class="text-slate-400">Select a tender to evaluate its bids or approve awards.</p>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Tenders Pending Evaluation</h1>
+            <p class="text-slate-600 dark:text-slate-400">Select a tender to evaluate its bids or approve awards.</p>
         </div>
     </div>
 
     <!-- Tenders Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for tender in tenders %}
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col hover:border-indigo-500/50 transition-colors">
-            <div class="px-5 py-4 border-b border-slate-800 bg-slate-800/30">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden flex flex-col hover:border-indigo-500/50 transition-colors">
+            <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30">
                 <div class="flex items-start justify-between gap-2">
-                    <h3 class="text-base font-bold text-white line-clamp-1" title="{{ tender.title }}">{{ tender.title }}</h3>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white line-clamp-1" title="{{ tender.title }}">{{ tender.title }}</h3>
                     {% if tender.status == 'closed' %}
-                        <span class="px-2 py-1 bg-amber-500/10 text-amber-400 text-[10px] font-bold uppercase rounded-md whitespace-nowrap border border-amber-500/20">Needs Eval</span>
+                        <span class="px-2 py-1 bg-amber-500/10 text-amber-700 dark:text-amber-400 text-[10px] font-bold uppercase rounded-md whitespace-nowrap border border-amber-500/20">Needs Eval</span>
                     {% elif tender.status == 'under_evaluation' %}
-                        <span class="px-2 py-1 bg-indigo-500/10 text-indigo-400 text-[10px] font-bold uppercase rounded-md whitespace-nowrap border border-indigo-500/20">Evaluating</span>
+                        <span class="px-2 py-1 bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 text-[10px] font-bold uppercase rounded-md whitespace-nowrap border border-indigo-500/20">Evaluating</span>
                     {% elif tender.status == 'pending_approval' %}
-                        <span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase rounded-md whitespace-nowrap border border-emerald-500/20">Needs Approval</span>
+                        <span class="px-2 py-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold uppercase rounded-md whitespace-nowrap border border-emerald-500/20">Needs Approval</span>
                     {% endif %}
                 </div>
-                <p class="text-xs text-slate-500 font-mono mt-1">{{ tender.tender_number }}</p>
+                <p class="text-xs text-slate-600 dark:text-slate-500 font-mono mt-1">{{ tender.tender_number }}</p>
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
                 <div class="space-y-3">
                     <div class="flex justify-between items-center text-sm">
-                        <span class="text-slate-500">Budget</span>
-                        <span class="text-white font-medium">₹{{ tender.estimated_budget }}</span>
+                        <span class="text-slate-600 dark:text-slate-500">Budget</span>
+                        <span class="text-slate-900 dark:text-white font-medium">₹{{ tender.estimated_budget }}</span>
                     </div>
                     <div class="flex justify-between items-center text-sm">
-                        <span class="text-slate-500">Bids Received</span>
-                        <span class="text-white font-medium">{{ tender.bids.count }}</span>
+                        <span class="text-slate-600 dark:text-slate-500">Bids Received</span>
+                        <span class="text-slate-900 dark:text-white font-medium">{{ tender.bids.count }}</span>
                     </div>
                     <div class="flex justify-between items-center text-sm">
-                        <span class="text-slate-500">Closed On</span>
-                        <span class="text-white font-medium">{{ tender.closing_date|date:"d M Y" }}</span>
+                        <span class="text-slate-600 dark:text-slate-500">Closed On</span>
+                        <span class="text-slate-900 dark:text-white font-medium">{{ tender.closing_date|date:"d M Y" }}</span>
                     </div>
                 </div>
                 
-                <a href="{% url 'evaluations:tender_evaluations' tender.pk %}" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-xl transition-all border border-slate-700">
+                <a href="{% url 'evaluations:tender_evaluations' tender.pk %}" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-xl transition-all border border-slate-300 dark:border-slate-700">
                     {% if user.role == 'manager' and tender.status == 'pending_approval' %}
-                        <i data-lucide="check-square" class="w-4 h-4 text-emerald-400"></i> Review Approvals
+                        <i data-lucide="check-square" class="w-4 h-4 text-emerald-700 dark:text-emerald-400"></i> Review Approvals
                     {% else %}
-                        <i data-lucide="bar-chart-2" class="w-4 h-4 text-indigo-400"></i> View Evaluations
+                        <i data-lucide="bar-chart-2" class="w-4 h-4 text-indigo-700 dark:text-indigo-400"></i> View Evaluations
                     {% endif %}
                 </a>
             </div>
         </div>
         {% empty %}
-        <div class="col-span-full p-8 text-center bg-slate-900 border border-slate-800 rounded-2xl">
-            <div class="w-16 h-16 rounded-full bg-slate-800/50 flex items-center justify-center mx-auto mb-4">
-                <i data-lucide="check-circle" class="w-8 h-8 text-slate-500"></i>
+        <div class="col-span-full p-8 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+            <div class="w-16 h-16 rounded-full bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="check-circle" class="w-8 h-8 text-slate-600 dark:text-slate-500"></i>
             </div>
-            <h3 class="text-lg font-bold text-white mb-1">All Caught Up!</h3>
-            <p class="text-sm text-slate-400">There are no closed tenders pending evaluation at the moment.</p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">All Caught Up!</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">There are no closed tenders pending evaluation at the moment.</p>
         </div>
         {% endfor %}
     </div>

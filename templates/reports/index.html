@@ -10,57 +10,57 @@
     <!-- Top KPIs -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
             <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl group-hover:bg-emerald-500/20 transition-all"></div>
             <div class="flex items-center gap-4 mb-2">
                 <div class="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
-                    <i data-lucide="indian-rupee" class="w-5 h-5 text-emerald-400"></i>
+                    <i data-lucide="indian-rupee" class="w-5 h-5 text-emerald-700 dark:text-emerald-400"></i>
                 </div>
-                <h3 class="text-sm font-semibold text-slate-400">Total Procurement Value</h3>
+                <h3 class="text-sm font-semibold text-slate-600 dark:text-slate-400">Total Procurement Value</h3>
             </div>
-            <p class="text-2xl font-black text-white mt-4">₹{{ total_po_value|default:"0" }}</p>
+            <p class="text-2xl font-black text-slate-900 dark:text-white mt-4">₹{{ total_po_value|default:"0" }}</p>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
             <div class="absolute -right-4 -top-4 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl group-hover:bg-indigo-500/20 transition-all"></div>
             <div class="flex items-center gap-4 mb-2">
                 <div class="w-10 h-10 bg-indigo-500/20 rounded-xl flex items-center justify-center">
-                    <i data-lucide="file-text" class="w-5 h-5 text-indigo-400"></i>
+                    <i data-lucide="file-text" class="w-5 h-5 text-indigo-700 dark:text-indigo-400"></i>
                 </div>
-                <h3 class="text-sm font-semibold text-slate-400">Active Tenders</h3>
+                <h3 class="text-sm font-semibold text-slate-600 dark:text-slate-400">Active Tenders</h3>
             </div>
-            <p class="text-2xl font-black text-white mt-4">{{ active_tenders }}</p>
+            <p class="text-2xl font-black text-slate-900 dark:text-white mt-4">{{ active_tenders }}</p>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
             <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-xl group-hover:bg-blue-500/20 transition-all"></div>
             <div class="flex items-center gap-4 mb-2">
                 <div class="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
-                    <i data-lucide="building-2" class="w-5 h-5 text-blue-400"></i>
+                    <i data-lucide="building-2" class="w-5 h-5 text-blue-700 dark:text-blue-400"></i>
                 </div>
-                <h3 class="text-sm font-semibold text-slate-400">Verified Vendors</h3>
+                <h3 class="text-sm font-semibold text-slate-600 dark:text-slate-400">Verified Vendors</h3>
             </div>
-            <p class="text-2xl font-black text-white mt-4">{{ total_vendors }}</p>
+            <p class="text-2xl font-black text-slate-900 dark:text-white mt-4">{{ total_vendors }}</p>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden group">
             <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition-all"></div>
             <div class="flex items-center gap-4 mb-2">
                 <div class="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center">
-                    <i data-lucide="send" class="w-5 h-5 text-purple-400"></i>
+                    <i data-lucide="send" class="w-5 h-5 text-purple-700 dark:text-purple-400"></i>
                 </div>
-                <h3 class="text-sm font-semibold text-slate-400">Total Bids Received</h3>
+                <h3 class="text-sm font-semibold text-slate-600 dark:text-slate-400">Total Bids Received</h3>
             </div>
-            <p class="text-2xl font-black text-white mt-4">{{ total_bids }}</p>
+            <p class="text-2xl font-black text-slate-900 dark:text-white mt-4">{{ total_bids }}</p>
         </div>
     </div>
 
     <!-- Charts -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Tender Status Chart -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
-            <h3 class="text-sm font-semibold text-white mb-5 flex items-center gap-2">
-                <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-400"></i>
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-lg">
+            <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
+                <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-700 dark:text-indigo-400"></i>
                 Tenders by Status
             </h3>
             <div class="relative h-64 w-full">
@@ -69,9 +69,9 @@
         </div>
 
         <!-- PO Value Trend Chart -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
-            <h3 class="text-sm font-semibold text-white mb-5 flex items-center gap-2">
-                <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i>
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-lg">
+            <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
+                <i data-lucide="trending-up" class="w-4 h-4 text-emerald-700 dark:text-emerald-400"></i>
                 Purchase Order Spending Trend (6 Months)
             </h3>
             <div class="relative h-64 w-full">
@@ -81,30 +81,30 @@
     </div>
 
     <!-- Top Vendors Table -->
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
-        <h3 class="text-sm font-semibold text-white mb-5 flex items-center gap-2">
-            <i data-lucide="award" class="w-4 h-4 text-amber-400"></i>
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-lg">
+        <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
+            <i data-lucide="award" class="w-4 h-4 text-amber-700 dark:text-amber-400"></i>
             Top 5 Vendors by Total PO Value
         </h3>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-800/50 border-b border-slate-800 text-xs text-slate-400 uppercase tracking-wider">
+                    <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                         <th class="px-2 py-3 sm:p-3 font-semibold rounded-tl-lg">Vendor Name</th>
                         <th class="px-2 py-3 sm:p-3 font-semibold hidden sm:table-cell">GSTIN</th>
                         <th class="px-2 py-3 sm:p-3 font-semibold text-right rounded-tr-lg">Total Business Value</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-800/50">
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-800/50">
                     {% for vendor in top_vendors %}
-                    <tr class="hover:bg-slate-800/30 transition-colors">
-                        <td class="px-2 py-3 sm:p-3 text-xs sm:text-sm font-bold text-white">{{ vendor.company_name }}</td>
-                        <td class="px-2 py-3 sm:p-3 text-xs sm:text-sm text-slate-400 hidden sm:table-cell">{{ vendor.gst_number }}</td>
-                        <td class="px-2 py-3 sm:p-3 text-xs sm:text-sm font-bold text-emerald-400 text-right">₹{{ vendor.po_total|default:"0.00" }}</td>
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                        <td class="px-2 py-3 sm:p-3 text-xs sm:text-sm font-bold text-slate-900 dark:text-white">{{ vendor.company_name }}</td>
+                        <td class="px-2 py-3 sm:p-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 hidden sm:table-cell">{{ vendor.gst_number }}</td>
+                        <td class="px-2 py-3 sm:p-3 text-xs sm:text-sm font-bold text-emerald-700 dark:text-emerald-400 text-right">₹{{ vendor.po_total|default:"0.00" }}</td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="3" class="p-6 text-center text-slate-500 text-sm">No purchase orders awarded yet.</td>
+                        <td colspan="3" class="p-6 text-center text-slate-600 dark:text-slate-500 text-sm">No purchase orders awarded yet.</td>
                     </tr>
                     {% endfor %}
                 </tbody>

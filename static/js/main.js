@@ -98,6 +98,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ── Theme Toggle ───────────────────────────────────────────────
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', function() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        });
+    }
+
+
     // Handle resize: close mobile sidebar when going to desktop
     window.addEventListener('resize', function() {
         if (window.innerWidth >= 1024) closeSidebar();

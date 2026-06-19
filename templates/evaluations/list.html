@@ -7,11 +7,11 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white mb-2">Evaluations Leaderboard</h1>
-            <p class="text-slate-400">Tender: {{ tender.title }}</p>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Evaluations Leaderboard</h1>
+            <p class="text-slate-600 dark:text-slate-400">Tender: {{ tender.title }}</p>
         </div>
         <div class="flex items-center gap-3">
-            <a href="{% url 'tenders:detail' tender.pk %}" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 transition-colors text-sm font-medium">
+            <a href="{% url 'tenders:detail' tender.pk %}" class="px-4 py-2 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm font-medium">
                 View Tender
             </a>
             <form method="post" action="{% url 'evaluations:submit_evaluations' tender.pk %}">
@@ -24,29 +24,29 @@
     </div>
 
     <!-- Tender Summary Card -->
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-                <p class="text-xs text-slate-500 mb-1">Total Bids</p>
-                <p class="text-lg font-bold text-white">{{ bids|length }}</p>
+                <p class="text-xs text-slate-600 dark:text-slate-500 mb-1">Total Bids</p>
+                <p class="text-lg font-bold text-slate-900 dark:text-white">{{ bids|length }}</p>
             </div>
             <div>
-                <p class="text-xs text-slate-500 mb-1">Estimated Budget</p>
-                <p class="text-lg font-bold text-white">₹{{ tender.estimated_budget }}</p>
+                <p class="text-xs text-slate-600 dark:text-slate-500 mb-1">Estimated Budget</p>
+                <p class="text-lg font-bold text-slate-900 dark:text-white">₹{{ tender.estimated_budget }}</p>
             </div>
             <div class="md:col-span-2">
-                <p class="text-xs text-slate-500 mb-1">Tender Status</p>
-                <p class="text-sm font-medium px-3 py-1 bg-slate-800 text-slate-300 rounded-lg inline-block">{{ tender.get_status_display }}</p>
+                <p class="text-xs text-slate-600 dark:text-slate-500 mb-1">Tender Status</p>
+                <p class="text-sm font-medium px-3 py-1 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg inline-block">{{ tender.get_status_display }}</p>
             </div>
         </div>
     </div>
 
     <!-- Leaderboard Table -->
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-800/50 border-b border-slate-800 text-xs text-slate-400 uppercase tracking-wider">
+                    <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                         <th class="p-4 font-semibold">Rank</th>
                         <th class="p-4 font-semibold">Vendor</th>
                         <th class="p-4 font-semibold">Total Score</th>
@@ -54,12 +54,12 @@
                         <th class="p-4 font-semibold text-right">Action</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-800/50">
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-800/50">
                     {% for bid in bids %}
-                    <tr class="hover:bg-slate-800/30 transition-colors group">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
                         <td class="p-4">
                             {% if bid.evaluation.total_score >= 40 %}
-                                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-sm font-bold text-white border border-slate-700">
+                                <div class="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-sm font-bold text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700">
                                     {{ forloop.counter }}
                                 </div>
                             {% else %}
@@ -67,16 +67,16 @@
                             {% endif %}
                         </td>
                         <td class="p-4">
-                            <p class="text-sm font-bold text-white">{{ bid.vendor.company_name }}</p>
-                            <p class="text-xs text-slate-500">₹{{ bid.total_bid_amount }} • {{ bid.delivery_timeline_days }} Days</p>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ bid.vendor.company_name }}</p>
+                            <p class="text-xs text-slate-600 dark:text-slate-500">₹{{ bid.total_bid_amount }} • {{ bid.delivery_timeline_days }} Days</p>
                         </td>
                         <td class="p-4">
                             {% if bid.evaluation %}
                                 <div class="flex items-center gap-2">
-                                    <span class="text-lg font-mono font-bold {% if bid.evaluation.total_score >= 40 %}text-emerald-400{% else %}text-red-400{% endif %}">
+                                    <span class="text-lg font-mono font-bold {% if bid.evaluation.total_score >= 40 %}text-emerald-700 dark:text-emerald-400{% else %}text-red-700 dark:text-red-400{% endif %}">
                                         {{ bid.evaluation.total_score }}
                                     </span>
-                                    <span class="text-xs text-slate-500">/ 100</span>
+                                    <span class="text-xs text-slate-600 dark:text-slate-500">/ 100</span>
                                 </div>
                             {% else %}
                                 <span class="text-xs text-amber-500 bg-amber-500/10 px-2 py-1 rounded-md">Not Evaluated</span>
@@ -84,15 +84,15 @@
                         </td>
                         <td class="p-4">
                             {% if bid.status == 'shortlisted' %}
-                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Shortlisted</span>
+                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">Shortlisted</span>
                             {% elif bid.status == 'rejected' %}
-                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">Rejected</span>
+                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20">Rejected</span>
                             {% else %}
-                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-400">{{ bid.get_status_display }}</span>
+                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400">{{ bid.get_status_display }}</span>
                             {% endif %}
                         </td>
                         <td class="p-4 text-right">
-                            <a href="{% url 'evaluations:evaluate_bid' bid.id %}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg transition-colors border border-slate-700">
+                            <a href="{% url 'evaluations:evaluate_bid' bid.id %}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg transition-colors border border-slate-300 dark:border-slate-700">
                                 {% if bid.evaluation %}
                                     <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Edit Score
                                 {% else %}
@@ -103,7 +103,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="5" class="p-8 text-center text-slate-500">
+                        <td colspan="5" class="p-8 text-center text-slate-600 dark:text-slate-500">
                             No bids received for this tender yet.
                         </td>
                     </tr>

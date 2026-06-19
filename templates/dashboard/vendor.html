@@ -11,11 +11,11 @@
     {% if not has_profile %}
     <div class="flex items-center gap-4 p-5 bg-indigo-900/30 border border-indigo-700/40 rounded-2xl">
         <div class="w-10 h-10 bg-indigo-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-            <i data-lucide="info" class="w-5 h-5 text-indigo-400"></i>
+            <i data-lucide="info" class="w-5 h-5 text-indigo-700 dark:text-indigo-400"></i>
         </div>
         <div class="flex-1">
-            <p class="text-sm font-semibold text-indigo-300">Complete your vendor profile to start participating</p>
-            <p class="text-xs text-indigo-400/70 mt-0.5">Add company details, GST number, and documents to get approved</p>
+            <p class="text-sm font-semibold text-indigo-700 dark:text-indigo-300">Complete your vendor profile to start participating</p>
+            <p class="text-xs text-indigo-700 dark:text-indigo-400/70 mt-0.5">Add company details, GST number, and documents to get approved</p>
         </div>
         <a href="{% url 'vendors:create' %}"
            class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all flex-shrink-0">
@@ -26,11 +26,11 @@
     {% elif vendor.status != 'approved' %}
     <div class="flex items-center gap-4 p-5 bg-amber-900/20 border border-amber-700/40 rounded-2xl">
         <div class="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-            <i data-lucide="clock" class="w-5 h-5 text-amber-400"></i>
+            <i data-lucide="clock" class="w-5 h-5 text-amber-700 dark:text-amber-400"></i>
         </div>
         <div class="flex-1">
             <p class="text-sm font-semibold text-amber-300">Your profile is {{ vendor.get_status_display|lower }}</p>
-            <p class="text-xs text-amber-400/70 mt-0.5">You can submit bids once your profile is approved</p>
+            <p class="text-xs text-amber-700 dark:text-amber-400/70 mt-0.5">You can submit bids once your profile is approved</p>
         </div>
         <a href="{% url 'vendors:my_profile' %}"
            class="flex items-center gap-2 px-4 py-2 bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 text-sm font-medium rounded-xl transition-all flex-shrink-0 border border-amber-600/30">
@@ -40,7 +40,7 @@
     {% else %}
     <div class="flex items-center gap-4 p-4 bg-emerald-900/20 border border-emerald-700/40 rounded-2xl">
         <div class="w-8 h-8 bg-emerald-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-700 dark:text-emerald-400"></i>
         </div>
         <p class="text-sm text-emerald-300 font-medium">Your profile is approved. You can now submit bids!</p>
     </div>
@@ -49,54 +49,54 @@
     <!-- Stats -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <div class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
             <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 bg-cyan-600/20 rounded-xl flex items-center justify-center">
-                    <i data-lucide="file-text" class="w-5 h-5 text-cyan-400"></i>
+                    <i data-lucide="file-text" class="w-5 h-5 text-cyan-700 dark:text-cyan-400"></i>
                 </div>
             </div>
-            <p class="text-3xl font-bold text-white">{{ open_tenders|default:"0" }}</p>
-            <p class="text-sm text-slate-400 mt-1">Open Tenders</p>
-            <a href="{% url 'tenders:list' %}" class="text-xs text-indigo-400 hover:text-indigo-300 mt-2 inline-block">Browse tenders &rarr;</a>
+            <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ open_tenders|default:"0" }}</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Open Tenders</p>
+            <a href="{% url 'tenders:list' %}" class="text-xs text-indigo-700 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-2 inline-block">Browse tenders &rarr;</a>
         </div>
 
-        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <div class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
             <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 bg-indigo-600/20 rounded-xl flex items-center justify-center">
-                    <i data-lucide="send" class="w-5 h-5 text-indigo-400"></i>
+                    <i data-lucide="send" class="w-5 h-5 text-indigo-700 dark:text-indigo-400"></i>
                 </div>
             </div>
-            <p class="text-3xl font-bold text-white">{{ my_bids_count|default:"0" }}</p>
-            <p class="text-sm text-slate-400 mt-1">My Bids</p>
-            <a href="{% url 'bids:list' %}" class="text-xs text-indigo-400 hover:text-indigo-300 mt-2 inline-block">View all &rarr;</a>
+            <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ my_bids_count|default:"0" }}</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">My Bids</p>
+            <a href="{% url 'bids:list' %}" class="text-xs text-indigo-700 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-2 inline-block">View all &rarr;</a>
         </div>
 
         {% if vendor %}
-        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <div class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
             <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 rounded-xl flex items-center justify-center
                     {% if vendor.status == 'approved' %}bg-emerald-600/20
                     {% elif vendor.status == 'pending' %}bg-amber-600/20
                     {% else %}bg-blue-600/20{% endif %}">
                     <i data-lucide="shield" class="w-5 h-5
-                        {% if vendor.status == 'approved' %}text-emerald-400
-                        {% elif vendor.status == 'pending' %}text-amber-400
-                        {% else %}text-blue-400{% endif %}"></i>
+                        {% if vendor.status == 'approved' %}text-emerald-700 dark:text-emerald-400
+                        {% elif vendor.status == 'pending' %}text-amber-700 dark:text-amber-400
+                        {% else %}text-blue-700 dark:text-blue-400{% endif %}"></i>
                 </div>
             </div>
-            <p class="text-lg font-bold text-white">{{ vendor.get_status_display }}</p>
-            <p class="text-sm text-slate-400 mt-1">Profile Status</p>
-            <div class="mt-2 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+            <p class="text-lg font-bold text-slate-900 dark:text-white">{{ vendor.get_status_display }}</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Profile Status</p>
+            <div class="mt-2 h-1.5 bg-slate-50 dark:bg-slate-800 rounded-full overflow-hidden">
                 <div class="h-full bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-full transition-all duration-700"
                      style="width: {{ vendor.completion_percentage }}%"></div>
             </div>
-            <p class="text-xs text-slate-500 mt-1">{{ vendor.completion_percentage }}% complete</p>
+            <p class="text-xs text-slate-600 dark:text-slate-500 mt-1">{{ vendor.completion_percentage }}% complete</p>
         </div>
         {% else %}
-        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+        <div class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex flex-col items-center justify-center text-center">
             <i data-lucide="building-2" class="w-8 h-8 text-slate-600 mb-2"></i>
-            <p class="text-sm text-slate-400">No profile yet</p>
-            <a href="{% url 'vendors:create' %}" class="text-xs text-indigo-400 mt-1 hover:text-indigo-300">Create now &rarr;</a>
+            <p class="text-sm text-slate-600 dark:text-slate-400">No profile yet</p>
+            <a href="{% url 'vendors:create' %}" class="text-xs text-indigo-700 dark:text-indigo-400 mt-1 hover:text-indigo-700 dark:hover:text-indigo-300">Create now &rarr;</a>
         </div>
         {% endif %}
     </div>
@@ -105,31 +105,31 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- Open Tenders -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800">
-                <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-                    <i data-lucide="file-text" class="w-4 h-4 text-cyan-400"></i>
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i data-lucide="file-text" class="w-4 h-4 text-cyan-700 dark:text-cyan-400"></i>
                     Open Tenders
                 </h3>
-                <a href="{% url 'tenders:list' %}" class="text-xs text-indigo-400 hover:text-indigo-300">Browse all &rarr;</a>
+                <a href="{% url 'tenders:list' %}" class="text-xs text-indigo-700 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">Browse all &rarr;</a>
             </div>
-            <div class="divide-y divide-slate-800/60">
+            <div class="divide-y divide-slate-200 dark:divide-slate-800/60">
                 {% for tender in active_tenders %}
                 <a href="{% url 'tenders:detail' tender.pk %}"
-                   class="flex items-start gap-3 px-5 py-4 hover:bg-slate-800/40 transition-colors">
+                   class="flex items-start gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-white truncate">{{ tender.title }}</p>
-                        <p class="text-xs text-slate-400 mt-0.5">{{ tender.tender_number }} &middot; &#8377;{{ tender.estimated_budget|floatformat:0 }}</p>
+                        <p class="text-sm font-medium text-slate-900 dark:text-white truncate">{{ tender.title }}</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">{{ tender.tender_number }} &middot; &#8377;{{ tender.estimated_budget|floatformat:0 }}</p>
                         <div class="flex items-center gap-3 mt-1.5">
-                            <span class="text-xs text-slate-500 flex items-center gap-1">
+                            <span class="text-xs text-slate-600 dark:text-slate-500 flex items-center gap-1">
                                 <i data-lucide="clock" class="w-3 h-3"></i>
                                 {{ tender.days_remaining }} day{{ tender.days_remaining|pluralize }} left
                             </span>
-                            <span class="text-xs text-slate-500">{{ tender.bids_count }} bid{{ tender.bids_count|pluralize }}</span>
+                            <span class="text-xs text-slate-600 dark:text-slate-500">{{ tender.bids_count }} bid{{ tender.bids_count|pluralize }}</span>
                         </div>
                     </div>
                     {% if vendor and vendor.status == 'approved' %}
-                    <span class="flex-shrink-0 text-xs px-2 py-0.5 bg-indigo-600/20 text-indigo-400 border border-indigo-600/30 rounded-md font-medium mt-0.5">
+                    <span class="flex-shrink-0 text-xs px-2 py-0.5 bg-indigo-600/20 text-indigo-700 dark:text-indigo-400 border border-indigo-600/30 rounded-md font-medium mt-0.5">
                         Bid Now
                     </span>
                     {% endif %}
@@ -137,44 +137,44 @@
                 {% empty %}
                 <div class="px-5 py-10 text-center">
                     <i data-lucide="file-x" class="w-8 h-8 text-slate-700 mx-auto mb-2"></i>
-                    <p class="text-sm text-slate-500">No open tenders at this time</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-500">No open tenders at this time</p>
                 </div>
                 {% endfor %}
             </div>
         </div>
 
         <!-- My Recent Bids -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800">
-                <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-                    <i data-lucide="send" class="w-4 h-4 text-indigo-400"></i>
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i data-lucide="send" class="w-4 h-4 text-indigo-700 dark:text-indigo-400"></i>
                     My Recent Bids
                 </h3>
-                <a href="{% url 'bids:list' %}" class="text-xs text-indigo-400 hover:text-indigo-300">View all &rarr;</a>
+                <a href="{% url 'bids:list' %}" class="text-xs text-indigo-700 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">View all &rarr;</a>
             </div>
-            <div class="divide-y divide-slate-800/60">
+            <div class="divide-y divide-slate-200 dark:divide-slate-800/60">
                 {% for bid in my_bids %}
                 <a href="{% url 'bids:detail' bid.pk %}"
-                   class="flex items-center gap-3 px-5 py-3 hover:bg-slate-800/40 transition-colors">
+                   class="flex items-center gap-3 px-5 py-3 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-white truncate">{{ bid.tender.title }}</p>
-                        <p class="text-xs text-slate-400 mt-0.5">&#8377;{{ bid.bid_amount|floatformat:0 }} &middot; {{ bid.submitted_at|date:"M d, Y" }}</p>
+                        <p class="text-sm font-medium text-slate-900 dark:text-white truncate">{{ bid.tender.title }}</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">&#8377;{{ bid.bid_amount|floatformat:0 }} &middot; {{ bid.submitted_at|date:"M d, Y" }}</p>
                     </div>
                     <span class="flex-shrink-0 text-xs px-2 py-0.5 rounded-md font-medium
-                        {% if bid.status == 'approved' %}bg-emerald-900/40 text-emerald-400
-                        {% elif bid.status == 'submitted' %}bg-blue-900/40 text-blue-400
-                        {% elif bid.status == 'shortlisted' %}bg-purple-900/40 text-purple-400
-                        {% elif bid.status == 'under_review' %}bg-amber-900/40 text-amber-400
-                        {% else %}bg-red-900/40 text-red-400{% endif %}">
+                        {% if bid.status == 'approved' %}bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400
+                        {% elif bid.status == 'submitted' %}bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400
+                        {% elif bid.status == 'shortlisted' %}bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-400
+                        {% elif bid.status == 'under_review' %}bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400
+                        {% else %}bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400{% endif %}">
                         {{ bid.get_status_display }}
                     </span>
                 </a>
                 {% empty %}
                 <div class="px-5 py-10 text-center">
                     <i data-lucide="send" class="w-8 h-8 text-slate-700 mx-auto mb-2"></i>
-                    <p class="text-sm text-slate-500">No bids submitted yet</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-500">No bids submitted yet</p>
                     {% if vendor and vendor.status == 'approved' %}
-                    <a href="{% url 'tenders:list' %}" class="mt-2 inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300">
+                    <a href="{% url 'tenders:list' %}" class="mt-2 inline-flex items-center gap-1 text-xs text-indigo-700 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
                         <i data-lucide="plus" class="w-3 h-3"></i>
                         Browse tenders to bid
                     </a>

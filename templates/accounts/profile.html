@@ -8,7 +8,7 @@
 <div class="max-w-4xl mx-auto space-y-6">
 
     <!-- Profile Header Card -->
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
         <div class="h-24 bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-600 relative">
             <div class="absolute inset-0 opacity-20" style="background-image: url('data:image/svg+xml,<svg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><g fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;><g fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.15&quot;><path d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/></g></g></svg>')"></div>
         </div>
@@ -17,17 +17,17 @@
                 <!-- Avatar -->
                 <div class="relative flex-shrink-0 -mt-12">
                     <div class="w-24 h-24 rounded-2xl border-4 border-slate-900 overflow-hidden bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center shadow-xl">
-                        <span class="text-3xl font-bold text-white">{{ user.initials }}</span>
+                        <span class="text-3xl font-bold text-slate-900 dark:text-white">{{ user.initials }}</span>
                     </div>
                 </div>
                 <div class="pb-1 pt-2">
-                    <h2 class="text-xl font-bold text-white">
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">
                         {% if user.get_full_name %}{{ user.get_full_name }}{% else %}Profile Details{% endif %}
                     </h2>
-                    <p class="text-slate-400 text-sm">{{ user.email }}</p>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">{{ user.email }}</p>
                     <span class="inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-xs font-medium
                         {% if user.is_admin %}bg-purple-900/60 text-purple-300 border border-purple-700/50
-                        {% elif user.is_procurement_officer %}bg-blue-900/60 text-blue-300 border border-blue-700/50
+                        {% elif user.is_procurement_officer %}bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-700/50
                         {% elif user.is_manager %}bg-amber-900/60 text-amber-300 border border-amber-700/50
                         {% else %}bg-emerald-900/60 text-emerald-300 border border-emerald-700/50{% endif %}">
                         {{ user.get_role_display }}
@@ -42,9 +42,9 @@
 
         <!-- Main Form -->
         <div class="lg:col-span-2">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                <h3 class="text-base font-semibold text-white mb-5 flex items-center gap-2">
-                    <i data-lucide="user" class="w-4 h-4 text-indigo-400"></i>
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6">
+                <h3 class="text-base font-semibold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
+                    <i data-lucide="user" class="w-4 h-4 text-indigo-700 dark:text-indigo-400"></i>
                     Personal Information
                 </h3>
 
@@ -53,31 +53,31 @@
 
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wide">First Name</label>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wide">First Name</label>
                             {{ form.first_name }}
-                            {% if form.first_name.errors %}<p class="mt-1 text-xs text-red-400">{{ form.first_name.errors.0 }}</p>{% endif %}
+                            {% if form.first_name.errors %}<p class="mt-1 text-xs text-red-700 dark:text-red-400">{{ form.first_name.errors.0 }}</p>{% endif %}
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wide">Last Name</label>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Last Name</label>
                             {{ form.last_name }}
-                            {% if form.last_name.errors %}<p class="mt-1 text-xs text-red-400">{{ form.last_name.errors.0 }}</p>{% endif %}
+                            {% if form.last_name.errors %}<p class="mt-1 text-xs text-red-700 dark:text-red-400">{{ form.last_name.errors.0 }}</p>{% endif %}
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wide">Phone Number</label>
+                        <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Phone Number</label>
                         {{ form.phone }}
-                        {% if form.phone.errors %}<p class="mt-1 text-xs text-red-400">{{ form.phone.errors.0 }}</p>{% endif %}
+                        {% if form.phone.errors %}<p class="mt-1 text-xs text-red-700 dark:text-red-400">{{ form.phone.errors.0 }}</p>{% endif %}
                     </div>
 
                     {% if not user.is_vendor_user %}
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wide">Department</label>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Department</label>
                             {{ form.department }}
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wide">Designation</label>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wide">Designation</label>
                             {{ form.designation }}
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                             Save Changes
                         </button>
                         <a href="{% url 'accounts:change_password' %}"
-                           class="flex items-center gap-2 px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded-xl transition-all duration-200 text-sm border border-slate-700">
+                           class="flex items-center gap-2 px-5 py-2.5 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium rounded-xl transition-all duration-200 text-sm border border-slate-300 dark:border-slate-700">
                             <i data-lucide="lock" class="w-4 h-4"></i>
                             Change Password
                         </a>
@@ -104,37 +104,37 @@
         <!-- Account Info Sidebar -->
         <div class="space-y-4">
             <!-- Account Details -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                <h3 class="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-                    <i data-lucide="shield" class="w-4 h-4 text-indigo-400"></i>
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <i data-lucide="shield" class="w-4 h-4 text-indigo-700 dark:text-indigo-400"></i>
                     Account Details
                 </h3>
                 <div class="space-y-3">
                     <div>
-                        <p class="text-xs text-slate-500 uppercase tracking-wide">Email</p>
-                        <p class="text-sm text-slate-200 font-medium mt-0.5 truncate">{{ user.email }}</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-500 uppercase tracking-wide">Email</p>
+                        <p class="text-sm text-slate-800 dark:text-slate-200 font-medium mt-0.5 truncate">{{ user.email }}</p>
                     </div>
                     <div>
-                        <p class="text-xs text-slate-500 uppercase tracking-wide">Role</p>
-                        <p class="text-sm text-slate-200 font-medium mt-0.5">{{ user.get_role_display }}</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-500 uppercase tracking-wide">Role</p>
+                        <p class="text-sm text-slate-800 dark:text-slate-200 font-medium mt-0.5">{{ user.get_role_display }}</p>
                     </div>
                     {% if user.employee_id %}
                     <div>
-                        <p class="text-xs text-slate-500 uppercase tracking-wide">Employee ID</p>
-                        <p class="text-sm text-slate-200 font-medium mt-0.5">{{ user.employee_id }}</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-500 uppercase tracking-wide">Employee ID</p>
+                        <p class="text-sm text-slate-800 dark:text-slate-200 font-medium mt-0.5">{{ user.employee_id }}</p>
                     </div>
                     {% endif %}
                     <div>
-                        <p class="text-xs text-slate-500 uppercase tracking-wide">Member Since</p>
-                        <p class="text-sm text-slate-200 font-medium mt-0.5">{{ user.date_joined|date:"M d, Y" }}</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-500 uppercase tracking-wide">Member Since</p>
+                        <p class="text-sm text-slate-800 dark:text-slate-200 font-medium mt-0.5">{{ user.date_joined|date:"M d, Y" }}</p>
                     </div>
                     <div>
-                        <p class="text-xs text-slate-500 uppercase tracking-wide">Last Login</p>
-                        <p class="text-sm text-slate-200 font-medium mt-0.5">{{ user.last_login|date:"M d, Y H:i"|default:"—" }}</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-500 uppercase tracking-wide">Last Login</p>
+                        <p class="text-sm text-slate-800 dark:text-slate-200 font-medium mt-0.5">{{ user.last_login|date:"M d, Y H:i"|default:"—" }}</p>
                     </div>
                     <div>
-                        <p class="text-xs text-slate-500 uppercase tracking-wide">Account Status</p>
-                        <span class="inline-flex items-center gap-1 mt-0.5 text-sm font-medium {% if user.is_active %}text-emerald-400{% else %}text-red-400{% endif %}">
+                        <p class="text-xs text-slate-600 dark:text-slate-500 uppercase tracking-wide">Account Status</p>
+                        <span class="inline-flex items-center gap-1 mt-0.5 text-sm font-medium {% if user.is_active %}text-emerald-700 dark:text-emerald-400{% else %}text-red-700 dark:text-red-400{% endif %}">
                             <span class="w-1.5 h-1.5 rounded-full {% if user.is_active %}bg-emerald-400{% else %}bg-red-400{% endif %}"></span>
                             {% if user.is_active %}Active{% else %}Inactive{% endif %}
                         </span>
@@ -143,26 +143,26 @@
             </div>
 
             <!-- Quick Actions -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                <h3 class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                    <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-700 dark:text-amber-400"></i>
                     Quick Actions
                 </h3>
                 <div class="space-y-2">
                     <a href="{% url 'dashboard:index' %}"
-                       class="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                       class="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                         <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                         Go to Dashboard
                     </a>
                     {% if user.is_vendor_user %}
                     <a href="{% url 'vendors:my_profile' %}"
-                       class="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                       class="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                         <i data-lucide="building-2" class="w-4 h-4"></i>
                         Vendor Profile
                     </a>
                     {% endif %}
                     <a href="{% url 'notifications:list' %}"
-                       class="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                       class="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                         <i data-lucide="bell" class="w-4 h-4"></i>
                         Notifications
                         {% if unread_notifications_count > 0 %}

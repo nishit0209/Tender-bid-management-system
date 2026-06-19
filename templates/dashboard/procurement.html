@@ -10,50 +10,50 @@
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <div class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
             <div class="flex items-center justify-between mb-3">
                 <div class="w-10 h-10 bg-amber-600/20 rounded-xl flex items-center justify-center">
-                    <i data-lucide="user-check" class="w-5 h-5 text-amber-400"></i>
+                    <i data-lucide="user-check" class="w-5 h-5 text-amber-700 dark:text-amber-400"></i>
                 </div>
                 {% if pending_vendor_verifications > 0 %}
-                <span class="text-xs bg-amber-900/40 text-amber-400 px-2 py-0.5 rounded-md badge-pulse">Action needed</span>
+                <span class="text-xs bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded-md badge-pulse">Action needed</span>
                 {% endif %}
             </div>
-            <p class="text-3xl font-bold text-white">{{ pending_vendor_verifications|default:"0" }}</p>
-            <p class="text-sm text-slate-400 mt-1">Pending Verifications</p>
+            <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ pending_vendor_verifications|default:"0" }}</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Pending Verifications</p>
         </div>
 
-        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <div class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
             <div class="flex items-center justify-between mb-3">
                 <div class="w-10 h-10 bg-emerald-600/20 rounded-xl flex items-center justify-center">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+                    <i data-lucide="shield-check" class="w-5 h-5 text-emerald-700 dark:text-emerald-400"></i>
                 </div>
             </div>
-            <p class="text-3xl font-bold text-white">{{ verified_vendors|default:"0" }}</p>
-            <p class="text-sm text-slate-400 mt-1">Verified Vendors</p>
+            <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ verified_vendors|default:"0" }}</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Verified Vendors</p>
         </div>
 
-        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <div class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
             <div class="flex items-center justify-between mb-3">
                 <div class="w-10 h-10 bg-cyan-600/20 rounded-xl flex items-center justify-center">
-                    <i data-lucide="file-text" class="w-5 h-5 text-cyan-400"></i>
+                    <i data-lucide="file-text" class="w-5 h-5 text-cyan-700 dark:text-cyan-400"></i>
                 </div>
             </div>
-            <p class="text-3xl font-bold text-white">{{ active_tenders|default:"0" }}</p>
-            <p class="text-sm text-slate-400 mt-1">Active Tenders</p>
+            <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ active_tenders|default:"0" }}</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Active Tenders</p>
         </div>
 
-        <div class="stat-card bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <div class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
             <div class="flex items-center justify-between mb-3">
                 <div class="w-10 h-10 bg-purple-600/20 rounded-xl flex items-center justify-center">
-                    <i data-lucide="search" class="w-5 h-5 text-purple-400"></i>
+                    <i data-lucide="search" class="w-5 h-5 text-purple-700 dark:text-purple-400"></i>
                 </div>
                 {% if bids_under_review > 0 %}
-                <span class="text-xs bg-purple-900/40 text-purple-400 px-2 py-0.5 rounded-md">Reviewing</span>
+                <span class="text-xs bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-400 px-2 py-0.5 rounded-md">Reviewing</span>
                 {% endif %}
             </div>
-            <p class="text-3xl font-bold text-white">{{ bids_under_review|default:"0" }}</p>
-            <p class="text-sm text-slate-400 mt-1">Bids Under Review</p>
+            <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ bids_under_review|default:"0" }}</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Bids Under Review</p>
         </div>
     </div>
 
@@ -61,34 +61,34 @@
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <a href="{% url 'vendors:list' %}"
            class="flex items-center gap-3 p-4 bg-amber-600/10 border border-amber-600/20 hover:bg-amber-600/20 rounded-2xl transition-all group">
-            <i data-lucide="user-check" class="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform flex-shrink-0"></i>
+            <i data-lucide="user-check" class="w-5 h-5 text-amber-700 dark:text-amber-400 group-hover:scale-110 transition-transform flex-shrink-0"></i>
             <div class="min-w-0">
-                <p class="text-sm font-semibold text-white">Verify Vendors</p>
-                <p class="text-xs text-slate-400">{{ pending_vendor_verifications }} pending</p>
+                <p class="text-sm font-semibold text-slate-900 dark:text-white">Verify Vendors</p>
+                <p class="text-xs text-slate-600 dark:text-slate-400">{{ pending_vendor_verifications }} pending</p>
             </div>
         </a>
         <a href="{% url 'tenders:create' %}"
            class="flex items-center gap-3 p-4 bg-indigo-600/10 border border-indigo-600/20 hover:bg-indigo-600/20 rounded-2xl transition-all group">
-            <i data-lucide="plus-circle" class="w-5 h-5 text-indigo-400 group-hover:scale-110 transition-transform flex-shrink-0"></i>
+            <i data-lucide="plus-circle" class="w-5 h-5 text-indigo-700 dark:text-indigo-400 group-hover:scale-110 transition-transform flex-shrink-0"></i>
             <div class="min-w-0">
-                <p class="text-sm font-semibold text-white">Create Tender</p>
-                <p class="text-xs text-slate-400">New procurement</p>
+                <p class="text-sm font-semibold text-slate-900 dark:text-white">Create Tender</p>
+                <p class="text-xs text-slate-600 dark:text-slate-400">New procurement</p>
             </div>
         </a>
         <a href="{% url 'bids:list' %}"
            class="flex items-center gap-3 p-4 bg-purple-600/10 border border-purple-600/20 hover:bg-purple-600/20 rounded-2xl transition-all group">
-            <i data-lucide="bar-chart-2" class="w-5 h-5 text-purple-400 group-hover:scale-110 transition-transform flex-shrink-0"></i>
+            <i data-lucide="bar-chart-2" class="w-5 h-5 text-purple-700 dark:text-purple-400 group-hover:scale-110 transition-transform flex-shrink-0"></i>
             <div class="min-w-0">
-                <p class="text-sm font-semibold text-white">Evaluate Bids</p>
-                <p class="text-xs text-slate-400">{{ bids_under_review }} to review</p>
+                <p class="text-sm font-semibold text-slate-900 dark:text-white">Evaluate Bids</p>
+                <p class="text-xs text-slate-600 dark:text-slate-400">{{ bids_under_review }} to review</p>
             </div>
         </a>
         <a href="{% url 'reports:index' %}"
            class="flex items-center gap-3 p-4 bg-cyan-600/10 border border-cyan-600/20 hover:bg-cyan-600/20 rounded-2xl transition-all group">
-            <i data-lucide="pie-chart" class="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform flex-shrink-0"></i>
+            <i data-lucide="pie-chart" class="w-5 h-5 text-cyan-700 dark:text-cyan-400 group-hover:scale-110 transition-transform flex-shrink-0"></i>
             <div class="min-w-0">
-                <p class="text-sm font-semibold text-white">Reports</p>
-                <p class="text-xs text-slate-400">Analytics</p>
+                <p class="text-sm font-semibold text-slate-900 dark:text-white">Reports</p>
+                <p class="text-xs text-slate-600 dark:text-slate-400">Analytics</p>
             </div>
         </a>
     </div>
@@ -97,65 +97,65 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- Pending Vendors -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800">
-                <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-                    <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i>
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i data-lucide="clock" class="w-4 h-4 text-amber-700 dark:text-amber-400"></i>
                     Vendors Awaiting Verification
                 </h3>
-                <a href="{% url 'vendors:list' %}" class="text-xs text-indigo-400 hover:text-indigo-300">View all &rarr;</a>
+                <a href="{% url 'vendors:list' %}" class="text-xs text-indigo-700 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">View all &rarr;</a>
             </div>
-            <div class="divide-y divide-slate-800/60">
+            <div class="divide-y divide-slate-200 dark:divide-slate-800/60">
                 {% for vendor in recent_vendors %}
                 <a href="{% url 'vendors:detail' vendor.pk %}"
-                   class="flex items-center gap-3 px-5 py-3 hover:bg-slate-800/40 transition-colors">
+                   class="flex items-center gap-3 px-5 py-3 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                     <div class="w-8 h-8 rounded-xl bg-amber-600/20 flex items-center justify-center text-xs font-bold text-amber-300 flex-shrink-0">
                         {{ vendor.company_name|first|upper }}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-white truncate">{{ vendor.company_name }}</p>
-                        <p class="text-xs text-slate-400">Registered {{ vendor.created_at|timesince }} ago</p>
+                        <p class="text-sm font-medium text-slate-900 dark:text-white truncate">{{ vendor.company_name }}</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">Registered {{ vendor.created_at|timesince }} ago</p>
                     </div>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600 flex-shrink-0"></i>
                 </a>
                 {% empty %}
                 <div class="px-5 py-10 text-center">
                     <i data-lucide="check-circle" class="w-8 h-8 text-emerald-600 mx-auto mb-2"></i>
-                    <p class="text-sm text-slate-400">All vendors verified!</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">All vendors verified!</p>
                 </div>
                 {% endfor %}
             </div>
         </div>
 
         <!-- Recent Tenders -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800">
-                <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-                    <i data-lucide="file-text" class="w-4 h-4 text-cyan-400"></i>
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i data-lucide="file-text" class="w-4 h-4 text-cyan-700 dark:text-cyan-400"></i>
                     Recent Tenders
                 </h3>
-                <a href="{% url 'tenders:list' %}" class="text-xs text-indigo-400 hover:text-indigo-300">View all &rarr;</a>
+                <a href="{% url 'tenders:list' %}" class="text-xs text-indigo-700 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">View all &rarr;</a>
             </div>
-            <div class="divide-y divide-slate-800/60">
+            <div class="divide-y divide-slate-200 dark:divide-slate-800/60">
                 {% for tender in recent_tenders %}
                 <a href="{% url 'tenders:detail' tender.pk %}"
-                   class="flex items-center gap-3 px-5 py-3 hover:bg-slate-800/40 transition-colors">
+                   class="flex items-center gap-3 px-5 py-3 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-white truncate">{{ tender.title }}</p>
-                        <p class="text-xs text-slate-400">{{ tender.tender_number }} &middot; Budget: &#8377;{{ tender.estimated_budget|floatformat:0 }}</p>
+                        <p class="text-sm font-medium text-slate-900 dark:text-white truncate">{{ tender.title }}</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">{{ tender.tender_number }} &middot; Budget: &#8377;{{ tender.estimated_budget|floatformat:0 }}</p>
                     </div>
                     <span class="text-xs px-2 py-0.5 rounded-md font-medium flex-shrink-0
-                        {% if tender.status == 'open' %}bg-emerald-900/40 text-emerald-400
-                        {% elif tender.status == 'draft' %}bg-slate-700 text-slate-400
-                        {% elif tender.status == 'pending_approval' %}bg-amber-900/40 text-amber-400
-                        {% else %}bg-red-900/40 text-red-400{% endif %}">
+                        {% if tender.status == 'open' %}bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400
+                        {% elif tender.status == 'draft' %}bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400
+                        {% elif tender.status == 'pending_approval' %}bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400
+                        {% else %}bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400{% endif %}">
                         {{ tender.get_status_display }}
                     </span>
                 </a>
                 {% empty %}
                 <div class="px-5 py-10 text-center">
                     <i data-lucide="file-text" class="w-8 h-8 text-slate-700 mx-auto mb-2"></i>
-                    <p class="text-sm text-slate-500">No tenders yet</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-500">No tenders yet</p>
                 </div>
                 {% endfor %}
             </div>

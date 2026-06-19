@@ -5,7 +5,7 @@
 {% block page_subtitle %}{% if is_edit %}Update tender details{% else %}Draft a new tender for procurement{% endif %}{% endblock %}
 
 {% block page_actions %}
-<a href="{% if is_edit %}{% url 'tenders:detail' tender.pk %}{% else %}{% url 'tenders:list' %}{% endif %}" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-colors">
+<a href="{% if is_edit %}{% url 'tenders:detail' tender.pk %}{% else %}{% url 'tenders:list' %}{% endif %}" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
     Cancel
 </a>
 {% endblock %}
@@ -18,8 +18,8 @@
         {% if form.non_field_errors %}
         <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
             <div class="flex items-start gap-3">
-                <i data-lucide="alert-circle" class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5"></i>
-                <div class="text-sm text-red-400">
+                <i data-lucide="alert-circle" class="w-5 h-5 text-red-700 dark:text-red-400 flex-shrink-0 mt-0.5"></i>
+                <div class="text-sm text-red-700 dark:text-red-400">
                     {{ form.non_field_errors }}
                 </div>
             </div>
@@ -27,166 +27,166 @@
         {% endif %}
 
         <!-- Section 1: Basic Information -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-700 dark:text-indigo-400">
                     <i data-lucide="file-text" class="w-4 h-4"></i>
                 </div>
-                <h2 class="text-base font-semibold text-white">Basic Information</h2>
+                <h2 class="text-base font-semibold text-slate-900 dark:text-white">Basic Information</h2>
             </div>
             
             <div class="p-6 space-y-5">
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Tender Title <span class="text-red-400">*</span></label>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Tender Title <span class="text-red-700 dark:text-red-400">*</span></label>
                     {{ form.title }}
-                    {% if form.title.errors %}<p class="text-xs text-red-400 mt-1">{{ form.title.errors.0 }}</p>{% endif %}
+                    {% if form.title.errors %}<p class="text-xs text-red-700 dark:text-red-400 mt-1">{{ form.title.errors.0 }}</p>{% endif %}
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Description <span class="text-red-400">*</span></label>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Description <span class="text-red-700 dark:text-red-400">*</span></label>
                     {{ form.description }}
-                    {% if form.description.errors %}<p class="text-xs text-red-400 mt-1">{{ form.description.errors.0 }}</p>{% endif %}
+                    {% if form.description.errors %}<p class="text-xs text-red-700 dark:text-red-400 mt-1">{{ form.description.errors.0 }}</p>{% endif %}
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Category</label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Category</label>
                         {{ form.category }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Tender Type</label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Tender Type</label>
                         {{ form.tender_type }}
                     </div>
                 </div>
 
                 <!-- Custom Category field (hidden by default) -->
                 <div id="custom-category-wrapper" style="display: none;">
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Specify Category <span class="text-red-400">*</span></label>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Specify Category <span class="text-red-700 dark:text-red-400">*</span></label>
                     {{ form.custom_category }}
-                    {% if form.custom_category.errors %}<p class="text-xs text-red-400 mt-1">{{ form.custom_category.errors.0 }}</p>{% endif %}
+                    {% if form.custom_category.errors %}<p class="text-xs text-red-700 dark:text-red-400 mt-1">{{ form.custom_category.errors.0 }}</p>{% endif %}
                 </div>
             </div>
         </div>
 
         <!-- Section 2: Specifications & Financials -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
                     <i data-lucide="indian-rupee" class="w-4 h-4"></i>
                 </div>
-                <h2 class="text-base font-semibold text-white">Specifications & Financials</h2>
+                <h2 class="text-base font-semibold text-slate-900 dark:text-white">Specifications & Financials</h2>
             </div>
             
             <div class="p-6 space-y-5">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Estimated Budget (INR) <span class="text-red-400">*</span></label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Estimated Budget (INR) <span class="text-red-700 dark:text-red-400">*</span></label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">₹</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-500">₹</span>
                             {{ form.estimated_budget }}
                         </div>
-                        {% if form.estimated_budget.errors %}<p class="text-xs text-red-400 mt-1">{{ form.estimated_budget.errors.0 }}</p>{% endif %}
+                        {% if form.estimated_budget.errors %}<p class="text-xs text-red-700 dark:text-red-400 mt-1">{{ form.estimated_budget.errors.0 }}</p>{% endif %}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Earnest Money Deposit (EMD)</label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Earnest Money Deposit (EMD)</label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">₹</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-500">₹</span>
                             {{ form.emd_amount }}
                         </div>
-                        {% if form.emd_amount.errors %}<p class="text-xs text-red-400 mt-1">{{ form.emd_amount.errors.0 }}</p>{% endif %}
+                        {% if form.emd_amount.errors %}<p class="text-xs text-red-700 dark:text-red-400 mt-1">{{ form.emd_amount.errors.0 }}</p>{% endif %}
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Quantity</label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Quantity</label>
                         {{ form.quantity }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Unit</label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Unit</label>
                         {{ form.unit }}
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Detailed Specifications</label>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Detailed Specifications</label>
                     {{ form.specifications }}
-                    <p class="text-xs text-slate-500 mt-1">Provide any technical specifications or requirements.</p>
+                    <p class="text-xs text-slate-600 dark:text-slate-500 mt-1">Provide any technical specifications or requirements.</p>
                 </div>
             </div>
         </div>
 
         <!-- Section 3: Important Dates -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-700 dark:text-amber-400">
                     <i data-lucide="calendar" class="w-4 h-4"></i>
                 </div>
-                <h2 class="text-base font-semibold text-white">Important Dates</h2>
+                <h2 class="text-base font-semibold text-slate-900 dark:text-white">Important Dates</h2>
             </div>
             
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Bid Opening Date <span class="text-red-400">*</span></label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Bid Opening Date <span class="text-red-700 dark:text-red-400">*</span></label>
                         {{ form.opening_date }}
-                        {% if form.opening_date.errors %}<p class="text-xs text-red-400 mt-1">{{ form.opening_date.errors.0 }}</p>{% endif %}
+                        {% if form.opening_date.errors %}<p class="text-xs text-red-700 dark:text-red-400 mt-1">{{ form.opening_date.errors.0 }}</p>{% endif %}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Bid Closing Date <span class="text-red-400">*</span></label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Bid Closing Date <span class="text-red-700 dark:text-red-400">*</span></label>
                         {{ form.closing_date }}
-                        {% if form.closing_date.errors %}<p class="text-xs text-red-400 mt-1">{{ form.closing_date.errors.0 }}</p>{% endif %}
+                        {% if form.closing_date.errors %}<p class="text-xs text-red-700 dark:text-red-400 mt-1">{{ form.closing_date.errors.0 }}</p>{% endif %}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Expected Evaluation Date</label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Expected Evaluation Date</label>
                         {{ form.evaluation_date }}
-                        {% if form.evaluation_date.errors %}<p class="text-xs text-red-400 mt-1">{{ form.evaluation_date.errors.0 }}</p>{% endif %}
+                        {% if form.evaluation_date.errors %}<p class="text-xs text-red-700 dark:text-red-400 mt-1">{{ form.evaluation_date.errors.0 }}</p>{% endif %}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-2">Delivery Deadline</label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Delivery Deadline</label>
                         {{ form.delivery_deadline }}
-                        {% if form.delivery_deadline.errors %}<p class="text-xs text-red-400 mt-1">{{ form.delivery_deadline.errors.0 }}</p>{% endif %}
+                        {% if form.delivery_deadline.errors %}<p class="text-xs text-red-700 dark:text-red-400 mt-1">{{ form.delivery_deadline.errors.0 }}</p>{% endif %}
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Section 4: Terms & Pre-Bid Meeting -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400">
                     <i data-lucide="gavel" class="w-4 h-4"></i>
                 </div>
-                <h2 class="text-base font-semibold text-white">Terms & Pre-Bid Meeting</h2>
+                <h2 class="text-base font-semibold text-slate-900 dark:text-white">Terms & Pre-Bid Meeting</h2>
             </div>
             
             <div class="p-6 space-y-5">
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Eligibility Criteria</label>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Eligibility Criteria</label>
                     {{ form.eligibility_criteria }}
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Terms and Conditions</label>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Terms and Conditions</label>
                     {{ form.terms_and_conditions }}
                 </div>
 
-                <div class="border border-slate-700 rounded-xl p-4 bg-slate-800/30">
+                <div class="border border-slate-300 dark:border-slate-700 rounded-xl p-4 bg-slate-50 dark:bg-slate-800/30">
                     <label class="flex items-center gap-3 mb-4 cursor-pointer">
                         {{ form.is_pre_bid_meeting_required }}
-                        <span class="text-sm font-medium text-white">Pre-Bid Meeting Required</span>
+                        <span class="text-sm font-medium text-slate-900 dark:text-white">Pre-Bid Meeting Required</span>
                     </label>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Meeting Date</label>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Meeting Date</label>
                             {{ form.pre_bid_meeting_date }}
-                            {% if form.pre_bid_meeting_date.errors %}<p class="text-xs text-red-400 mt-1">{{ form.pre_bid_meeting_date.errors.0 }}</p>{% endif %}
+                            {% if form.pre_bid_meeting_date.errors %}<p class="text-xs text-red-700 dark:text-red-400 mt-1">{{ form.pre_bid_meeting_date.errors.0 }}</p>{% endif %}
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Meeting Location</label>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Meeting Location</label>
                             {{ form.pre_bid_meeting_location }}
-                            {% if form.pre_bid_meeting_location.errors %}<p class="text-xs text-red-400 mt-1">{{ form.pre_bid_meeting_location.errors.0 }}</p>{% endif %}
+                            {% if form.pre_bid_meeting_location.errors %}<p class="text-xs text-red-700 dark:text-red-400 mt-1">{{ form.pre_bid_meeting_location.errors.0 }}</p>{% endif %}
                         </div>
                     </div>
                 </div>
@@ -194,35 +194,35 @@
         </div>
 
         <!-- Section 5: Attachments & Visibility -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-700 dark:text-blue-400">
                     <i data-lucide="paperclip" class="w-4 h-4"></i>
                 </div>
-                <h2 class="text-base font-semibold text-white">Attachments & Visibility</h2>
+                <h2 class="text-base font-semibold text-slate-900 dark:text-white">Attachments & Visibility</h2>
             </div>
             
             <div class="p-6 space-y-5">
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Tender Document (PDF)</label>
-                    <div class="border-2 border-dashed border-slate-700 rounded-xl p-6 text-center hover:border-slate-500 transition-colors bg-slate-800/30">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Tender Document (PDF)</label>
+                    <div class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-6 text-center hover:border-slate-500 transition-colors bg-slate-50 dark:bg-slate-800/30">
                         {{ form.tender_document }}
-                        <p class="text-xs text-slate-400 mt-2">Upload official tender notice or detailed document (PDF)</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">Upload official tender notice or detailed document (PDF)</p>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3 bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                <div class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-300 dark:border-slate-700">
                     {{ form.is_public }}
                     <div>
-                        <p class="text-sm font-medium text-white">Public Tender</p>
-                        <p class="text-xs text-slate-400">If checked, this tender will be visible to all verified vendors. If unchecked, it remains internal until explicitly shared.</p>
+                        <p class="text-sm font-medium text-slate-900 dark:text-white">Public Tender</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">If checked, this tender will be visible to all verified vendors. If unchecked, it remains internal until explicitly shared.</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="flex items-center justify-end gap-3 pt-4">
-            <a href="{% if is_edit %}{% url 'tenders:detail' tender.pk %}{% else %}{% url 'tenders:list' %}{% endif %}" class="px-6 py-2.5 text-sm font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition-all">
+            <a href="{% if is_edit %}{% url 'tenders:detail' tender.pk %}{% else %}{% url 'tenders:list' %}{% endif %}" class="px-6 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 rounded-xl transition-all">
                 Cancel
             </a>
             <button type="submit" class="px-6 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl shadow-lg shadow-indigo-500/20 transition-all flex items-center gap-2">

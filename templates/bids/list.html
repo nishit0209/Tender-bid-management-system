@@ -7,15 +7,15 @@
 {% block content %}
 <div class="space-y-6">
 
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-        <div class="px-6 py-4 border-b border-slate-800 bg-slate-800/50 flex items-center justify-between">
-            <h2 class="text-base font-semibold text-white">All Bids</h2>
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between">
+            <h2 class="text-base font-semibold text-slate-900 dark:text-white">All Bids</h2>
         </div>
         
         {% if bids %}
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-300">
-                <thead class="text-xs text-slate-400 bg-slate-800/50 uppercase">
+            <table class="w-full text-left text-sm text-slate-700 dark:text-slate-300">
+                <thead class="text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 uppercase">
                     <tr>
                         <th class="px-2 py-3 sm:px-6 sm:py-4 font-medium">Tender</th>
                         <th class="px-2 py-3 sm:px-6 sm:py-4 font-medium hidden md:table-cell">Vendor</th>
@@ -25,17 +25,17 @@
                         <th class="px-2 py-3 sm:px-6 sm:py-4 font-medium text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-800/60">
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-800/60">
                     {% for bid in bids %}
-                    <tr class="hover:bg-slate-800/30 transition-colors">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                         <td class="px-2 py-3 sm:px-6 sm:py-4">
-                            <p class="text-white font-medium line-clamp-1 text-xs sm:text-sm">{{ bid.tender.title }}</p>
-                            <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">{{ bid.tender.tender_number }}</p>
+                            <p class="text-slate-900 dark:text-white font-medium line-clamp-1 text-xs sm:text-sm">{{ bid.tender.title }}</p>
+                            <p class="text-[10px] sm:text-xs text-slate-600 dark:text-slate-500 mt-0.5">{{ bid.tender.tender_number }}</p>
                         </td>
                         <td class="px-2 py-3 sm:px-6 sm:py-4 hidden md:table-cell">
-                            <p class="font-medium text-slate-300 text-xs sm:text-sm">{{ bid.vendor.company_name }}</p>
+                            <p class="font-medium text-slate-700 dark:text-slate-300 text-xs sm:text-sm">{{ bid.vendor.company_name }}</p>
                         </td>
-                        <td class="px-2 py-3 sm:px-6 sm:py-4 font-mono font-medium text-slate-300 text-xs sm:text-sm">
+                        <td class="px-2 py-3 sm:px-6 sm:py-4 font-mono font-medium text-slate-700 dark:text-slate-300 text-xs sm:text-sm">
                             ₹{{ bid.total_bid_amount }}
                         </td>
                         <td class="px-2 py-3 sm:px-6 sm:py-4 hidden sm:table-cell text-xs sm:text-sm">
@@ -43,21 +43,21 @@
                         </td>
                         <td class="px-6 py-4">
                             {% if bid.status == 'submitted' %}
-                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">Submitted</span>
+                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700">Submitted</span>
                             {% elif bid.status == 'under_review' %}
-                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">Under Review</span>
+                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">Under Review</span>
                             {% elif bid.status == 'shortlisted' %}
-                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Shortlisted</span>
+                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/20">Shortlisted</span>
                             {% elif bid.status == 'approved' %}
-                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Winner</span>
+                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">Winner</span>
                             {% elif bid.status == 'rejected' %}
-                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">Rejected</span>
+                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20">Rejected</span>
                             {% else %}
-                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-500">{{ bid.get_status_display }}</span>
+                                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-500">{{ bid.get_status_display }}</span>
                             {% endif %}
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <a href="{% url 'bids:detail' bid.pk %}" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors">
+                            <a href="{% url 'bids:detail' bid.pk %}" class="text-indigo-700 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-sm font-medium transition-colors">
                                 View
                             </a>
                         </td>
@@ -69,14 +69,14 @@
 
         <!-- Pagination -->
         {% if page_obj.has_other_pages %}
-        <div class="px-6 py-4 border-t border-slate-800 bg-slate-800/30 flex items-center justify-between">
-            <span class="text-sm text-slate-400">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 flex items-center justify-between">
+            <span class="text-sm text-slate-600 dark:text-slate-400">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
             <div class="flex gap-2">
                 {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors">Previous</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm transition-colors">Previous</a>
                 {% endif %}
                 {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors">Next</a>
+                <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm transition-colors">Next</a>
                 {% endif %}
             </div>
         </div>

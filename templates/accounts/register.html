@@ -4,7 +4,7 @@
 {% block title %}Register — New Vendor{% endblock %}
 
 {% block auth_content %}
-<div class="min-h-screen flex items-center justify-center p-6 bg-slate-950">
+<div class="min-h-screen flex items-center justify-center p-6 bg-slate-50 dark:bg-slate-950">
     <!-- Background decoration -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
         <div class="absolute -top-40 -right-40 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl"></div>
@@ -16,87 +16,87 @@
         <div class="text-center mb-8">
             <a href="{% url 'accounts:login' %}" class="inline-flex items-center gap-3 mb-6">
                 <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-500/30">
-                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-7 h-7 text-slate-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                 </div>
-                <span class="text-xl font-bold text-white">TenderBMS</span>
+                <span class="text-xl font-bold text-slate-900 dark:text-white">TenderBMS</span>
             </a>
-            <h1 class="text-3xl font-bold text-white">Create Vendor Account</h1>
-            <p class="text-slate-400 mt-2">Register your company to participate in tenders</p>
+            <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Create Vendor Account</h1>
+            <p class="text-slate-600 dark:text-slate-400 mt-2">Register your company to participate in tenders</p>
         </div>
 
         <!-- Form Card -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-2xl">
             <form method="post" novalidate>
                 {% csrf_token %}
 
                 <!-- Name Row -->
                 <div class="grid grid-cols-2 gap-4 mb-5">
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1.5">First Name <span class="text-red-400">*</span></label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">First Name <span class="text-red-700 dark:text-red-400">*</span></label>
                         {{ form.first_name }}
                         {% if form.first_name.errors %}
-                        <p class="mt-1 text-xs text-red-400">{{ form.first_name.errors.0 }}</p>
+                        <p class="mt-1 text-xs text-red-700 dark:text-red-400">{{ form.first_name.errors.0 }}</p>
                         {% endif %}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1.5">Last Name <span class="text-red-400">*</span></label>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Last Name <span class="text-red-700 dark:text-red-400">*</span></label>
                         {{ form.last_name }}
                         {% if form.last_name.errors %}
-                        <p class="mt-1 text-xs text-red-400">{{ form.last_name.errors.0 }}</p>
+                        <p class="mt-1 text-xs text-red-700 dark:text-red-400">{{ form.last_name.errors.0 }}</p>
                         {% endif %}
                     </div>
                 </div>
 
                 <!-- Email -->
                 <div class="mb-5">
-                    <label class="block text-sm font-medium text-slate-300 mb-1.5">Business Email <span class="text-red-400">*</span></label>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Business Email <span class="text-red-700 dark:text-red-400">*</span></label>
                     {{ form.email }}
                     {% if form.email.errors %}
-                    <p class="mt-1 text-xs text-red-400">{{ form.email.errors.0 }}</p>
+                    <p class="mt-1 text-xs text-red-700 dark:text-red-400">{{ form.email.errors.0 }}</p>
                     {% endif %}
                 </div>
 
                 <!-- Phone -->
                 <div class="mb-5">
-                    <label class="block text-sm font-medium text-slate-300 mb-1.5">Phone Number</label>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Phone Number</label>
                     {{ form.phone }}
                     {% if form.phone.errors %}
-                    <p class="mt-1 text-xs text-red-400">{{ form.phone.errors.0 }}</p>
+                    <p class="mt-1 text-xs text-red-700 dark:text-red-400">{{ form.phone.errors.0 }}</p>
                     {% endif %}
                 </div>
 
                 <!-- Password -->
                 <div class="mb-5">
-                    <label class="block text-sm font-medium text-slate-300 mb-1.5">Password <span class="text-red-400">*</span></label>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Password <span class="text-red-700 dark:text-red-400">*</span></label>
                     <div class="relative">
                         {{ form.password1|attr:"autocomplete:new-password" }}
-                        <button type="button" id="toggle-pw1" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
+                        <button type="button" id="toggle-pw1" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
                             <i data-lucide="eye" class="w-4 h-4"></i>
                         </button>
                     </div>
                     {% if form.password1.errors %}
-                    <p class="mt-1 text-xs text-red-400">{{ form.password1.errors.0 }}</p>
+                    <p class="mt-1 text-xs text-red-700 dark:text-red-400">{{ form.password1.errors.0 }}</p>
                     {% endif %}
                 </div>
 
                 <!-- Confirm Password -->
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-slate-300 mb-1.5">Confirm Password <span class="text-red-400">*</span></label>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Confirm Password <span class="text-red-700 dark:text-red-400">*</span></label>
                     <div class="relative">
                         {{ form.password2|attr:"autocomplete:new-password" }}
-                        <button type="button" id="toggle-pw2" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
+                        <button type="button" id="toggle-pw2" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
                             <i data-lucide="eye" class="w-4 h-4"></i>
                         </button>
                     </div>
                     {% if form.password2.errors %}
-                    <p class="mt-1 text-xs text-red-400">{{ form.password2.errors.0 }}</p>
+                    <p class="mt-1 text-xs text-red-700 dark:text-red-400">{{ form.password2.errors.0 }}</p>
                     {% endif %}
                 </div>
 
                 <!-- Terms notice -->
-                <p class="text-xs text-slate-500 mb-5 text-center">
+                <p class="text-xs text-slate-600 dark:text-slate-500 mb-5 text-center">
                     By registering, you agree to our Terms of Service and Privacy Policy.
                 </p>
 
@@ -108,14 +108,14 @@
             </form>
 
             <div class="mt-6 flex items-center justify-center space-x-4">
-                <div class="flex-1 border-t border-slate-800"></div>
-                <span class="text-xs text-slate-500 uppercase tracking-wider">Or sign up with</span>
-                <div class="flex-1 border-t border-slate-800"></div>
+                <div class="flex-1 border-t border-slate-200 dark:border-slate-800"></div>
+                <span class="text-xs text-slate-600 dark:text-slate-500 uppercase tracking-wider">Or sign up with</span>
+                <div class="flex-1 border-t border-slate-200 dark:border-slate-800"></div>
             </div>
 
             <div class="mt-6">
                 <a href="{% provider_login_url 'google' %}"
-                   class="w-full flex items-center justify-center gap-3 py-3.5 px-4 bg-slate-900 border border-slate-700 hover:bg-slate-800 text-white font-medium rounded-xl transition-all duration-200 hover:-translate-y-0.5">
+                   class="w-full flex items-center justify-center gap-3 py-3.5 px-4 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium rounded-xl transition-all duration-200 hover:-translate-y-0.5">
                     <svg class="w-5 h-5" viewBox="0 0 24 24">
                         <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0112 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115z"/>
                         <path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 01-6.723-4.823l-4.04 3.067A11.965 11.965 0 0012 24c2.933 0 5.735-1.043 7.834-3l-3.793-2.987z"/>
@@ -127,9 +127,9 @@
             </div>
         </div>
 
-        <p class="text-center text-sm text-slate-400 mt-5">
+        <p class="text-center text-sm text-slate-600 dark:text-slate-400 mt-5">
             Already have an account?
-            <a href="{% url 'accounts:login' %}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Sign in →</a>
+            <a href="{% url 'accounts:login' %}" class="text-indigo-700 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium transition-colors">Sign in →</a>
         </p>
     </div>
 </div>

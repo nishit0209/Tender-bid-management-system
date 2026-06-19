@@ -3,11 +3,11 @@ Reusable empty state partial.
 Usage: {% include 'partials/_empty_state.html' with icon="file-text" title="No tenders yet" message="Create your first tender to get started." action_url=url action_label="Create Tender" %}
 {% endcomment %}
 <div class="flex flex-col items-center justify-center py-16 text-center px-6">
-    <div class="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center mb-4">
+    <div class="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center mb-4">
         <i data-lucide="{{ icon|default:'inbox' }}" class="w-8 h-8 text-slate-600"></i>
     </div>
-    <h3 class="text-base font-semibold text-white mb-1">{{ title|default:"Nothing here yet" }}</h3>
-    <p class="text-sm text-slate-400 max-w-xs mb-4">{{ message|default:"No records found." }}</p>
+    <h3 class="text-base font-semibold text-slate-900 dark:text-white mb-1">{{ title|default:"Nothing here yet" }}</h3>
+    <p class="text-sm text-slate-600 dark:text-slate-400 max-w-xs mb-4">{{ message|default:"No records found." }}</p>
     {% if action_url %}
     <a href="{{ action_url }}"
        class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-all">

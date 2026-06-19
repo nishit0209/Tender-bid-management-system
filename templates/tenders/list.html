@@ -20,54 +20,54 @@
     {% if not user.is_vendor_user %}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <!-- Total -->
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl relative overflow-hidden group hover:border-slate-700 transition-colors">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl relative overflow-hidden group hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
             <div class="flex items-start justify-between">
                 <div>
-                    <p class="text-sm text-slate-400 font-medium">Total Tenders</p>
-                    <p class="text-2xl font-bold text-white mt-1">{{ total }}</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 font-medium">Total Tenders</p>
+                    <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">{{ total }}</p>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
+                <div class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
                     <i data-lucide="folder" class="w-5 h-5"></i>
                 </div>
             </div>
         </div>
 
         <!-- Open -->
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl relative overflow-hidden group hover:border-emerald-500/50 transition-colors">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl relative overflow-hidden group hover:border-emerald-500/50 transition-colors">
             <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all"></div>
             <div class="flex items-start justify-between">
                 <div>
-                    <p class="text-sm text-emerald-400 font-medium">Open for Bidding</p>
-                    <p class="text-2xl font-bold text-white mt-1">{{ open_count }}</p>
+                    <p class="text-sm text-emerald-700 dark:text-emerald-400 font-medium">Open for Bidding</p>
+                    <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">{{ open_count }}</p>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
                     <i data-lucide="unlock" class="w-5 h-5"></i>
                 </div>
             </div>
         </div>
 
         <!-- Pending Approval -->
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl relative overflow-hidden group hover:border-amber-500/50 transition-colors">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl relative overflow-hidden group hover:border-amber-500/50 transition-colors">
             <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all"></div>
             <div class="flex items-start justify-between">
                 <div>
-                    <p class="text-sm text-amber-400 font-medium">Pending Approval</p>
-                    <p class="text-2xl font-bold text-white mt-1">{{ pending }}</p>
+                    <p class="text-sm text-amber-700 dark:text-amber-400 font-medium">Pending Approval</p>
+                    <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">{{ pending }}</p>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-700 dark:text-amber-400">
                     <i data-lucide="clock" class="w-5 h-5"></i>
                 </div>
             </div>
         </div>
 
         <!-- Drafts -->
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl relative overflow-hidden group hover:border-slate-700 transition-colors">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl relative overflow-hidden group hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
             <div class="flex items-start justify-between">
                 <div>
-                    <p class="text-sm text-slate-400 font-medium">Drafts</p>
-                    <p class="text-2xl font-bold text-white mt-1">{{ draft }}</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 font-medium">Drafts</p>
+                    <p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">{{ draft }}</p>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
+                <div class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
                     <i data-lucide="file-edit" class="w-5 h-5"></i>
                 </div>
             </div>
@@ -76,16 +76,16 @@
     {% endif %}
 
     <!-- Filter Bar -->
-    <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
         <form method="get" class="flex flex-col sm:flex-row gap-3 items-center">
             <div class="w-full sm:flex-1 relative">
-                <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                <i data-lucide="search" class="w-4 h-4 text-slate-600 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
                 <input type="text" name="q" value="{{ filter_form.q.value|default:'' }}" placeholder="Search by tender number or title..."
-                       class="w-full pl-9 pr-4 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                       class="w-full pl-9 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
             </div>
             
             <div class="w-full sm:w-48">
-                <select name="status" class="w-full px-3 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500">
+                <select name="status" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500">
                     {% for value, label in filter_form.status.field.choices %}
                         <option value="{{ value }}" {% if filter_form.status.value == value %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
@@ -93,17 +93,17 @@
             </div>
 
             <div class="w-full sm:w-48">
-                <select name="category" class="w-full px-3 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500">
+                <select name="category" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500">
                     {% for value, label in filter_form.category.field.choices %}
                         <option value="{{ value }}" {% if filter_form.category.value == value %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
             
-            <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-sm font-medium rounded-xl transition-colors">
+            <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-sm font-medium rounded-xl transition-colors">
                 Filter
             </button>
-            <a href="{% url 'tenders:list' %}" class="w-full sm:w-auto px-4 py-2.5 text-slate-400 hover:text-white text-sm font-medium text-center transition-colors">
+            <a href="{% url 'tenders:list' %}" class="w-full sm:w-auto px-4 py-2.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium text-center transition-colors">
                 Clear
             </a>
         </form>
@@ -113,41 +113,41 @@
     {% if tenders %}
     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
         {% for tender in tenders %}
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 hover:border-slate-700 transition-all flex flex-col h-full group">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col h-full group">
             
             <!-- Header -->
             <div class="flex items-start justify-between mb-4">
                 <div>
-                    <p class="text-xs font-mono text-indigo-400 mb-1">{{ tender.tender_number }}</p>
-                    <h3 class="text-base font-bold text-white line-clamp-1" title="{{ tender.title }}">{{ tender.title }}</h3>
+                    <p class="text-xs font-mono text-indigo-700 dark:text-indigo-400 mb-1">{{ tender.tender_number }}</p>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white line-clamp-1" title="{{ tender.title }}">{{ tender.title }}</h3>
                 </div>
                 
                 <!-- Status Badge -->
                 {% if tender.status == 'draft' %}
-                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-400 whitespace-nowrap"><i data-lucide="file-edit" class="w-3 h-3 mr-1"></i>Draft</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 whitespace-nowrap"><i data-lucide="file-edit" class="w-3 h-3 mr-1"></i>Draft</span>
                 {% elif tender.status == 'pending_approval' %}
-                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-amber-500/10 text-amber-400 whitespace-nowrap"><i data-lucide="clock" class="w-3 h-3 mr-1"></i>Pending</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-amber-500/10 text-amber-700 dark:text-amber-400 whitespace-nowrap"><i data-lucide="clock" class="w-3 h-3 mr-1"></i>Pending</span>
                 {% elif tender.status == 'open' %}
-                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-emerald-500/10 text-emerald-400 whitespace-nowrap"><i data-lucide="unlock" class="w-3 h-3 mr-1"></i>Open</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 whitespace-nowrap"><i data-lucide="unlock" class="w-3 h-3 mr-1"></i>Open</span>
                 {% elif tender.status == 'closed' %}
-                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-red-500/10 text-red-400 whitespace-nowrap"><i data-lucide="lock" class="w-3 h-3 mr-1"></i>Closed</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-red-500/10 text-red-700 dark:text-red-400 whitespace-nowrap"><i data-lucide="lock" class="w-3 h-3 mr-1"></i>Closed</span>
                 {% else %}
-                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-300 whitespace-nowrap">{{ tender.get_status_display }}</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 whitespace-nowrap">{{ tender.get_status_display }}</span>
                 {% endif %}
             </div>
             
             <!-- Content -->
             <div class="flex-1">
-                <p class="text-sm text-slate-400 line-clamp-2 mb-4">{{ tender.description }}</p>
+                <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 mb-4">{{ tender.description }}</p>
                 
                 <div class="grid grid-cols-2 gap-3 mb-4">
-                    <div class="bg-slate-800/50 rounded-xl p-3">
-                        <p class="text-xs text-slate-500 mb-0.5">Budget</p>
-                        <p class="text-sm font-semibold text-slate-200">₹{{ tender.estimated_budget|floatformat:"0" }}</p>
+                    <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3">
+                        <p class="text-xs text-slate-600 dark:text-slate-500 mb-0.5">Budget</p>
+                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">₹{{ tender.estimated_budget|floatformat:"0" }}</p>
                     </div>
-                    <div class="bg-slate-800/50 rounded-xl p-3">
-                        <p class="text-xs text-slate-500 mb-0.5">Category</p>
-                        <p class="text-sm font-semibold text-slate-200">
+                    <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3">
+                        <p class="text-xs text-slate-600 dark:text-slate-500 mb-0.5">Category</p>
+                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">
                             {% if tender.category == 'other' and tender.custom_category %}
                                 {{ tender.custom_category }}
                             {% else %}
@@ -157,10 +157,10 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2 text-xs text-slate-400">
+                <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
                     <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
                     {% if tender.status == 'open' %}
-                        <span>Closes: <span class="font-medium text-slate-300">{{ tender.closing_date|date:"d M Y" }}</span></span>
+                        <span>Closes: <span class="font-medium text-slate-700 dark:text-slate-300">{{ tender.closing_date|date:"d M Y" }}</span></span>
                     {% elif tender.status == 'draft' %}
                         <span>Created: {{ tender.created_at|date:"d M Y" }}</span>
                     {% else %}
@@ -170,13 +170,13 @@
             </div>
             
             <!-- Actions -->
-            <div class="mt-5 pt-4 border-t border-slate-800/60 flex items-center justify-between">
-                <div class="flex items-center gap-1.5 text-xs font-medium text-slate-500">
+            <div class="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800/60 flex items-center justify-between">
+                <div class="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-500">
                     <i data-lucide="users" class="w-3.5 h-3.5"></i>
                     {% if tender.is_public %}Public{% else %}Internal{% endif %}
                 </div>
                 
-                <a href="{% url 'tenders:detail' tender.pk %}" class="flex items-center gap-1.5 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
+                <a href="{% url 'tenders:detail' tender.pk %}" class="flex items-center gap-1.5 text-sm font-medium text-indigo-700 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
                     View Details
                     <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                 </a>
@@ -188,19 +188,19 @@
 
     <!-- Pagination -->
     {% if page_obj.has_other_pages %}
-    <div class="flex items-center justify-between bg-slate-900 border border-slate-800 px-4 py-3 rounded-2xl">
-        <div class="text-sm text-slate-400">
-            Showing <span class="font-medium text-white">{{ page_obj.start_index }}</span> to <span class="font-medium text-white">{{ page_obj.end_index }}</span> of <span class="font-medium text-white">{{ paginator.count }}</span>
+    <div class="flex items-center justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-3 rounded-2xl">
+        <div class="text-sm text-slate-600 dark:text-slate-400">
+            Showing <span class="font-medium text-slate-900 dark:text-white">{{ page_obj.start_index }}</span> to <span class="font-medium text-slate-900 dark:text-white">{{ page_obj.end_index }}</span> of <span class="font-medium text-slate-900 dark:text-white">{{ paginator.count }}</span>
         </div>
         <div class="flex gap-1">
             {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors">
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                 <i data-lucide="chevron-left" class="w-4 h-4"></i>
             </a>
             {% endif %}
             
             {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors">
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                 <i data-lucide="chevron-right" class="w-4 h-4"></i>
             </a>
             {% endif %}

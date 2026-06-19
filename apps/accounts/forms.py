@@ -14,15 +14,10 @@ User = get_user_model()
 # ─────────────────────────────────────────────
 # Shared Widget CSS Classes (module-level)
 # ─────────────────────────────────────────────
-_DARK = (
-    'w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg '
-    'text-white placeholder-slate-400 focus:outline-none focus:ring-2 '
-    'focus:ring-indigo-500 focus:border-transparent transition'
-)
-_LIGHT = (
-    'w-full px-4 py-3 bg-white border border-gray-300 rounded-lg '
-    'text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 '
-    'focus:ring-indigo-500 focus:border-transparent transition'
+INPUT_CLASSES = (
+    'w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 '
+    'rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 '
+    'focus:ring-indigo-500 focus:border-transparent transition-all duration-200'
 )
 
 
@@ -35,7 +30,7 @@ class LoginForm(AuthenticationForm):
     username = forms.EmailField(
         label=_('Email Address'),
         widget=forms.EmailInput(attrs={
-            'class': _DARK,
+            'class': INPUT_CLASSES,
             'placeholder': 'you@company.com',
             'autocomplete': 'email',
             'id': 'id_email',
@@ -44,7 +39,7 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(
         label=_('Password'),
         widget=forms.PasswordInput(attrs={
-            'class': _DARK,
+            'class': INPUT_CLASSES,
             'placeholder': '••••••••',
             'autocomplete': 'current-password',
             'id': 'id_password',
@@ -54,7 +49,7 @@ class LoginForm(AuthenticationForm):
         required=False,
         label=_('Remember me for 8 hours'),
         widget=forms.CheckboxInput(attrs={
-            'class': 'w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-600 focus:ring-indigo-500',
+            'class': 'w-4 h-4 rounded border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-indigo-600 focus:ring-indigo-500',
             'id': 'id_remember_me',
         })
     )
@@ -70,7 +65,7 @@ class VendorRegistrationForm(forms.ModelForm):
         label=_('Password'),
         strip=False,
         widget=forms.PasswordInput(attrs={
-            'class': _DARK,
+            'class': INPUT_CLASSES,
             'placeholder': 'Minimum 8 characters',
             'autocomplete': 'new-password',
             'id': 'id_password1',
@@ -81,7 +76,7 @@ class VendorRegistrationForm(forms.ModelForm):
         label=_('Confirm Password'),
         strip=False,
         widget=forms.PasswordInput(attrs={
-            'class': _DARK,
+            'class': INPUT_CLASSES,
             'placeholder': 'Repeat your password',
             'autocomplete': 'new-password',
             'id': 'id_password2',
@@ -93,22 +88,22 @@ class VendorRegistrationForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email', 'phone']
         widgets = {
             'first_name': forms.TextInput(attrs={
-                'class': _DARK,
+                'class': INPUT_CLASSES,
                 'placeholder': 'John',
                 'id': 'id_first_name',
             }),
             'last_name': forms.TextInput(attrs={
-                'class': _DARK,
+                'class': INPUT_CLASSES,
                 'placeholder': 'Doe',
                 'id': 'id_last_name',
             }),
             'email': forms.EmailInput(attrs={
-                'class': _DARK,
+                'class': INPUT_CLASSES,
                 'placeholder': 'john@yourcompany.com',
                 'id': 'id_email',
             }),
             'phone': forms.TextInput(attrs={
-                'class': _DARK,
+                'class': INPUT_CLASSES,
                 'placeholder': '+91 98765 43210',
                 'id': 'id_phone',
             }),
@@ -167,12 +162,12 @@ class StaffRegistrationForm(forms.ModelForm):
     password1 = forms.CharField(
         label=_('Password'),
         strip=False,
-        widget=forms.PasswordInput(attrs={'class': _LIGHT, 'placeholder': 'Set password'}),
+        widget=forms.PasswordInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'Set password'}),
     )
     password2 = forms.CharField(
         label=_('Confirm Password'),
         strip=False,
-        widget=forms.PasswordInput(attrs={'class': _LIGHT, 'placeholder': 'Repeat password'}),
+        widget=forms.PasswordInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'Repeat password'}),
     )
 
     class Meta:
@@ -182,14 +177,14 @@ class StaffRegistrationForm(forms.ModelForm):
             'role', 'department', 'designation', 'employee_id',
         ]
         widgets = {
-            'first_name':   forms.TextInput(attrs={'class': _LIGHT}),
-            'last_name':    forms.TextInput(attrs={'class': _LIGHT}),
-            'email':        forms.EmailInput(attrs={'class': _LIGHT}),
-            'phone':        forms.TextInput(attrs={'class': _LIGHT}),
-            'role':         forms.Select(attrs={'class': _LIGHT}),
-            'department':   forms.TextInput(attrs={'class': _LIGHT}),
-            'designation':  forms.TextInput(attrs={'class': _LIGHT}),
-            'employee_id':  forms.TextInput(attrs={'class': _LIGHT}),
+            'first_name':   forms.TextInput(attrs={'class': INPUT_CLASSES}),
+            'last_name':    forms.TextInput(attrs={'class': INPUT_CLASSES}),
+            'email':        forms.EmailInput(attrs={'class': INPUT_CLASSES}),
+            'phone':        forms.TextInput(attrs={'class': INPUT_CLASSES}),
+            'role':         forms.Select(attrs={'class': INPUT_CLASSES}),
+            'department':   forms.TextInput(attrs={'class': INPUT_CLASSES}),
+            'designation':  forms.TextInput(attrs={'class': INPUT_CLASSES}),
+            'employee_id':  forms.TextInput(attrs={'class': INPUT_CLASSES}),
         }
 
     def clean_password2(self):
@@ -222,11 +217,11 @@ class ProfileEditForm(forms.ModelForm):
             'department', 'designation',
         ]
         widgets = {
-            'first_name':   forms.TextInput(attrs={'class': _LIGHT, 'placeholder': 'First name'}),
-            'last_name':    forms.TextInput(attrs={'class': _LIGHT, 'placeholder': 'Last name'}),
-            'phone':        forms.TextInput(attrs={'class': _LIGHT, 'placeholder': '+91 98765 43210'}),
-            'department':   forms.TextInput(attrs={'class': _LIGHT, 'placeholder': 'e.g. IT, Finance'}),
-            'designation':  forms.TextInput(attrs={'class': _LIGHT, 'placeholder': 'e.g. Manager'}),
+            'first_name':   forms.TextInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'First name'}),
+            'last_name':    forms.TextInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'Last name'}),
+            'phone':        forms.TextInput(attrs={'class': INPUT_CLASSES, 'placeholder': '+91 98765 43210'}),
+            'department':   forms.TextInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'e.g. IT, Finance'}),
+            'designation':  forms.TextInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'e.g. Manager'}),
         }
 
 
@@ -239,7 +234,7 @@ class CustomPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs.update({'class': _LIGHT})
+            field.widget.attrs.update({'class': INPUT_CLASSES})
         self.fields['old_password'].widget.attrs['placeholder'] = 'Current password'
         self.fields['new_password1'].widget.attrs['placeholder'] = 'New password (min 8 chars)'
         self.fields['new_password2'].widget.attrs['placeholder'] = 'Repeat new password'
@@ -254,7 +249,7 @@ class PasswordResetRequestForm(forms.Form):
     email = forms.EmailField(
         label=_('Your Registered Email'),
         widget=forms.EmailInput(attrs={
-            'class': _DARK,
+            'class': INPUT_CLASSES,
             'placeholder': 'you@company.com',
             'id': 'id_reset_email',
         })
@@ -272,10 +267,10 @@ class SetNewPasswordForm(SetPasswordForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['new_password1'].widget.attrs.update({
-            'class': _DARK,
+            'class': INPUT_CLASSES,
             'placeholder': 'New password',
         })
         self.fields['new_password2'].widget.attrs.update({
-            'class': _DARK,
+            'class': INPUT_CLASSES,
             'placeholder': 'Confirm new password',
         })
