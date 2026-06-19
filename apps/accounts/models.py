@@ -117,6 +117,7 @@ class CustomUser(AbstractUser, TimeStampedModel):
     # Verification
     is_verified = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
+    phone_verified = models.BooleanField(default=False)
 
     # Login tracking
     last_login_ip = models.GenericIPAddressField(blank=True, null=True)

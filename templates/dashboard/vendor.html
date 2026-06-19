@@ -7,6 +7,23 @@
 {% block content %}
 <div class="space-y-6">
 
+    <!-- Phone Verification Banner -->
+    {% if not user.phone or not user.phone_verified %}
+    <div class="flex items-center gap-4 p-5 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700/40 rounded-2xl mb-4">
+        <div class="w-10 h-10 bg-red-50 dark:bg-red-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i data-lucide="phone-off" class="w-5 h-5 text-red-700 dark:text-red-400"></i>
+        </div>
+        <div class="flex-1">
+            <p class="text-sm font-semibold text-red-800 dark:text-red-300">Action Required: Mobile Number Missing or Unverified</p>
+            <p class="text-xs text-red-700 dark:text-red-400/70 mt-0.5">Please enter and verify your mobile number to participate in bid tenders.</p>
+        </div>
+        <a href="{% url 'accounts:profile' %}"
+           class="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-medium rounded-xl transition-all flex-shrink-0 shadow-sm shadow-red-500/20">
+            Verify Now
+        </a>
+    </div>
+    {% endif %}
+
     <!-- Profile Status Banners -->
     {% if not has_profile %}
     <div class="flex items-center gap-4 p-5 bg-indigo-900/30 border border-indigo-700/40 rounded-2xl">

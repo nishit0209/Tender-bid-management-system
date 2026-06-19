@@ -593,6 +593,7 @@ def user_edit(request, pk):
 
         user_obj.is_active = request.POST.get('is_active') == 'on'
         user_obj.is_verified = request.POST.get('is_verified') == 'on'
+        user_obj.phone_verified = request.POST.get('phone_verified') == 'on'
 
         # Admin Password Reset Logic
         new_password = request.POST.get('new_password', '').strip()

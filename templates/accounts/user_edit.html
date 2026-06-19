@@ -151,6 +151,18 @@
                     <p class="text-xs text-slate-600 dark:text-slate-500">Mark user as verified</p>
                 </div>
             </label>
+
+            <label class="flex items-center gap-3 cursor-pointer group">
+                <div class="relative">
+                    <input type="checkbox" name="phone_verified" class="sr-only peer" {% if user_obj.phone_verified %}checked{% endif %}>
+                    <div class="w-10 h-5 bg-slate-100 dark:bg-slate-700 rounded-full peer-checked:bg-purple-600 transition-all"></div>
+                    <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow peer-checked:translate-x-5 transition-all"></div>
+                </div>
+                <div>
+                    <span class="text-sm text-slate-900 dark:text-white group-hover:text-slate-800 dark:group-hover:text-slate-200">Phone Verified</span>
+                    <p class="text-xs text-slate-600 dark:text-slate-500">Mark phone as verified</p>
+                </div>
+            </label>
         </div>
     </div>
 </div>
@@ -189,7 +201,22 @@
         <span class="ml-auto text-xs text-slate-600 dark:text-slate-500">Read-only</span>
     </div>
     <div class="p-4 sm:p-5">
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-6 gap-4">
+            <div>
+                <p class="text-xs text-slate-600 dark:text-slate-500 mb-0.5">Auth Method</p>
+                <p class="text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
+                    {% if user_obj.socialaccount_set.exists %}
+                    <svg class="w-4 h-4" viewBox="0 0 24 24">
+                        <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0112 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115z"/>
+                        <path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 01-6.723-4.823l-4.04 3.067A11.965 11.965 0 0012 24c2.933 0 5.735-1.043 7.834-3l-3.793-2.987z"/>
+                        <path fill="#4A90E2" d="M19.834 21c2.195-2.048 3.62-5.096 3.62-9v-2H12v4h6.813a5.811 5.811 0 01-2.984 3.905l3.966 3.095z"/>
+                        <path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 014.805 12c0-.792.155-1.545.426-2.234l-4.026-3.115A11.97 11.97 0 000 12c0 1.933.453 3.766 1.251 5.384l4.026-3.116z"/>
+                    </svg> Google
+                    {% else %}
+                    <i data-lucide="mail" class="w-4 h-4 text-slate-500"></i> Email/Pass
+                    {% endif %}
+                </p>
+            </div>
             <div>
                 <p class="text-xs text-slate-600 dark:text-slate-500 mb-0.5">Last Login</p>
                 <p class="text-sm text-slate-900 dark:text-white">{{ user_obj.last_login|date:"d/m/Y H:i"|default:"Never" }}</p>
