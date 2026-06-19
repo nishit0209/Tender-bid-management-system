@@ -47,3 +47,25 @@
 #sidebar-overlay {
     transition: opacity 0.3s ease;
 }
+
+/* ── CHROME AUTOFILL OVERRIDES ─────────────────────────────── */
+/* Fixes issue where saved passwords make input background white in dark mode */
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover, 
+.dark input:-webkit-autofill:focus, 
+.dark input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #1e293b inset !important; /* matches slate-800 */
+    -webkit-text-fill-color: white !important;
+    caret-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+html:not(.dark) input:-webkit-autofill,
+html:not(.dark) input:-webkit-autofill:hover, 
+html:not(.dark) input:-webkit-autofill:focus, 
+html:not(.dark) input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #f8fafc inset !important; /* matches slate-50 */
+    -webkit-text-fill-color: #0f172a !important; /* matches slate-900 */
+    caret-color: #0f172a !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
