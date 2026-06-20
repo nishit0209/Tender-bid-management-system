@@ -75,8 +75,8 @@ def allauth_user_signed_up(request, user, **kwargs):
         defaults={
             'company_name': f"{company_name}'s Company",
             'contact_email': user.email,
-            'gst_number': f"TEMP-GST-{user.id}",
-            'pan_number': f"TEMP-PAN-{user.id}",
+            'gst_number': f"GSTTEMP{user.id:08d}"[:15],
+            'pan_number': f"TEMP{user.id:06d}"[:10],
         }
     )
 
@@ -90,7 +90,7 @@ def allauth_user_signed_up(request, user, **kwargs):
                     recipient=staff,
                     title='New Vendor Registration (Google)',
                     message=f'Vendor {vendor.company_name} ({user.email}) has registered via Google and is pending review.',
-                    link=f'/vendors/{vendor.id}/',
+                    action_url=f'/vendors/{vendor.id}/',
                 )
             )
         Notification.objects.bulk_create(notifications)

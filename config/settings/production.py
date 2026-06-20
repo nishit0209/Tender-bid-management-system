@@ -23,6 +23,10 @@ CSRF_COOKIE_SECURE = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# Add trusted origins for CSRF
+csrf_trusted = config('CSRF_TRUSTED_ORIGINS', default='https://*.vercel.app,https://*.render.com')
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_trusted.split(',') if origin.strip()]
+
 # ─────────────────────────────────────────────
 # Email (production SMTP)
 # ─────────────────────────────────────────────
