@@ -357,8 +357,12 @@ def reset_password_view(request, token):
 # ─────────────────────────────────────────────
 # Dashboard Routing
 # ─────────────────────────────────────────────
-@login_required
 def index(request):
+    """Public Landing Page. Shows features, links to Login/Signup."""
+    return render(request, 'landing.html')
+
+@login_required
+def dashboard_router(request):
     """Route users to their role-specific dashboard."""
     return redirect(request.user.get_dashboard_url())
 
