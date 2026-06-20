@@ -68,29 +68,17 @@ def allauth_user_signed_up(request, user, **kwargs):
     user.email_verified = True
     user.save(update_fields=['role', 'is_verified', 'email_verified'])
 
-    # 2. Create Vendor profile (if doesn't exist)
-    company_name = user.get_full_name() or user.email.split('@')[0]
-    vendor, created = Vendor.objects.get_or_create(
-        user=user,
-        defaults={
-            'company_name': f"{company_name}'s Company",
-            'contact_email': user.email,
-            'gst_number': f"GSTTEMP{user.id:08d}"[:15],
-            'pan_number': f"TEMP{user.id:06d}"[:10],
-        }
-    )
-
-    # 3. Create Notifications for Staff
-    if created:
-        staff_users = CustomUser.objects.filter(role__in=[UserRole.ADMIN, UserRole.MANAGER, UserRole.PROCUREMENT_OFFICER], is_active=True)
-        notifications = []
-        for staff in staff_users:
-            notifications.append(
-                Notification(
-                    recipient=staff,
-                    title='New Vendor Registration (Google)',
-                    message=f'Vendor {vendor.company_name} ({user.email}) has registered via Google and is pending review.',
-                    action_url=f'/vendors/{vendor.id}/',
-                )
+    # 2. Notify Staff about new Google user registration
+    staff_users = CustomUser.objects.filter(role__in=[UserRole.ADMIN, UserRole.MANAGER, UserRole.PROCUREMENT_OFFICER], is_active=True)
+    notifications = []
+    for staff in staff_users:
+        notifications.append(
+            Notification(
+                recipient=staff,
+                title='New User Registration (Google)',
+                message=f'User {user.email} has registered via Google. They still need to complete their Vendor Profile.',
+                action_url=f'/accounts/users/{user.id}/edit/',
             )
+        )
+    if notifications:
         Notification.objects.bulk_create(notifications)
