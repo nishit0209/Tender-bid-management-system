@@ -662,8 +662,18 @@ def user_delete(request, pk):
         messages.error(request, 'Cannot delete a superuser account.')
         return redirect('accounts:user_management')
 
+    from django.db.models.deletion import ProtectedError
+
     email = user_obj.email
-    user_obj.delete()
-    messages.success(request, f'User "{email}" has been permanently deleted.')
+    try:
+        user_obj.delete()
+        messages.success(request, f'User "{email}" has been permanently deleted.')
+    except ProtectedError:
+        messages.error(
+            request, 
+            f'Cannot delete user "{email}" because they have a Vendor profile or other linked records. '
+            'Please delete their Vendor profile first, or simply Suspend their account instead.'
+        )
+        
     return redirect('accounts:user_management')
 

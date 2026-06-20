@@ -16,4 +16,5 @@ urlpatterns = [
     path('<int:vendor_pk>/upload-document/',  views.document_upload,   name='document_upload'),
     path('document/<int:doc_pk>/verify/',  views.document_verify,  name='document_verify'),
     path('document/<int:doc_pk>/delete/',  views.document_delete,  name='document_delete'),
+    path('<int:pk>/delete/',           views.vendor_delete,     name='delete'),
 ]

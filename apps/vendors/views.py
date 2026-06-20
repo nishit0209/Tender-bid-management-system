@@ -583,5 +583,26 @@ def _notify_document_uploaded(request, vendor, doc):
                 action_url=f'/vendors/{vendor.pk}/',
                 related_vendor=vendor,
             )
-    except Exception:
         pass
+
+@login_required
+def vendor_delete(request, pk):
+    """Admin-only: Delete a vendor profile."""
+    if not _is_staff(request.user):
+        messages.error(request, 'Access denied.')
+        return redirect('dashboard:index')
+
+    if request.method != 'POST':
+        return redirect('vendors:list')
+
+    vendor = get_object_or_404(Vendor, pk=pk)
+    company_name = vendor.company_name
+    
+    from django.db.models.deletion import ProtectedError
+    try:
+        vendor.delete()
+        messages.success(request, f'Vendor "{company_name}" has been permanently deleted.')
+    except ProtectedError:
+        messages.error(request, f'Cannot delete Vendor "{company_name}" because it has associated Bids or Purchase Orders.')
+        
+    return redirect('vendors:list')

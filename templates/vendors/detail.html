@@ -100,6 +100,15 @@
                 <i data-lucide="upload" class="w-4 h-4"></i> Upload Document
             </a>
             {% endif %}
+
+            {% if user.is_admin %}
+            <form method="post" action="{% url 'vendors:delete' vendor.pk %}" class="ml-auto" onsubmit="return confirm('⚠️ Permanently delete this vendor profile? This action cannot be undone!')">
+                {% csrf_token %}
+                <button type="submit" class="flex items-center gap-2 px-4 py-2 bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 text-red-700 dark:text-red-400 text-sm font-medium rounded-xl transition-all">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i> Delete Vendor
+                </button>
+            </form>
+            {% endif %}
         </div>
 
         <!-- Rejection Reason -->
