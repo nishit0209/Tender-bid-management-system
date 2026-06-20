@@ -583,6 +583,7 @@ def _notify_document_uploaded(request, vendor, doc):
                 action_url=f'/vendors/{vendor.pk}/',
                 related_vendor=vendor,
             )
+    except Exception:
         pass
 
 @login_required
