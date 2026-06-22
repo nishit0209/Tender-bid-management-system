@@ -139,6 +139,7 @@ class Vendor(TimeStampedModel):
     rejection_reason   = models.TextField(blank=True, null=True)
     suspension_reason  = models.TextField(blank=True, null=True)
     document_retries_left = models.PositiveIntegerField(default=5, help_text='Number of document re-upload attempts allowed')
+    document_upload_counts = models.JSONField(default=dict, blank=True, help_text='Tracks upload counts per document type')
 
     # Workflow Tracking
     submitted_at       = models.DateTimeField(auto_now_add=True)

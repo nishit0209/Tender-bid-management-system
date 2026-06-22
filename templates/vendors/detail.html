@@ -102,7 +102,12 @@
             {% endif %}
 
             {% if user.is_admin %}
-            <form method="post" action="{% url 'vendors:delete' vendor.pk %}" class="ml-auto" onsubmit="return confirm('⚠️ Permanently delete this vendor profile? This action cannot be undone!')">
+            <a href="{% url 'vendors:reset_limits' vendor.pk %}"
+               class="flex items-center gap-2 px-4 py-2 bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-600/20 text-emerald-700 dark:text-emerald-400 text-sm font-medium rounded-xl transition-all ml-auto">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Reset Limits
+            </a>
+            
+            <form method="post" action="{% url 'vendors:delete' vendor.pk %}" class="ml-2" onsubmit="return confirm('⚠️ Permanently delete this vendor profile? This action cannot be undone!')">
                 {% csrf_token %}
                 <button type="submit" class="flex items-center gap-2 px-4 py-2 bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 text-red-700 dark:text-red-400 text-sm font-medium rounded-xl transition-all">
                     <i data-lucide="trash-2" class="w-4 h-4"></i> Delete Vendor

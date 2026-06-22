@@ -13,6 +13,7 @@ urlpatterns = [
     path('<int:pk>/approve/',          views.vendor_approve,    name='approve'),
     path('<int:pk>/reject/',           views.vendor_reject,     name='reject'),
     path('<int:pk>/suspend/',          views.vendor_suspend,    name='suspend'),
+    path('<int:pk>/reset-limits/',     views.vendor_reset_limits, name='reset_limits'),
     path('<int:vendor_pk>/upload-document/',  views.document_upload,   name='document_upload'),
     path('document/<int:doc_pk>/verify/',  views.document_verify,  name='document_verify'),
     path('document/<int:doc_pk>/delete/',  views.document_delete,  name='document_delete'),
