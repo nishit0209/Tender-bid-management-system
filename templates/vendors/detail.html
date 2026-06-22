@@ -270,6 +270,24 @@
                             {% if doc.valid_until %}
                             <p class="text-xs text-amber-700 dark:text-amber-400/80">Expires: {{ doc.valid_until|date:"d M Y" }}</p>
                             {% endif %}
+                            
+                            {% if doc.ai_confidence_score is not None %}
+                            <div class="mt-2 text-xs flex flex-col gap-1 {% if doc.ai_confidence_score > 80 %}text-emerald-600 dark:text-emerald-400{% elif doc.ai_confidence_score > 50 %}text-amber-600 dark:text-amber-400{% else %}text-red-600 dark:text-red-400{% endif %} font-medium">
+                                <div class="flex items-center gap-1.5">
+                                    <i data-lucide="{% if doc.ai_confidence_score > 80 %}shield-check{% elif doc.ai_confidence_score > 50 %}shield-alert{% else %}shield-x{% endif %}" class="w-3.5 h-3.5"></i>
+                                    <span>AI Authenticity Score: {{ doc.ai_confidence_score }}%</span>
+                                </div>
+                                <div class="mt-1 p-2 rounded bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-normal leading-relaxed">
+                                    <strong class="text-[11px] uppercase tracking-wider text-slate-500 mb-1 block">AI Analysis:</strong>
+                                    {{ doc.ai_analysis_remarks }}
+                                </div>
+                            </div>
+                            {% elif doc.ai_analysis_remarks %}
+                            <div class="mt-2 text-xs flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-medium">
+                                <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                                <span>AI Status: {{ doc.ai_analysis_remarks }}</span>
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="flex items-center gap-2 flex-shrink-0">
                             <span class="text-xs px-2 py-0.5 rounded-md font-medium

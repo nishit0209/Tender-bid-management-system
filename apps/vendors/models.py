@@ -138,6 +138,7 @@ class Vendor(TimeStampedModel):
                          )
     rejection_reason   = models.TextField(blank=True, null=True)
     suspension_reason  = models.TextField(blank=True, null=True)
+    document_retries_left = models.PositiveIntegerField(default=5, help_text='Number of document re-upload attempts allowed')
 
     # Workflow Tracking
     submitted_at       = models.DateTimeField(auto_now_add=True)
@@ -283,6 +284,8 @@ class VendorDocument(TimeStampedModel):
     rejection_reason = models.TextField(blank=True, null=True)
     remarks       = models.TextField(blank=True, null=True,
                                      help_text='Internal remarks by verifier')
+    ai_confidence_score = models.IntegerField(null=True, blank=True)
+    ai_analysis_remarks = models.TextField(blank=True, null=True)
 
     # Validity
     valid_from    = models.DateField(null=True, blank=True)

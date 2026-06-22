@@ -19,13 +19,36 @@ from django.http import HttpResponse
 
 def fix_site(request):
     from django.contrib.sites.models import Site
-    Site.objects.update_or_create(id=2, defaults={'domain': '127.0.0.1:8000', 'name': 'Localhost'})
-    return HttpResponse("Site 2 successfully created! You can now use Google Login on Local.")
+    Site.objects.update_or_create(id=1, defaults={'domain': '127.0.0.1:8000', 'name': 'Localhost'})
+    Site.objects.update_or_create(id=2, defaults={'domain': 'tenderbms.vercel.app', 'name': 'Production'})
+    return HttpResponse("Site 1 & 2 successfully configured! You can now use Google Login on Local.")
+
+def run_migrations(request):
+    from django.core.management import call_command
+    import io
+    out = io.StringIO()
+    try:
+        call_command('makemigrations', stdout=out)
+        call_command('migrate', 'socialaccount', '--fake', stdout=out)
+        call_command('migrate', '--fake-initial', stdout=out)
+        return HttpResponse(f"<pre>Migrations Successful!\n\n{out.getvalue()}</pre>")
+    except Exception as e:
+        return HttpResponse(f"<pre>Error running migrations:\n\n{str(e)}\n\nOutput so far:\n{out.getvalue()}</pre>")
+
+def list_models(request):
+    import urllib.request, json
+    from decouple import config
+    api_key = config('GEMINI_API_KEY', default='').strip()
+    req = urllib.request.Request(f'https://generativelanguage.googleapis.com/v1beta/models?key={api_key}')
+    res = urllib.request.urlopen(req)
+    return HttpResponse(f"<pre>{json.dumps(json.loads(res.read()), indent=2)}</pre>")
 
 from apps.accounts.views_secure import secure_document_download
 
 urlpatterns = [
     path('fix-site/', fix_site),
+    path('run-migrations/', run_migrations),
+    path('list-models/', list_models),
     # Django Admin
     path('admin/', admin.site.urls),
 

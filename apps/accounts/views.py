@@ -120,6 +120,25 @@ class LoginView(View):
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
+        email = request.POST.get('username', '')
+        user_obj = None
+        
+        # Check lockout BEFORE form validation
+        try:
+            user_obj = User.objects.get(email=email)
+            if user_obj.account_locked_until:
+                if user_obj.account_locked_until > timezone.now():
+                    lock_mins = int((user_obj.account_locked_until - timezone.now()).total_seconds() / 60)
+                    messages.error(request, f'Account locked for {lock_mins} minutes due to multiple failed attempts. Use the Forgot Password link below if needed.')
+                    return render(request, self.template_name, {'form': LoginForm(request.POST)})
+                else:
+                    # Lock expired, reset
+                    user_obj.failed_login_attempts = 0
+                    user_obj.account_locked_until = None
+                    user_obj.save(update_fields=['failed_login_attempts', 'account_locked_until'])
+        except User.DoesNotExist:
+            pass
+
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
@@ -127,31 +146,36 @@ class LoginView(View):
 
             # Handle remember-me
             if not form.cleaned_data.get('remember_me'):
-                request.session.set_expiry(0)  # Session expires on browser close
+                request.session.set_expiry(0)
             else:
-                request.session.set_expiry(28800)  # 8 hours
+                request.session.set_expiry(28800)
 
-            # Track login IP
+            # Track login IP and reset attempts
             ip = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip() \
                  or request.META.get('REMOTE_ADDR', '')
             user.last_login_ip = ip or None
             user.failed_login_attempts = 0
-            user.save(update_fields=['last_login_ip', 'failed_login_attempts'])
+            user.account_locked_until = None
+            user.save(update_fields=['last_login_ip', 'failed_login_attempts', 'account_locked_until'])
 
             messages.success(request, f'Welcome back, {user.first_name or user.email}!')
             next_url = request.GET.get('next', user.get_dashboard_url())
             return redirect(next_url)
 
-        # Track failed attempts (without locking for now)
-        email = request.POST.get('username', '')
-        try:
-            user_obj = User.objects.get(email=email)
+        # Track failed attempts for existing user
+        if user_obj:
             user_obj.failed_login_attempts += 1
-            user_obj.save(update_fields=['failed_login_attempts'])
-        except User.DoesNotExist:
-            pass
-
-        messages.error(request, 'Invalid email or password. Please try again.')
+            if user_obj.failed_login_attempts >= 5:
+                user_obj.account_locked_until = timezone.now() + timezone.timedelta(minutes=10)
+                user_obj.save(update_fields=['failed_login_attempts', 'account_locked_until'])
+                messages.error(request, 'Account locked for 10 minutes due to 5 failed attempts. Use the Forgot Password link below.')
+            else:
+                user_obj.save(update_fields=['failed_login_attempts'])
+                rem = 5 - user_obj.failed_login_attempts
+                messages.error(request, f'Invalid email or password. {rem} attempts remaining.')
+        else:
+            messages.error(request, 'Invalid email or password. Please try again.')
+            
         return render(request, self.template_name, {'form': form})
 
 

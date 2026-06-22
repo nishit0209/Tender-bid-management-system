@@ -49,3 +49,56 @@ class HideNextUrlMiddleware:
                 response['Location'] = new_url
 
         return response
+
+import logging
+from django.db.utils import ProgrammingError, OperationalError
+from django.http import HttpResponse
+
+logger = logging.getLogger(__name__)
+
+class MigrationErrorMiddleware:
+    """
+    Catches Database ProgrammingError and OperationalError, which usually indicate 
+    that migrations have not been applied, and returns a friendly error page.
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        try:
+            return self.get_response(request)
+        except (ProgrammingError, OperationalError) as e:
+            error_msg = str(e).lower()
+            if "column" in error_msg or "relation" in error_msg or "does not exist" in error_msg:
+                html = f"""
+                <html>
+                <head>
+                    <title>System Update Required</title>
+                    <style>
+                        body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f8fafc; color: #334155; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }}
+                        .card {{ background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); max-width: 500px; text-align: center; border-top: 4px solid #ef4444; }}
+                        h1 {{ color: #0f172a; font-size: 24px; margin-bottom: 16px; margin-top: 0; }}
+                        p {{ line-height: 1.6; margin-bottom: 24px; }}
+                        .code {{ background: #1e293b; color: #10b981; padding: 16px; border-radius: 8px; text-align: left; font-family: monospace; font-size: 14px; overflow-x: auto; }}
+                        .error-details {{ margin-top: 24px; padding: 12px; background: #fee2e2; color: #991b1b; border-radius: 6px; font-size: 12px; text-align: left; word-break: break-all; }}
+                    </style>
+                </head>
+                <body>
+                    <div class="card">
+                        <h1>⚙️ Database Update Required</h1>
+                        <p>The system has been upgraded with new features, but the database schema needs to be updated to match the new code.</p>
+                        <p>Please run the following commands in your terminal:</p>
+                        <div class="code">
+                            python manage.py makemigrations<br><br>
+                            python manage.py migrate
+                        </div>
+                        <div class="error-details">
+                            <strong>Technical Detail:</strong><br>
+                            {e}
+                        </div>
+                    </div>
+                </body>
+                </html>
+                """
+                return HttpResponse(html, status=500)
+            raise

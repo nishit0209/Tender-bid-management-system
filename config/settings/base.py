@@ -71,6 +71,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'apps.accounts.middleware.HideNextUrlMiddleware',
+    'apps.accounts.middleware.MigrationErrorMiddleware',
 ]
 
 # ─────────────────────────────────────────────
@@ -137,7 +138,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http' if DEBUG else 'https'
 
 # Social Auth Provider Settings
 SOCIALACCOUNT_PROVIDERS = {

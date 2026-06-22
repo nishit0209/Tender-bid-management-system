@@ -391,7 +391,6 @@ def vendor_suspend(request, pk):
 def document_upload(request, vendor_pk):
     vendor = get_object_or_404(Vendor, pk=vendor_pk)
 
-    # Only the vendor themselves can upload documents
     if request.user.is_vendor_user:
         try:
             if request.user.vendor_profile.pk != vendor_pk:
@@ -401,17 +400,37 @@ def document_upload(request, vendor_pk):
     elif request.user.role != 'admin':
         return HttpResponseForbidden()
 
+    # Check attempts
+    if vendor.document_retries_left <= 0:
+        messages.error(request, 'You have exhausted your document upload attempts. Please contact admin.')
+        return redirect('vendors:my_profile')
+
     if request.method == 'POST':
         form = DocumentUploadForm(request.POST, request.FILES)
         if form.is_valid():
+            # Check if this type already exists and is not rejected
+            doc_type = form.cleaned_data['document_type']
+            existing = vendor.documents.filter(document_type=doc_type).first()
+            if existing and existing.status != DocumentStatus.REJECTED:
+                messages.error(request, 'You have already uploaded this document type. Please wait for verification.')
+                return redirect('vendors:my_profile')
+
             doc = form.save(commit=False)
             doc.vendor = vendor
             doc.save()
 
-            # Notify procurement
-            _notify_document_uploaded(request, vendor, doc)
+            # Run AI Scanner
+            try:
+                from .ai_scanner import scan_document_with_gemini
+                ai_result = scan_document_with_gemini(doc.file.path)
+                doc.ai_confidence_score = ai_result.get('confidence_score')
+                doc.ai_analysis_remarks = ai_result.get('remarks')
+                doc.save(update_fields=['ai_confidence_score', 'ai_analysis_remarks'])
+            except Exception as e:
+                pass # Non-fatal if AI fails
 
-            messages.success(request, f'Document "{doc.get_document_type_display()}" uploaded successfully.')
+            _notify_document_uploaded(request, vendor, doc)
+            messages.success(request, f'Document uploaded. {vendor.document_retries_left} attempts remaining across your profile.')
             return redirect('vendors:my_profile')
     else:
         form = DocumentUploadForm()
@@ -443,12 +462,31 @@ def document_verify(request, doc_pk):
             doc.save(update_fields=['status', 'verified_by', 'verified_at', 'rejection_reason', 'updated_at'])
             messages.success(request, f'Document "{doc.get_document_type_display()}" verified.')
         elif action == 'reject':
-            reject_form = DocumentRejectForm(request.POST)
-            if reject_form.is_valid():
-                doc.status = DocumentStatus.REJECTED
-                doc.rejection_reason = reject_form.cleaned_data['reason']
-                doc.save(update_fields=['status', 'rejection_reason', 'updated_at'])
-                messages.warning(request, f'Document "{doc.get_document_type_display()}" rejected.')
+            reason = request.POST.get('reason', 'Failed Authenticity / Invalid Document')
+            
+            # Decrement vendor retries
+            if doc.vendor.document_retries_left > 0:
+                doc.vendor.document_retries_left -= 1
+                doc.vendor.save(update_fields=['document_retries_left'])
+
+            # Notify vendor
+            from apps.notifications.models import create_notification, NotificationType
+            from django.urls import reverse
+            create_notification(
+                recipient=doc.vendor.user,
+                notification_type=NotificationType.DOCUMENT_REJECTED,
+                title="Document Rejected",
+                message=f"Your {doc.get_document_type_display()} was rejected. Reason: {reason}. Please upload proper document for verification. You have {doc.vendor.document_retries_left} attempts left.",
+                action_url=reverse('vendors:my_profile')
+            )
+            
+            doc_type_name = doc.get_document_type_display()
+            
+            # Auto-delete document
+            doc.file.delete(save=False)
+            doc.delete()
+            
+            messages.error(request, f'Document "{doc_type_name}" rejected and deleted. Vendor has {doc.vendor.document_retries_left} retries left.')
         return redirect('vendors:detail', pk=doc.vendor.pk)
 
     return redirect('vendors:detail', pk=doc.vendor.pk)
