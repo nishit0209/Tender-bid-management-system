@@ -107,5 +107,5 @@ Visit `http://127.0.0.1:8000` in your browser.
 5.  **Evaluation:** After the deadline, the evaluation committee reviews the bids, assigns scores, and selects a winner based on the criteria.
 6.  **Award & PO:** The winning bid is approved, and a Purchase Order is automatically generated and sent to the vendor.
 
-##Devloped by
+## Devloped by
 Nishit Bhavsar
