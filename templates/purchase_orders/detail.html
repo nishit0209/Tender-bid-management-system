@@ -43,8 +43,8 @@
             {% if po.status == 'pending' and user.role in 'admin,manager' %}
                 <form method="post" action="{% url 'purchase_orders:action' po.pk 'approve' %}" class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 p-1.5 rounded-xl border border-slate-300 dark:border-slate-700">
                     {% csrf_token %}
-                    <label class="flex items-center gap-2 px-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
-                        <input type="checkbox" name="send_email" class="rounded border-slate-300 dark:border-slate-700 text-emerald-500 focus:ring-emerald-500 bg-slate-50 dark:bg-slate-800">
+                    <label class="flex items-center gap-2 px-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer" title="Send email to vendor on approval">
+                        <input type="checkbox" name="send_email" checked class="rounded border-slate-300 dark:border-slate-700 text-emerald-500 focus:ring-emerald-500 bg-slate-50 dark:bg-slate-800">
                         <span>Email Vendor</span>
                     </label>
                     <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2" onclick="return confirm('Approve this Purchase Order? The Vendor will be notified to start delivery.');">

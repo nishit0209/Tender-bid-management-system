@@ -13,4 +13,5 @@ urlpatterns = [
     path('<int:pk>/reject/', views.tender_reject, name='reject'),
     path('<int:pk>/close/', views.tender_close, name='close'),
     path('<int:pk>/cancel/', views.tender_cancel, name='cancel'),
+    path('<int:pk>/export-bids/', views.tender_export_bids, name='export_bids'),
 ]

@@ -82,14 +82,20 @@ def tender_detail(request, pk):
     approval_form = TenderApprovalForm()
     
     winning_bid = None
+    l1_bid = None
     if tender.status == TenderStatus.AWARDED:
         winning_bid = tender.bids.filter(status=BidStatus.APPROVED).first()
+    
+    # Calculate L1 bid (Lowest bidder)
+    if tender.bids.exists() and _is_staff(request.user):
+        l1_bid = tender.bids.filter(status__in=[BidStatus.SUBMITTED, BidStatus.UNDER_REVIEW, BidStatus.SHORTLISTED]).order_by('bid_amount').first()
 
     return render(request, 'tenders/detail.html', {
         'page_title': tender.tender_number,
         'tender': tender,
         'approval_form': approval_form,
         'winning_bid': winning_bid,
+        'l1_bid': l1_bid,
         'can_edit': _is_procurement_or_admin(request.user) and tender.status == TenderStatus.DRAFT,
         'can_submit': _is_procurement_or_admin(request.user) and tender.status == TenderStatus.DRAFT,
         'can_approve': _is_manager_or_admin(request.user) and tender.status == TenderStatus.PENDING_APPROVAL,
@@ -259,3 +265,32 @@ def tender_cancel(request, pk):
         return redirect('tenders:detail', pk=tender.pk)
         
     return redirect('tenders:detail', pk=tender.pk)
+
+
+@login_required
+def tender_export_bids(request, pk):
+    import csv
+    from django.http import HttpResponse
+
+    if not _is_staff(request.user):
+        return HttpResponseForbidden()
+
+    tender = get_object_or_404(Tender, pk=pk)
+    bids = tender.bids.all().order_by('bid_amount')
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="Tender_{tender.tender_number}_Bids.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Vendor Name', 'Bid Amount', 'Delivery Days', 'Status', 'Submitted At'])
+
+    for bid in bids:
+        writer.writerow([
+            bid.vendor.company_name,
+            f"{bid.total_bid_amount}",
+            f"{bid.delivery_timeline_days} days",
+            bid.get_status_display(),
+            bid.submitted_at.strftime("%Y-%m-%d %H:%M") if bid.submitted_at else "N/A"
+        ])
+
+    return response

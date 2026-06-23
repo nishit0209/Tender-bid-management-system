@@ -156,7 +156,7 @@ def po_action(request, pk, action):
                 )
                 messages.success(request, 'Purchase Order Approved. Vendor has been notified and email sent.')
             except Exception as e:
-                messages.success(request, 'Purchase Order Approved. Notification sent, but email failed.')
+                messages.warning(request, 'Purchase Order Approved, but email failed to send.')
         else:
             messages.success(request, 'Purchase Order Approved. Vendor has been notified in-app.')
 

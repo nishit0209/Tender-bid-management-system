@@ -94,18 +94,13 @@
     <aside id="sidebar" class="w-64 h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col fixed top-0 left-0 z-40 overflow-y-auto">
 
         <!-- Logo -->
-        <div class="flex items-center gap-3 px-6 py-5 border-b border-slate-200 dark:border-slate-800">
-            <div class="w-9 h-9 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                <svg class="w-5 h-5 text-slate-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-                <p class="text-sm font-bold text-slate-900 dark:text-white truncate">TenderBMS</p>
-                <p class="text-xs text-slate-600 dark:text-slate-400 truncate">Procurement System</p>
+        <div class="flex items-center gap-3 px-6 py-5 border-b border-slate-200 dark:border-slate-800 justify-between">
+            <div class="flex flex-col gap-1 min-w-0">
+                <img src="{% static 'images/logo-1-removebg-preview.png' %}" alt="TenderBMS Logo" class="w-[240px] max-w-none h-auto object-contain self-start -ml-8 -mb-2">
+                <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-600 dark:text-slate-400">Procurement System</p>
             </div>
             <!-- Mobile close button -->
-            <button id="sidebar-close" class="lg:hidden p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+            <button id="sidebar-close" class="lg:hidden p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all self-start mt-0.5">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
