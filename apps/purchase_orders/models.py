@@ -147,6 +147,16 @@ class PurchaseOrder(TimeStampedModel):
                         )
     cancellation_reason = models.TextField(blank=True, null=True)
 
+    # Vendor Performance Rating
+    vendor_rating     = models.PositiveSmallIntegerField(
+                            null=True, blank=True,
+                            help_text='Rating out of 5 for vendor performance'
+                        )
+    vendor_feedback   = models.TextField(
+                            blank=True, null=True,
+                            help_text='Internal feedback on vendor performance'
+                        )
+
     # Delivery tracking
     dispatched_at     = models.DateTimeField(null=True, blank=True)
     delivered_at      = models.DateTimeField(null=True, blank=True)

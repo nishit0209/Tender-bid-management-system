@@ -80,6 +80,13 @@
                 </form>
             {% endif %}
 
+            <!-- Rate Vendor -->
+            {% if po.status == 'completed' and not po.vendor_rating and user.role in 'admin,manager,procurement_officer' %}
+                <button type="button" onclick="document.getElementById('rating-modal').classList.remove('hidden')" class="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-yellow-500/20 flex items-center gap-2">
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i> Rate Vendor Performance
+                </button>
+            {% endif %}
+
             <!-- Send Email Manually -->
             {% if po.status != 'draft' and user.role in 'admin,manager,procurement_officer' %}
                 <form method="post" action="{% url 'purchase_orders:action' po.pk 'send_email' %}">

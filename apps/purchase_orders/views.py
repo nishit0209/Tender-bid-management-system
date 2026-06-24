@@ -227,6 +227,26 @@ def po_action(request, pk, action):
         except Exception as e:
             messages.error(request, f'Failed to send email. Check your SMTP settings in .env file. Error: {str(e)}')
 
+    # Rate Vendor
+    elif action == 'rate_vendor' and request.user.role in [UserRole.ADMIN, UserRole.MANAGER, UserRole.PROCUREMENT_OFFICER]:
+        if po.status != POStatus.COMPLETED:
+            messages.error(request, 'You can only rate the vendor after the Purchase Order is Completed.')
+        elif po.vendor_rating:
+            messages.error(request, 'This vendor has already been rated for this order.')
+        else:
+            try:
+                rating = int(request.POST.get('vendor_rating', 0))
+                feedback = request.POST.get('vendor_feedback', '')
+                if 1 <= rating <= 5:
+                    po.vendor_rating = rating
+                    po.vendor_feedback = feedback
+                    po.save()
+                    messages.success(request, 'Vendor rating submitted successfully.')
+                else:
+                    messages.error(request, 'Invalid rating value. Must be between 1 and 5.')
+            except ValueError:
+                messages.error(request, 'Invalid rating format.')
+
     else:
         messages.error(request, 'Invalid action or access denied.')
 

@@ -234,6 +234,19 @@ class Vendor(TimeStampedModel):
         filled = sum(1 for f in fields_to_check if f)
         return int((filled / len(fields_to_check)) * 100)
 
+    @property
+    def average_rating(self):
+        """Calculate average rating from all completed POs"""
+        ratings = self.purchase_orders.filter(vendor_rating__isnull=False).values_list('vendor_rating', flat=True)
+        if not ratings:
+            return 0
+        return round(sum(ratings) / len(ratings), 1)
+
+    @property
+    def total_ratings(self):
+        """Count of all completed POs with ratings"""
+        return self.purchase_orders.filter(vendor_rating__isnull=False).count()
+
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('vendors:detail', kwargs={'pk': self.pk})
