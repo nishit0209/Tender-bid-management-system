@@ -4,14 +4,25 @@ A comprehensive, full-stack web application designed to streamline the entire pr
 
 ## 🚀 Key Features
 
-*   **Role-Based Access Control:** Distinct dashboards and permissions for Admins, Procurement Officers, Managers, and Vendors.
-*   **Vendor Management:** Secure vendor registration, profile verification, and document management.
-*   **Tender Publishing:** Create and publish tenders with deadlines, categories, and necessary documentation.
-*   **Bid Management:** Secure and structured bid submission by verified vendors.
-*   **Evaluation System:** Technical and financial evaluation of submitted bids with scoring mechanisms.
-*   **Purchase Orders:** Automated purchase order generation for winning bids.
-*   **Google OAuth Integration:** Seamless sign-in experience using Google credentials via `django-allauth`.
-*   **Real-time Notifications:** Automated system notifications for tender updates, bid status, and profile verification.
+*   **Comprehensive User Authentication:** Secure login, registration, and password management for all user types.
+*   **Role-Based Access Control (RBAC):** 4 distinct roles (Admin, Procurement Officer, Manager, Vendor) with tailored dashboards, permissions, and routing.
+*   **Vendor Onboarding & Compliance:** Vendors can register and upload mandatory compliance documents (GST, PAN, Trade License).
+*   **Document Verification Workflow:** Multi-step approval process where Managers/Admins review vendor documents. Includes rejection feedback and strict retry limits for uploads.
+*   **Tender Lifecycle Management:** Complete end-to-end management (Draft -> Pending Approval -> Open -> Evaluation -> Closed -> Cancelled).
+*   **Tender Publishing:** Create rich-text tenders with document attachments, categories, terms & conditions, and deadlines.
+*   **Secure Bid Management:** Vendors can securely submit bids with pricing and compliance docs. Bids remain sealed/hidden until the tender closing date.
+*   **Multi-Stage Evaluation System:** Built-in technical and financial scoring for bids, automatic rank assignment based on total scores, and manager approval workflows.
+*   **Purchase Order Automation:** One-click automated purchase order generation for winning bids.
+*   **PO Fulfillment Workflow:** Track POs from Draft -> Approved -> Dispatched (Vendor) -> Delivered with Proof of Delivery (Vendor) -> Completed.
+*   **Analytics Dashboard:** Visual representation of monthly spends, tender status, and PO statuses using dynamic Chart.js integrations.
+*   **In-System Messaging:** Direct communication channel between Vendors and Admins, including automated "Document Limit Reset" requests.
+*   **Audit Trail & System Logs:** Comprehensive tracking of all critical system events (user logins, approvals, PO generation, dispatch, etc.) for high-level accountability.
+*   **Vendor E-Agreement:** Vendors must digitally sign and agree to Purchase Order terms before they are allowed to dispatch goods.
+*   **Real-time & Email Notifications:** Automated in-app notifications and SMTP email alerts for tender updates, bid status, PO receipts, and profile verification.
+*   **Advanced Data Security:** Strict file upload validation with **AI File Scanning**, secure document storage, **File Upload Rate Limiting** to prevent spam, and robust password hashing.
+*   **Data Export (Excel):** Export system reports, vendor lists, and financial data directly into Excel sheets for offline analysis.
+*   **Google OAuth Integration:** Seamless, one-click sign-in experience using Google credentials via `django-allauth`.
+*   **Responsive Modern UI:** Built with Tailwind CSS, featuring full Light and Dark mode support, micro-animations, and Lucide icons for a premium user experience.
 
 ## 🛠️ Technology Stack
 

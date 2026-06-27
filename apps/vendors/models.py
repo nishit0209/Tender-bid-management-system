@@ -349,3 +349,34 @@ class VendorDocument(TimeStampedModel):
         if self.file and hasattr(self.file, 'size'):
             self.file_size = self.file.size
         super().save(*args, **kwargs)
+
+
+# ─────────────────────────────────────────────
+# Vendor Chat / Messaging Model
+# ─────────────────────────────────────────────
+class VendorMessage(TimeStampedModel):
+    """
+    Direct chat messages between a Vendor and Admins/System.
+    """
+    vendor = models.ForeignKey(
+        Vendor, 
+        on_delete=models.CASCADE, 
+        related_name='chat_messages'
+    )
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='sent_vendor_messages'
+    )
+    message = models.TextField()
+    is_system_generated = models.BooleanField(default=False)
+    is_read_by_vendor = models.BooleanField(default=False)
+    is_read_by_admin = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('Vendor Message')
+        verbose_name_plural = _('Vendor Messages')
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Msg: {self.vendor.company_name} - {self.sender.email}"

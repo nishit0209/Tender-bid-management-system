@@ -89,6 +89,15 @@ def po_generate(request, bid_id):
             
             po.save()
             
+            from apps.accounts.utils import log_activity
+            from apps.accounts.models import SystemLogAction
+            log_activity(
+                user=request.user,
+                action=SystemLogAction.PO_GENERATED,
+                description=f"Drafted PO {po.po_number} for tender {bid.tender.tender_number}",
+                request=request
+            )
+            
             # Notify Managers
             managers = CustomUser.objects.filter(role=UserRole.MANAGER, is_active=True)
             for manager in managers:
@@ -125,12 +134,22 @@ def po_action(request, pk, action):
     if request.method != 'POST':
         return redirect('purchase_orders:detail', pk=pk)
 
+    from apps.accounts.utils import log_activity
+    from apps.accounts.models import SystemLogAction
+
     # Manager Approve
     if action == 'approve' and request.user.role in [UserRole.ADMIN, UserRole.MANAGER]:
         po.status = POStatus.APPROVED
         po.approved_by = request.user
         po.approved_at = timezone.now()
         po.save()
+        
+        log_activity(
+            user=request.user,
+            action=SystemLogAction.PO_APPROVED,
+            description=f"Approved PO {po.po_number}",
+            request=request
+        )
         
         # Notify Vendor
         create_notification(
@@ -159,12 +178,41 @@ def po_action(request, pk, action):
                 messages.warning(request, 'Purchase Order Approved, but email failed to send.')
         else:
             messages.success(request, 'Purchase Order Approved. Vendor has been notified in-app.')
+    # Vendor Agree to Terms
+    elif action == 'agree' and request.user.role == UserRole.VENDOR:
+        if not po.is_agreed:
+            po.is_agreed = True
+            po.agreed_at = timezone.now()
+            po.save()
+            
+            # Notify Procurement
+            staff_users = CustomUser.objects.filter(role__in=[UserRole.MANAGER, UserRole.PROCUREMENT_OFFICER], is_active=True)
+            for staff in staff_users:
+                create_notification(
+                    recipient=staff,
+                    notification_type=NotificationType.SYSTEM_ALERT,
+                    title=f"PO E-Agreement Signed",
+                    message=f"{po.vendor.company_name} has digitally signed PO {po.po_number}.",
+                    action_url=po.get_absolute_url(),
+                    related_po=po
+                )
+            
+            messages.success(request, 'You have successfully signed the E-Agreement. You can now dispatch the order.')
+        else:
+            messages.info(request, 'You have already agreed to this Purchase Order.')
 
     # Vendor Dispatch
     elif action == 'dispatch' and request.user.role == UserRole.VENDOR:
         po.status = POStatus.IN_PROGRESS
         po.dispatched_at = timezone.now()
         po.save()
+        
+        log_activity(
+            user=request.user,
+            action=SystemLogAction.PO_DISPATCHED,
+            description=f"Dispatched PO {po.po_number}",
+            request=request
+        )
         
         # Notify Procurement and Manager
         staff_users = CustomUser.objects.filter(role__in=[UserRole.MANAGER, UserRole.PROCUREMENT_OFFICER], is_active=True)
@@ -188,6 +236,13 @@ def po_action(request, pk, action):
             po.status = POStatus.DELIVERED
             po.delivered_at = timezone.now()
             po.save()
+            
+            log_activity(
+                user=request.user,
+                action=SystemLogAction.PO_DELIVERED,
+                description=f"Delivered PO {po.po_number}",
+                request=request
+            )
             
             # Notify Procurement and Manager
             staff_users = CustomUser.objects.filter(role__in=[UserRole.MANAGER, UserRole.PROCUREMENT_OFFICER], is_active=True)

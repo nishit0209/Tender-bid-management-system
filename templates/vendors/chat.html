@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Support Chat - {{ vendor.company_name }}{% endblock %}
+{% block page_title %}Support Chat{% endblock %}
+{% block page_subtitle %}{{ vendor.company_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto flex flex-col h-[75vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+    
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-indigo-600/20 flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold">
+                {{ vendor.company_name|first|upper }}
+            </div>
+            <div>
+                <h2 class="text-sm font-bold text-slate-900 dark:text-white">{{ vendor.company_name }}</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Support & Chat</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <a href="{% url 'vendors:detail' vendor.pk %}" class="px-3 py-1.5 text-xs font-medium bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-lg transition-colors">
+                Back to Profile
+            </a>
+            {% if user.role == 'admin' %}
+            <a href="{% url 'vendors:reset_limits' vendor.pk %}" class="px-3 py-1.5 text-xs font-medium bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-700 dark:text-emerald-400 border border-emerald-600/20 rounded-lg transition-colors flex items-center gap-1">
+                <i data-lucide="refresh-cw" class="w-3 h-3"></i> Reset Limits
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Messages Area -->
+    <div class="flex-1 p-6 overflow-y-auto bg-slate-50/50 dark:bg-slate-900 flex flex-col gap-4" id="chat-container">
+        {% for msg in chat_messages %}
+            {% if msg.is_system_generated %}
+            <div class="flex justify-center my-2">
+                <div class="px-4 py-1.5 bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-400 text-xs font-medium rounded-full border border-amber-200 dark:border-amber-800/60 shadow-sm flex items-center gap-2">
+                    <i data-lucide="info" class="w-3 h-3"></i>
+                    {{ msg.message }}
+                </div>
+            </div>
+            {% else %}
+                {% if msg.sender == request.user %}
+                <div class="flex justify-end">
+                    <div class="max-w-[75%] bg-indigo-600 text-white rounded-2xl rounded-tr-sm px-5 py-3 shadow-sm">
+                        <p class="text-sm">{{ msg.message }}</p>
+                        <div class="text-[10px] text-indigo-200 mt-1 text-right flex items-center justify-end gap-1">
+                            {{ msg.created_at|date:"h:i A" }}
+                            {% if msg.is_read_by_admin and user.role == 'vendor' %}
+                            <i data-lucide="check-check" class="w-3 h-3 text-emerald-300"></i>
+                            {% elif msg.is_read_by_vendor and user.role != 'vendor' %}
+                            <i data-lucide="check-check" class="w-3 h-3 text-emerald-300"></i>
+                            {% else %}
+                            <i data-lucide="check" class="w-3 h-3"></i>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="flex justify-start">
+                    <div class="max-w-[75%] bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-tl-sm px-5 py-3 shadow-sm">
+                        <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">{{ msg.sender.get_full_name|default:msg.sender.email }}</p>
+                        <p class="text-sm text-slate-800 dark:text-slate-200">{{ msg.message }}</p>
+                        <div class="text-[10px] text-slate-400 mt-1">
+                            {{ msg.created_at|date:"h:i A" }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+        {% empty %}
+        <div class="flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500">
+            <i data-lucide="message-square" class="w-12 h-12 mb-3 opacity-50"></i>
+            <p>No messages yet.</p>
+            <p class="text-xs mt-1">Start a conversation below.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Input Area -->
+    <div class="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+        <form method="post" action="{% url 'vendors:chat' vendor.pk %}" class="flex gap-3">
+            {% csrf_token %}
+            <input type="text" name="message" required autocomplete="off" placeholder="Type a message..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl flex items-center justify-center transition-colors">
+                <i data-lucide="send" class="w-5 h-5"></i>
+            </button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    // Auto-scroll to bottom of chat
+    document.addEventListener('DOMContentLoaded', function() {
+        lucide.createIcons();
+        const container = document.getElementById('chat-container');
+        container.scrollTop = container.scrollHeight;
+    });
+</script>
+{% endblock %}

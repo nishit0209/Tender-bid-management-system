@@ -401,6 +401,27 @@ def admin_dashboard(request):
     from apps.purchase_orders.models import PurchaseOrder, POStatus
     from apps.notifications.models import Notification
 
+    from django.db.models import Count, Sum
+    from django.db.models.functions import TruncMonth
+    from django.utils import timezone
+    from datetime import timedelta
+
+    # Analytics Data
+    vendor_status_counts = list(Vendor.objects.values('status').annotate(count=Count('id')))
+    po_status_counts = list(PurchaseOrder.objects.values('status').annotate(count=Count('id')))
+    
+    six_months_ago = timezone.now() - timedelta(days=180)
+    monthly_spends = list(
+        PurchaseOrder.objects.filter(
+            status__in=[POStatus.COMPLETED, POStatus.DELIVERED, POStatus.IN_PROGRESS, POStatus.APPROVED],
+            created_at__gte=six_months_ago
+        )
+        .annotate(month=TruncMonth('created_at'))
+        .values('month')
+        .annotate(total_spend=Sum('total_amount'))
+        .order_by('month')
+    )
+
     context = {
         'page_title': 'Admin Dashboard',
         'total_vendors':      Vendor.objects.count(),
@@ -413,6 +434,11 @@ def admin_dashboard(request):
         'total_pos':          PurchaseOrder.objects.count(),
         'recent_vendors':     Vendor.objects.order_by('-created_at')[:5],
         'recent_tenders':     Tender.objects.order_by('-created_at')[:5],
+        
+        # Chart Data
+        'vendor_status_counts': vendor_status_counts,
+        'po_status_counts': po_status_counts,
+        'monthly_spends': monthly_spends,
     }
     return render(request, 'dashboard/admin.html', context)
 
@@ -448,6 +474,25 @@ def manager_dashboard(request):
     from apps.evaluations.models import Evaluation, EvaluationStatus
     from apps.purchase_orders.models import PurchaseOrder, POStatus
 
+    from django.db.models import Count, Sum
+    from django.db.models.functions import TruncMonth
+    from django.utils import timezone
+    from datetime import timedelta
+
+    po_status_counts = list(PurchaseOrder.objects.values('status').annotate(count=Count('id')))
+
+    six_months_ago = timezone.now() - timedelta(days=180)
+    monthly_spends = list(
+        PurchaseOrder.objects.filter(
+            status__in=[POStatus.COMPLETED, POStatus.DELIVERED, POStatus.IN_PROGRESS, POStatus.APPROVED],
+            created_at__gte=six_months_ago
+        )
+        .annotate(month=TruncMonth('created_at'))
+        .values('month')
+        .annotate(total_spend=Sum('total_amount'))
+        .order_by('month')
+    )
+
     context = {
         'page_title': 'Manager Dashboard',
         'vendors_awaiting_approval':   Vendor.objects.verified().count(),
@@ -457,6 +502,10 @@ def manager_dashboard(request):
         'recent_vendors':              Vendor.objects.verified().order_by('-created_at')[:5],
         'recent_tenders':              Tender.objects.pending_approval().order_by('-created_at')[:5],
         'recent_evaluations':          Evaluation.objects.pending_approval().order_by('-created_at')[:5],
+        
+        # Chart Data
+        'po_status_counts': po_status_counts,
+        'monthly_spends': monthly_spends,
     }
     return render(request, 'dashboard/manager.html', context)
 
@@ -704,4 +753,38 @@ def user_delete(request, pk):
         )
         
     return redirect('accounts:user_management')
+
+
+# ─────────────────────────────────────────────
+# Audit Trail / System Logs
+# ─────────────────────────────────────────────
+@login_required
+def system_logs_view(request):
+    """View system audit logs (Admin/Manager only)."""
+    if request.user.role not in [UserRole.ADMIN, UserRole.MANAGER]:
+        return HttpResponseForbidden()
+
+    from apps.accounts.models import SystemLog
+    
+    query = request.GET.get('q', '')
+    logs_list = SystemLog.objects.all().order_by('-created_at')
+    
+    if query:
+        logs_list = logs_list.filter(
+            Q(action__icontains=query) |
+            Q(email__icontains=query) |
+            Q(description__icontains=query) |
+            Q(user__first_name__icontains=query) |
+            Q(user__last_name__icontains=query)
+        )
+        
+    paginator = Paginator(logs_list, 50)
+    page_number = request.GET.get('page')
+    logs = paginator.get_page(page_number)
+    
+    return render(request, 'accounts/system_logs.html', {
+        'page_title': 'Audit Trail (System Logs)',
+        'logs': logs,
+        'query': query,
+    })
 

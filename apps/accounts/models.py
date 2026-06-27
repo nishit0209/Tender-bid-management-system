@@ -206,9 +206,18 @@ class CustomUser(AbstractUser, TimeStampedModel):
 # System Log (Audit) Model
 # ─────────────────────────────────────────────
 class SystemLogAction(models.TextChoices):
+    # Auth Actions
     LOGIN = 'login', _('Login')
     LOGOUT = 'logout', _('Logout')
     FAILED_LOGIN = 'failed_login', _('Failed Login')
+    
+    # Audit Trail Actions
+    VENDOR_APPROVED = 'vendor_approved', _('Vendor Approved')
+    TENDER_PUBLISHED = 'tender_published', _('Tender Published')
+    PO_GENERATED = 'po_generated', _('Purchase Order Generated')
+    PO_APPROVED = 'po_approved', _('Purchase Order Approved')
+    PO_DISPATCHED = 'po_dispatched', _('Purchase Order Dispatched')
+    PO_DELIVERED = 'po_delivered', _('Purchase Order Delivered')
 
 
 class SystemLog(TimeStampedModel):
@@ -220,7 +229,8 @@ class SystemLog(TimeStampedModel):
         related_name='system_logs'
     )
     email = models.CharField(max_length=255, blank=True, null=True, help_text=_("Stored in case user gets deleted or for failed logins"))
-    action = models.CharField(max_length=20, choices=SystemLogAction.choices)
+    action = models.CharField(max_length=50, choices=SystemLogAction.choices)
+    description = models.CharField(max_length=255, blank=True, null=True, help_text=_("Additional details about the action"))
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     user_agent = models.TextField(blank=True, null=True)
 

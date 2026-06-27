@@ -103,6 +103,11 @@
                 <i data-lucide="edit" class="w-4 h-4"></i> Edit Profile
             </a>
 
+            <a href="{% url 'vendors:chat' vendor.pk %}"
+               class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-all shadow-sm">
+                <i data-lucide="message-square" class="w-4 h-4"></i> Support Chat
+            </a>
+
             {% if vendor.status == 'approved' %}
             <a href="{% url 'vendors:document_upload' vendor.pk %}"
                class="flex items-center gap-2 px-4 py-2 bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-600/30 text-indigo-700 dark:text-indigo-400 text-sm font-medium rounded-xl transition-all">
@@ -124,6 +129,25 @@
             </form>
             {% endif %}
         </div>
+
+        <!-- Limit Reached Banner -->
+        {% if user.role == 'vendor' and vendor.document_retries_left <= 0 %}
+        <div class="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-700/30 rounded-xl">
+            <div class="flex items-start gap-3">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0"></i>
+                <div>
+                    <h4 class="text-sm font-bold text-amber-800 dark:text-amber-400">Document Upload Limit Reached</h4>
+                    <p class="text-sm text-amber-700 dark:text-amber-500 mt-1">You have exhausted your maximum upload retries for spam protection. Please request an admin to reset your limits.</p>
+                </div>
+            </div>
+            <form method="post" action="{% url 'vendors:request_limit_reset' vendor.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="whitespace-nowrap px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-xl transition-all shadow-sm">
+                    Request Limit Reset
+                </button>
+            </form>
+        </div>
+        {% endif %}
 
         <!-- Rejection Reason -->
         {% if vendor.rejection_reason %}

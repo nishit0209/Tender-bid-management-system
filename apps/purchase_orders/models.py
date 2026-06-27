@@ -128,6 +128,13 @@ class PurchaseOrder(TimeStampedModel):
                            )
     payment_terms     = models.CharField(max_length=255, blank=True, null=True,
                                          help_text='e.g. 30 days net, advance 20%, etc.')
+
+    # E-Agreement
+    is_agreed         = models.BooleanField(
+                            default=False, 
+                            verbose_name=_('Vendor Agreed')
+                        )
+    agreed_at         = models.DateTimeField(null=True, blank=True)
     penalty_clause    = models.TextField(blank=True, null=True,
                                          help_text='Penalty for late delivery')
 

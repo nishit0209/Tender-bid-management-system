@@ -22,6 +22,7 @@ class NotificationType(models.TextChoices):
     DOCUMENT_UPLOADED       = 'document_uploaded',       _('Document Uploaded')
     DOCUMENT_VERIFIED       = 'document_verified',       _('Document Verified')
     DOCUMENT_REJECTED       = 'document_rejected',       _('Document Rejected')
+    LIMIT_RESET_REQUESTED   = 'limit_reset_requested',   _('Limit Reset Requested')
 
     # Tender Events
     TENDER_SUBMITTED        = 'tender_submitted',        _('Tender Submitted for Approval')

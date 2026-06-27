@@ -18,4 +18,6 @@ urlpatterns = [
     path('document/<int:doc_pk>/verify/',  views.document_verify,  name='document_verify'),
     path('document/<int:doc_pk>/delete/',  views.document_delete,  name='document_delete'),
     path('<int:pk>/delete/',           views.vendor_delete,     name='delete'),
+    path('<int:pk>/request-reset/',    views.request_limit_reset, name='request_limit_reset'),
+    path('<int:pk>/chat/',             views.vendor_chat,       name='chat'),
 ]

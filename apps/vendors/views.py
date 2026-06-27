@@ -307,6 +307,15 @@ def vendor_approve(request, pk):
         vendor.approved_at = timezone.now()
         vendor.save(update_fields=['status', 'approved_by', 'approved_at', 'updated_at'])
 
+        from apps.accounts.utils import log_activity
+        from apps.accounts.models import SystemLogAction
+        log_activity(
+            user=request.user,
+            action=SystemLogAction.VENDOR_APPROVED,
+            description=f"Approved vendor {vendor.company_name}",
+            request=request
+        )
+
         _notify_vendor_approved(request, vendor)
 
         messages.success(request, f'"{vendor.company_name}" has been approved! The vendor can now submit bids.')
@@ -726,3 +735,114 @@ def vendor_delete(request, pk):
         messages.error(request, f'Cannot delete Vendor "{company_name}" because it has associated Bids or Purchase Orders.')
         
     return redirect('vendors:list')
+
+
+# ─────────────────────────────────────────────
+# Chat & Support Views
+# ─────────────────────────────────────────────
+@login_required
+def request_limit_reset(request, pk):
+    """Vendor requests a document limit reset."""
+    vendor = get_object_or_404(Vendor, pk=pk)
+    
+    # Must be the vendor owner
+    if request.user.role == 'vendor' and request.user.vendor_profile != vendor:
+        return HttpResponseForbidden()
+
+    if request.method == 'POST':
+        # Create Notification for Admin
+        from apps.notifications.models import Notification, NotificationType, NotificationPriority
+        from apps.accounts.models import CustomUser
+        
+        admins = CustomUser.objects.filter(role='admin', is_active=True)
+        for admin in admins:
+            Notification.objects.create(
+                recipient=admin,
+                notification_type=NotificationType.LIMIT_RESET_REQUESTED,
+                priority=NotificationPriority.HIGH,
+                title='Limit Reset Requested',
+                message=f'{vendor.company_name} requested a document upload limit reset.',
+                action_url=f'/vendors/{vendor.pk}/chat/',
+                related_vendor=vendor
+            )
+            
+        # Send system message in chat
+        from .models import VendorMessage
+        VendorMessage.objects.create(
+            vendor=vendor,
+            sender=request.user,
+            message="[System Generated Request]: Please reset my document upload limits. I have reached the maximum retries.",
+            is_system_generated=True,
+            is_read_by_vendor=True
+        )
+        
+        messages.success(request, 'Limit reset request sent to the admin. You can discuss the issue in the chat below.')
+        return redirect('vendors:chat', pk=vendor.pk)
+        
+    return HttpResponseForbidden()
+
+
+@login_required
+def vendor_chat(request, pk):
+    """Chat interface between Vendor and Admin/Staff."""
+    vendor = get_object_or_404(Vendor, pk=pk)
+    
+    # Access Control
+    if request.user.role == 'vendor' and request.user.vendor_profile != vendor:
+        return HttpResponseForbidden()
+    if request.user.role not in ['admin', 'manager', 'vendor']:
+        return HttpResponseForbidden()
+
+    from .models import VendorMessage
+
+    if request.method == 'POST':
+        message_text = request.POST.get('message', '').strip()
+        if message_text:
+            msg = VendorMessage.objects.create(
+                vendor=vendor,
+                sender=request.user,
+                message=message_text,
+                is_read_by_vendor=(request.user.role == 'vendor'),
+                is_read_by_admin=(request.user.role != 'vendor')
+            )
+            # Create Notification
+            from apps.notifications.models import Notification, NotificationType, NotificationPriority
+            if request.user.role == 'vendor':
+                # Notify Admins
+                from apps.accounts.models import CustomUser
+                admins = CustomUser.objects.filter(role='admin', is_active=True)
+                for admin in admins:
+                    Notification.objects.create(
+                        recipient=admin,
+                        notification_type=NotificationType.SYSTEM_ALERT,
+                        title='New Chat Message',
+                        message=f'New message from {vendor.company_name}.',
+                        action_url=f'/vendors/{vendor.pk}/chat/',
+                        related_vendor=vendor
+                    )
+            else:
+                # Notify Vendor
+                Notification.objects.create(
+                    recipient=vendor.user,
+                    notification_type=NotificationType.SYSTEM_ALERT,
+                    title='New Support Message',
+                    message='Admin has replied to your chat.',
+                    action_url=f'/vendors/{vendor.pk}/chat/',
+                    related_vendor=vendor
+                )
+        return redirect('vendors:chat', pk=vendor.pk)
+
+    messages_qs = vendor.chat_messages.all().order_by('created_at')
+    
+    # Mark as read
+    if request.user.role == 'vendor':
+        messages_qs.filter(is_read_by_vendor=False).update(is_read_by_vendor=True)
+    else:
+        messages_qs.filter(is_read_by_admin=False).update(is_read_by_admin=True)
+
+    context = {
+        'page_title': f'Support Chat: {vendor.company_name}',
+        'vendor': vendor,
+        'chat_messages': messages_qs,
+    }
+    return render(request, 'vendors/chat.html', context)

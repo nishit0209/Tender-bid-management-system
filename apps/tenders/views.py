@@ -195,6 +195,15 @@ def tender_approve(request, pk):
             related_tender=tender
         )
         
+        from apps.accounts.utils import log_activity
+        from apps.accounts.models import SystemLogAction
+        log_activity(
+            user=request.user,
+            action=SystemLogAction.TENDER_PUBLISHED,
+            description=f"Approved & published tender {tender.tender_number}",
+            request=request
+        )
+        
         messages.success(request, 'Tender approved and published.')
         return redirect('tenders:detail', pk=tender.pk)
 

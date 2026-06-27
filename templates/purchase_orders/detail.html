@@ -53,14 +53,26 @@
                 </form>
             {% endif %}
 
-            <!-- Vendor Dispatch -->
+            <!-- Vendor Actions -->
             {% if po.status == 'approved' and user.role == 'vendor' %}
+                {% if not po.is_agreed %}
+                <form method="post" action="{% url 'purchase_orders:action' po.pk 'agree' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2" onclick="return confirm('By clicking OK, you digitally sign and agree to the Terms and Conditions of this Purchase Order. Continue?');">
+                        <i data-lucide="file-signature" class="w-4 h-4"></i> Sign E-Agreement
+                    </button>
+                </form>
+                {% else %}
+                <div class="px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 text-xs font-semibold rounded-xl flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> Agreed on {{ po.agreed_at|date:"d M Y" }}
+                </div>
                 <form method="post" action="{% url 'purchase_orders:action' po.pk 'dispatch' %}">
                     {% csrf_token %}
                     <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2" onclick="return confirm('Mark items as dispatched?');">
                         <i data-lucide="truck" class="w-4 h-4"></i> Mark Dispatched
                     </button>
                 </form>
+                {% endif %}
             {% endif %}
 
             <!-- Vendor Deliver (Requires Proof Upload) -->

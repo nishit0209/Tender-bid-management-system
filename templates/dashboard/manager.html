@@ -63,6 +63,35 @@
         </div>
     </div>
 
+    <!-- Analytics Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- Monthly Spend Line Chart -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 overflow-hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i data-lucide="trending-up" class="w-4 h-4 text-emerald-600"></i>
+                    Monthly Approved Spend (Last 6 Months)
+                </h3>
+            </div>
+            <div class="h-64 relative w-full">
+                <canvas id="monthlySpendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- PO Status Doughnut Chart -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 overflow-hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-600"></i>
+                    Purchase Orders by Status
+                </h3>
+            </div>
+            <div class="h-64 relative w-full flex items-center justify-center">
+                <canvas id="poStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+
     <!-- Pending Actions Banner -->
     {% with total_pending=vendors_awaiting_approval|add:tenders_awaiting_approval|add:evaluations_for_approval|add:pos_awaiting_approval %}
     {% if total_pending > 0 %}
@@ -143,4 +172,67 @@
 
 </div>
 <script>document.addEventListener('DOMContentLoaded', function() { lucide.createIcons(); });</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Prepare Data for Monthly Spend
+        const spendData = {{ monthly_spends|safe|default:"[]" }};
+        const spendLabels = spendData.map(d => new Date(d.month).toLocaleString('default', { month: 'short', year: 'numeric' }));
+        const spendTotals = spendData.map(d => parseFloat(d.total_spend) || 0);
+
+        if(document.getElementById('monthlySpendChart')) {
+            new Chart(document.getElementById('monthlySpendChart'), {
+                type: 'line',
+                data: {
+                    labels: spendLabels,
+                    datasets: [{
+                        label: 'Total Spend (₹)',
+                        data: spendTotals,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(148, 163, 184, 0.1)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Prepare Data for PO Status
+        const poStatusData = {{ po_status_counts|safe|default:"[]" }};
+        const poLabels = poStatusData.map(d => d.status.charAt(0).toUpperCase() + d.status.slice(1).replace('_', ' '));
+        const poCounts = poStatusData.map(d => d.count);
+
+        if(document.getElementById('poStatusChart')) {
+            new Chart(document.getElementById('poStatusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: poLabels,
+                    datasets: [{
+                        data: poCounts,
+                        backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'right', labels: { color: '#94a3b8' } } },
+                    cutout: '70%'
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}
