@@ -11,11 +11,11 @@ class PrivateMediaCloudinaryStorage(RawMediaCloudinaryStorage):
     def _upload(self, name, content):
         options = {'type': 'authenticated', 'resource_type': 'raw'}
         
-        # Passing the file-like object directly instead of raw bytes
+        # Passing the file-like object directly
         response = cloudinary.uploader.upload(
             content,
             public_id=name,
             **options
         )
-        return response.get('public_id') or response.get('version')
+        return response
 
