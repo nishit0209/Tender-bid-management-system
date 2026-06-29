@@ -213,7 +213,11 @@ class SystemLogAction(models.TextChoices):
     
     # Audit Trail Actions
     VENDOR_APPROVED = 'vendor_approved', _('Vendor Approved')
+    TENDER_CREATED = 'tender_created', _('Tender Created')
     TENDER_PUBLISHED = 'tender_published', _('Tender Published')
+    TENDER_CLOSED = 'tender_closed', _('Tender Closed')
+    EVALUATION_SUBMITTED = 'evaluation_submitted', _('Evaluation Submitted')
+    TENDER_AWARDED = 'tender_awarded', _('Tender Awarded')
     PO_GENERATED = 'po_generated', _('Purchase Order Generated')
     PO_APPROVED = 'po_approved', _('Purchase Order Approved')
     PO_DISPATCHED = 'po_dispatched', _('Purchase Order Dispatched')

@@ -286,6 +286,54 @@
 </div>
 {% endif %}
 
+<!-- Rating Modal (Staff only) -->
+{% if po.status == 'completed' and not po.vendor_rating and user.role in 'admin,manager,procurement_officer' %}
+<div id="rating-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+        <div class="fixed inset-0 bg-slate-50 dark:bg-slate-950/80 backdrop-blur-sm transition-opacity" onclick="document.getElementById('rating-modal').classList.add('hidden')"></div>
+        <div class="relative inline-block align-bottom bg-white dark:bg-slate-900 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-slate-300 dark:border-slate-700">
+            <form method="post" action="{% url 'purchase_orders:action' po.pk 'rate_vendor' %}">
+                {% csrf_token %}
+                <div class="px-6 py-6">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 mb-4">
+                        <i data-lucide="star" class="w-6 h-6"></i>
+                    </div>
+                    <div class="text-center mb-6">
+                        <h3 class="text-lg leading-6 font-bold text-slate-900 dark:text-white" id="modal-title">Rate Vendor Performance</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">Rate {{ po.vendor.company_name }} based on their delivery, quality, and cooperation.</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Rating (1 to 5 Stars) <span class="text-red-700 dark:text-red-400">*</span></label>
+                        <select name="vendor_rating" required class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                            <option value="">Select Rating</option>
+                            <option value="5">5 - Excellent (Outstanding)</option>
+                            <option value="4">4 - Good (Met Expectations)</option>
+                            <option value="3">3 - Average (Acceptable)</option>
+                            <option value="2">2 - Poor (Below Expectations)</option>
+                            <option value="1">1 - Very Poor (Unacceptable)</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Feedback / Remarks</label>
+                        <textarea name="vendor_feedback" rows="3" class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none placeholder-slate-400" placeholder="Optional comments about vendor's performance..."></textarea>
+                    </div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/50 px-6 py-4 flex items-center justify-end gap-3">
+                    <button type="button" onclick="document.getElementById('rating-modal').classList.add('hidden')" class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-yellow-500 hover:bg-yellow-400 rounded-xl transition-colors shadow-lg shadow-yellow-500/20">
+                        Submit Rating
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <style>
 @media print {
     body * { visibility: hidden; }

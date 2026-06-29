@@ -113,6 +113,16 @@ def tender_create(request):
             tender.created_by = request.user
             tender.status = TenderStatus.DRAFT
             tender.save()
+            
+            # Log Action
+            from apps.accounts.models import SystemLog, SystemLogAction
+            SystemLog.objects.create(
+                user=request.user,
+                action=SystemLogAction.TENDER_CREATED,
+                description=f"Created Tender {tender.tender_number}",
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            
             messages.success(request, f'Tender {tender.tender_number} created successfully as Draft.')
             return redirect('tenders:detail', pk=tender.pk)
     else:
@@ -247,6 +257,17 @@ def tender_close(request, pk):
     
     if request.method == 'POST':
         tender.close()
+        
+        # Log Action
+        from apps.accounts.utils import log_activity
+        from apps.accounts.models import SystemLogAction
+        log_activity(
+            user=request.user,
+            action=SystemLogAction.TENDER_CLOSED,
+            description=f"Closed tender {tender.tender_number}",
+            request=request
+        )
+        
         messages.success(request, 'Tender has been closed for bidding.')
         return redirect('tenders:detail', pk=tender.pk)
         

@@ -112,32 +112,32 @@ class GlobalExceptionMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        try:
-            return self.get_response(request)
-        except Exception as e:
-            # We don't catch ProgrammingError or OperationalError here
-            # because MigrationErrorMiddleware handles them if it runs first,
-            # but if it falls through, we catch it here.
+        return self.get_response(request)
+
+    def process_exception(self, request, exception):
+        # We don't catch ProgrammingError or OperationalError here
+        # because MigrationErrorMiddleware handles them if it runs first,
+        # but if it falls through, we catch it here.
+        
+        # Log the error
+        import traceback
+        logger.error(f"Unhandled Exception at {request.path}: {str(exception)}\n{traceback.format_exc()}")
+        
+        from django.contrib import messages
+        from django.shortcuts import redirect
+        
+        # If the request is an AJAX/API request, we shouldn't redirect
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.path.startswith('/api/'):
+            from django.http import JsonResponse
+            return JsonResponse({'error': 'An unexpected error occurred. Please try again later.'}, status=500)
             
-            # Log the error
-            import traceback
-            logger.error(f"Unhandled Exception at {request.path}: {str(e)}\n{traceback.format_exc()}")
+        # Add a friendly error message
+        messages.error(request, "Oops! Something went wrong while processing your request. Please try again.")
+        
+        # Redirect back to the previous page if possible
+        referer = request.META.get('HTTP_REFERER')
+        if referer:
+            return redirect(referer)
             
-            from django.contrib import messages
-            from django.shortcuts import redirect
-            
-            # If the request is an AJAX/API request, we shouldn't redirect
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.path.startswith('/api/'):
-                from django.http import JsonResponse
-                return JsonResponse({'error': 'An unexpected error occurred. Please try again later.'}, status=500)
-                
-            # Add a friendly error message
-            messages.error(request, "Oops! Something went wrong while processing your request. Please try again.")
-            
-            # Redirect back to the previous page if possible
-            referer = request.META.get('HTTP_REFERER')
-            if referer:
-                return redirect(referer)
-                
-            # If no referer, redirect to home
-            return redirect('/')
+        # If no referer, redirect to home
+        return redirect('/')

@@ -130,6 +130,16 @@ def submit_evaluations(request, tender_id):
             return redirect('evaluations:tender_evaluations', tender_id=tender.id)
             
         evaluations.update(status=EvaluationStatus.PENDING_APPROVAL)
+        
+        # Log Action
+        from apps.accounts.models import SystemLog, SystemLogAction
+        SystemLog.objects.create(
+            user=request.user,
+            action=SystemLogAction.EVALUATION_SUBMITTED,
+            description=f"Submitted evaluations for Tender {tender.tender_number} to Manager",
+            ip_address=request.META.get('REMOTE_ADDR')
+        )
+        
         messages.success(request, 'Evaluations submitted to Manager for final approval.')
         
     return redirect('evaluations:tender_evaluations', tender_id=tender.id)
@@ -168,6 +178,15 @@ def approve_award(request, evaluation_id):
         # Update other evaluations
         other_evals = Evaluation.objects.filter(bid__tender=tender).exclude(id=evaluation.id)
         other_evals.update(status=EvaluationStatus.REJECTED, is_winner=False)
+        
+        # Log Action
+        from apps.accounts.models import SystemLog, SystemLogAction
+        SystemLog.objects.create(
+            user=request.user,
+            action=SystemLogAction.TENDER_AWARDED,
+            description=f"Awarded Tender {tender.tender_number} to {bid.vendor.company_name}",
+            ip_address=request.META.get('REMOTE_ADDR')
+        )
         
         messages.success(request, f'Bid by {bid.vendor.company_name} has been Awarded!')
         
