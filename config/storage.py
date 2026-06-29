@@ -2,6 +2,7 @@ import os
 import cloudinary.uploader
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
+
 class PrivateMediaCloudinaryStorage(RawMediaCloudinaryStorage):
     """
     Custom storage class that forces all media files to be uploaded to Cloudinary
@@ -10,10 +11,9 @@ class PrivateMediaCloudinaryStorage(RawMediaCloudinaryStorage):
     def _upload(self, name, content):
         options = {'type': 'authenticated', 'resource_type': 'raw'}
         
-        content_bytes = content.read()
-        
+        # Passing the file-like object directly instead of raw bytes
         response = cloudinary.uploader.upload(
-            content_bytes,
+            content,
             public_id=name,
             **options
         )

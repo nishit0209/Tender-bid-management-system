@@ -72,6 +72,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'apps.accounts.middleware.HideNextUrlMiddleware',
     'apps.accounts.middleware.MigrationErrorMiddleware',
+    'apps.accounts.middleware.GlobalExceptionMiddleware',
 ]
 
 # ─────────────────────────────────────────────
