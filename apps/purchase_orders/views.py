@@ -282,6 +282,27 @@ def po_action(request, pk, action):
         except Exception as e:
             messages.error(request, f'Failed to send email. Check your SMTP settings in .env file. Error: {str(e)}')
 
+    # Sign Agreement (Vendor)
+    elif action == 'sign_agreement' and request.user.role == UserRole.VENDOR:
+        if po.vendor_signature:
+            messages.error(request, 'You have already signed this Purchase Order.')
+        else:
+            signature_data = request.POST.get('signature_data')
+            if signature_data:
+                po.vendor_signature = signature_data
+                po.save()
+                
+                log_activity(
+                    user=request.user,
+                    action=SystemLogAction.VENDOR_APPROVED, # Can reuse this or create a new one, but let's just use what's available
+                    description=f"Vendor signed agreement for PO {po.po_number}",
+                    request=request
+                )
+                
+                messages.success(request, 'Agreement signed successfully! The Manager will now review it.')
+            else:
+                messages.error(request, 'Signature data is missing.')
+
     # Rate Vendor
     elif action == 'rate_vendor' and request.user.role in [UserRole.ADMIN, UserRole.MANAGER, UserRole.PROCUREMENT_OFFICER]:
         if po.status != POStatus.COMPLETED:

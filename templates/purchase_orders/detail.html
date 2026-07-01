@@ -10,6 +10,9 @@
 {% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <div class="max-w-5xl mx-auto space-y-6">
     
     <!-- Action Banner based on role and status -->
@@ -41,38 +44,47 @@
         <div class="flex flex-wrap items-center gap-3">
             <!-- Manager Approves -->
             {% if po.status == 'pending' and user.role in 'admin,manager' %}
-                <form method="post" action="{% url 'purchase_orders:action' po.pk 'approve' %}" class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 p-1.5 rounded-xl border border-slate-300 dark:border-slate-700">
-                    {% csrf_token %}
-                    <label class="flex items-center gap-2 px-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer" title="Send email to vendor on approval">
-                        <input type="checkbox" name="send_email" checked class="rounded border-slate-300 dark:border-slate-700 text-emerald-500 focus:ring-emerald-500 bg-slate-50 dark:bg-slate-800">
-                        <span>Email Vendor</span>
-                    </label>
-                    <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2" onclick="return confirm('Approve this Purchase Order? The Vendor will be notified to start delivery.');">
-                        <i data-lucide="check" class="w-4 h-4"></i> Approve Order
+                <div class="flex items-center gap-3">
+                    {% if po.vendor_signature %}
+                    <button type="button" onclick="document.getElementById('view-signature-modal').classList.remove('hidden')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-xl transition-all border border-slate-300 dark:border-slate-600 flex items-center gap-2">
+                        <i data-lucide="eye" class="w-4 h-4"></i> View Signature
                     </button>
-                </form>
+                    {% endif %}
+                    
+                    <form method="post" action="{% url 'purchase_orders:action' po.pk 'approve' %}" class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 p-1.5 rounded-xl border border-slate-300 dark:border-slate-700">
+                        {% csrf_token %}
+                        <label class="flex items-center gap-2 px-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer" title="Send email to vendor on approval">
+                            <input type="checkbox" name="send_email" checked class="rounded border-slate-300 dark:border-slate-700 text-emerald-500 focus:ring-emerald-500 bg-slate-50 dark:bg-slate-800">
+                            <span>Email Vendor</span>
+                        </label>
+                        <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2" onclick="return confirm('Approve this Purchase Order? The Vendor will be notified to start delivery.');">
+                            <i data-lucide="check" class="w-4 h-4"></i> Approve Order
+                        </button>
+                    </form>
+                </div>
             {% endif %}
 
-            <!-- Vendor Actions -->
-            {% if po.status == 'approved' and user.role == 'vendor' %}
-                {% if not po.is_agreed %}
-                <form method="post" action="{% url 'purchase_orders:action' po.pk 'agree' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2" onclick="return confirm('By clicking OK, you digitally sign and agree to the Terms and Conditions of this Purchase Order. Continue?');">
-                        <i data-lucide="file-signature" class="w-4 h-4"></i> Sign E-Agreement
-                    </button>
-                </form>
+            <!-- Vendor Actions (Pending/Draft) -->
+            {% if po.status == 'pending' and user.role == 'vendor' %}
+                {% if not po.vendor_signature %}
+                <button type="button" onclick="document.getElementById('signature-modal').classList.remove('hidden')" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2">
+                    <i data-lucide="file-signature" class="w-4 h-4"></i> Sign Agreement
+                </button>
                 {% else %}
                 <div class="px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 text-xs font-semibold rounded-xl flex items-center gap-2">
-                    <i data-lucide="check-circle" class="w-4 h-4"></i> Agreed on {{ po.agreed_at|date:"d M Y" }}
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> Signed. Waiting for Approval.
                 </div>
+                {% endif %}
+            {% endif %}
+
+            <!-- Vendor Actions (Approved) -->
+            {% if po.status == 'approved' and user.role == 'vendor' %}
                 <form method="post" action="{% url 'purchase_orders:action' po.pk 'dispatch' %}">
                     {% csrf_token %}
                     <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-xl transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2" onclick="return confirm('Mark items as dispatched?');">
                         <i data-lucide="truck" class="w-4 h-4"></i> Mark Dispatched
                     </button>
                 </form>
-                {% endif %}
             {% endif %}
 
             <!-- Vendor Deliver (Requires Proof Upload) -->
@@ -222,13 +234,36 @@
             </div>
             
             <!-- Approvals Info -->
-            <div class="flex items-center justify-between pt-8">
+            <div class="flex items-end justify-between pt-12 pb-4">
                 <div>
-                    <p class="text-xs text-slate-600 dark:text-slate-500">Generated By</p>
+                    <!-- Generated By Signature -->
+                    <div class="mb-2" style="font-family: 'Dancing Script', cursive; font-size: 28px; color: #1e293b; transform: rotate(-5deg);">
+                        {{ po.generated_by.full_name }}
+                    </div>
+                    <p class="text-xs text-slate-600 dark:text-slate-500 border-t border-slate-300 pt-1 w-40">Generated By</p>
                     <p class="text-sm font-bold text-slate-900 mt-1">{{ po.generated_by.full_name }}</p>
                 </div>
-                <div class="text-right">
-                    <p class="text-xs text-slate-600 dark:text-slate-500">Approved By</p>
+                <div class="text-right flex flex-col items-end">
+                    <!-- Approved By Signature & Stamp -->
+                    {% if po.approved_by %}
+                    <div class="relative w-32 h-32 mb-2 flex items-center justify-center">
+                        <!-- Circular Stamp -->
+                        <div class="absolute inset-0 rounded-full border-4 border-double border-red-600/60 flex items-center justify-center" style="transform: rotate(-15deg);">
+                            <div class="text-center">
+                                <span class="block text-[10px] font-bold text-red-600/80 tracking-widest uppercase">TenderBMS</span>
+                                <span class="block text-[8px] font-bold text-red-600/80 tracking-widest border-t border-red-600/30 mt-1 pt-1">APPROVED</span>
+                            </div>
+                        </div>
+                        <!-- Signature over stamp -->
+                        <div class="absolute z-10 whitespace-nowrap" style="font-family: 'Dancing Script', cursive; font-size: 32px; color: #0f172a; transform: rotate(-10deg);">
+                            {{ po.approved_by.full_name }}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="h-32 mb-2"></div>
+                    {% endif %}
+                    
+                    <p class="text-xs text-slate-600 dark:text-slate-500 border-t border-slate-300 pt-1 w-40 text-right">Approved By</p>
                     <p class="text-sm font-bold text-slate-900 mt-1">{% if po.approved_by %}{{ po.approved_by.full_name }}{% else %}Pending{% endif %}</p>
                 </div>
             </div>
@@ -329,6 +364,157 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endif %}
+
+<!-- Signature Modal (Vendor only) -->
+{% if po.status == 'pending' and user.role == 'vendor' %}
+<div id="signature-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+        <div class="fixed inset-0 bg-slate-50 dark:bg-slate-950/80 backdrop-blur-sm transition-opacity" onclick="document.getElementById('signature-modal').classList.add('hidden')"></div>
+        <div class="relative inline-block align-bottom bg-white dark:bg-slate-900 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-slate-300 dark:border-slate-700">
+            <form method="post" action="{% url 'purchase_orders:action' po.pk 'sign_agreement' %}" id="signature-form">
+                {% csrf_token %}
+                <input type="hidden" name="signature_data" id="signature_data">
+                <div class="px-6 py-6">
+                    <div class="text-center mb-4">
+                        <h3 class="text-lg leading-6 font-bold text-slate-900 dark:text-white" id="modal-title">Sign Agreement</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">Please draw your signature below to accept the PO.</p>
+                    </div>
+                    
+                    <div class="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-800 touch-none">
+                        <canvas id="signature-pad" class="w-full h-48 cursor-crosshair touch-none"></canvas>
+                    </div>
+                    <div class="flex justify-end mt-2">
+                        <button type="button" id="clear-signature" class="text-xs text-red-500 hover:text-red-700 font-medium">Clear Signature</button>
+                    </div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/50 px-6 py-4 flex items-center justify-end gap-3">
+                    <button type="button" onclick="document.getElementById('signature-modal').classList.add('hidden')" class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl transition-colors">
+                        Cancel
+                    </button>
+                    <button type="button" id="save-signature" class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-colors shadow-lg shadow-emerald-500/20">
+                        Sign & Agree
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const canvas = document.getElementById('signature-pad');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        
+        // Resize canvas to fix blurriness
+        function resizeCanvas() {
+            const ratio =  Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            ctx.scale(ratio, ratio);
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        function startDrawing(e) {
+            isDrawing = true;
+            ctx.beginPath();
+            const pos = getPos(e);
+            ctx.moveTo(pos.x, pos.y);
+            e.preventDefault();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const pos = getPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            e.preventDefault();
+        }
+
+        function stopDrawing(e) {
+            isDrawing = false;
+        }
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX = e.clientX;
+            let clientY = e.clientY;
+            
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            }
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing, {passive: false});
+        canvas.addEventListener('touchmove', draw, {passive: false});
+        canvas.addEventListener('touchend', stopDrawing);
+
+        document.getElementById('clear-signature').addEventListener('click', function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        document.getElementById('save-signature').addEventListener('click', function() {
+            const dataUrl = canvas.toDataURL('image/png');
+            
+            // Basic blank check
+            const blank = document.createElement('canvas');
+            blank.width = canvas.width;
+            blank.height = canvas.height;
+            if (dataUrl === blank.toDataURL('image/png')) {
+                alert('Please provide a signature first.');
+                return;
+            }
+            
+            document.getElementById('signature_data').value = dataUrl;
+            document.getElementById('signature-form').submit();
+        });
+    });
+</script>
+{% endif %}
+
+<!-- View Signature Modal (Manager) -->
+{% if po.vendor_signature %}
+<div id="view-signature-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+        <div class="fixed inset-0 bg-slate-50 dark:bg-slate-950/80 backdrop-blur-sm transition-opacity" onclick="document.getElementById('view-signature-modal').classList.add('hidden')"></div>
+        <div class="relative inline-block align-bottom bg-white dark:bg-slate-900 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full border border-slate-300 dark:border-slate-700">
+            <div class="px-6 py-6">
+                <div class="text-center mb-4">
+                    <h3 class="text-lg leading-6 font-bold text-slate-900 dark:text-white" id="modal-title">Vendor Signature</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">Signature provided by {{ po.vendor.company_name }}.</p>
+                </div>
+                
+                <div class="border border-slate-200 dark:border-slate-700 rounded-xl bg-white flex justify-center p-4">
+                    <img src="{{ po.vendor_signature }}" alt="Vendor Signature" class="max-w-full max-h-48 object-contain filter dark:invert">
+                </div>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-800/50 px-6 py-4 flex items-center justify-end">
+                <button type="button" onclick="document.getElementById('view-signature-modal').classList.add('hidden')" class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl transition-colors">
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 </div>

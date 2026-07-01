@@ -182,9 +182,15 @@ class PurchaseOrder(TimeStampedModel):
                             settings.AUTH_USER_MODEL,
                             on_delete=models.SET_NULL,
                             null=True, blank=True,
-                            related_name='pos_approved',
+                            related_name='approved_pos'
                         )
     approved_at       = models.DateTimeField(null=True, blank=True)
+    
+    vendor_signature  = models.TextField(
+                            blank=True, null=True,
+                            help_text=_("Base64 encoded digital signature from the vendor")
+                        )
+
     approval_remarks  = models.TextField(blank=True, null=True)
 
     # Notes
